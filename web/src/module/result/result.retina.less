@@ -1,0 +1,189 @@
+@media(min-width:1100px) {
+	.view-result {
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: #34495E;
+
+		.body-result {
+			position : relative;
+			top : 80px;
+			left : 0;
+			width : 100%;
+			height : 100%;
+			background: #34495E;
+			font-weight : 200px;
+			padding-top : 2%;
+
+			.comming-soon {
+				position : relative;
+				top : 0;
+				left : 0;
+				width : 200px;
+				height : 160px;
+				margin-left: auto;
+				margin-right: auto;
+				margin-top: 15%;
+			}
+
+			.container-body {
+				display : none;
+				position : relative;
+				top : 0;
+				left : 0;
+				padding-top : 20px;
+				height : 100%;
+				width : 1000px;
+				margin: auto;
+
+				.results {
+					position : absolute;
+					width : 700px;
+					height : 100%;
+					left : 0px;
+
+					.title-result {
+						padding: 0;
+						height : 80px;
+						padding-bottom : 80px;
+						.text-center;
+						h2 {
+							display : inline;
+							font-size : 1.7em;
+							font-weight: 300 !important;
+							color : rgba(255, 255, 255, 0.9);
+						}
+						img {
+							display : inline;
+							height : 40px;
+							width : 40px;
+							margin-right : 10px !important;
+							margin-top : -10px !important;
+						}
+					}
+					table {
+						color: white;
+						border-bottom: 1px solid rgba(255,255,255,0.6);
+						border-left: 1px solid rgba(255,255,255,0.6);
+						border-right: 1px solid rgba(255,255,255,0.6);
+						margin-left: auto;
+						margin-right: auto;
+					}
+					td {
+						border-collapse: collapse;
+						height : 30px;
+						width : 130px;
+						.text-center;
+					}
+					th {
+						border-collapse: collapse;
+						height : 40px;
+						width : 130px;
+						.text-center;
+					}
+					table tr:nth-child(odd) {
+						background-color: #495C6D;
+						font-size : 1.1em;
+					}
+					table tr:nth-child(even) {
+						background-color: #34495E;
+						font-size : 1.1em;
+					}
+					table td:nth-child(4) {
+						color : #F67D0A;
+					}
+					thead tr {
+						background-image:-moz-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+						background-image:-webkit-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+						background-image:-o-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+						background-image:linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+						background-size : 400px 40px;
+						background-attachment:fixed;
+					}
+
+					.ng-table-counts {
+						.hide;
+					}
+				}
+				.medate {
+					position : absolute;
+					top : 0;
+					right : 0;
+					width : 300px;
+					height : 100%;
+					padding-top : 100px;
+
+					table {
+						color: white;
+						background-color: #495C6D;
+						border-radius: 2px;
+					}
+					th , td {
+						height : 20px !important;
+						width : 20px !important;
+						.text-center;
+						span {
+							font-size : 1.2em;
+						}
+						box-shadow: none !important;
+					}
+
+					thead tr {
+						background-image:-moz-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
+						background-image:-webkit-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
+						background-image:-o-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
+						background-size : 400px 60px;
+						background-attachment:fixed;
+					}
+					button {
+						background-color: #495C6D;
+						color: white;
+						border: 0;
+						font-size: 0.8em;
+					}
+					td button {
+						height : 26px !important;
+						width : 26px !important;
+						background-color: #495C6D;
+						color: white;
+						border: 0;
+						box-shadow: none !important;
+						font-size: 0.8em;
+						padding : 0;
+						margin : 2px;
+						.text-info {
+							color: white;
+						}
+						.text-muted {
+							color : #495C6D;
+						}
+						span {
+							height : 100%;
+							width : 100%;
+						}
+					}
+					.active {
+						-webkit-box-shadow: none;
+						box-shadow: none;
+						background: transparent none;
+						outline : none;
+						border-radius : 100%;
+						background-color : #FF8610;
+					}
+					.btn[disabled] {
+						background-color: transparent;
+						opacity : 1;
+					}
+					.btn-sm.pull-right {
+						background-color: transparent;
+
+					}
+					.btn-sm.pull-left {
+						background-color: transparent;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,41 @@
+* {
+  font-family: 'Roboto', sans-serif;
+  font-weight:400;
+}
+
+html {
+	font-size: 62.5%;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	-webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.view {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Mixin
+.font-size(@sizeValue) {
+  @remValue: @sizeValue;
+  @pxValue: (@sizeValue * 10);
+  font-size: ~"@{pxValue}px";
+  font-size: ~"@{remValue}rem";
+	font-family: 'Raleway';
+}
+
+.visible-mobile {
+  .visible-xs-block();
+}
+
+.hidden-mobile {
+  .visible-sm-block();
+  .visible-md-block();
+  .visible-lg-block();
+}

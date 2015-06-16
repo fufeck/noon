@@ -1,0 +1,24 @@
+---
+- hosts: prod
+  sudo: yes
+  gather_facts: true
+
+  roles:
+
+    - keys
+    - nginx
+    - git
+    - nodejs
+    - site
+
+
+  vars:
+    general:
+      branch: master
+      port: 80
+    site:
+      name: noon
+      path: /var/www/site
+      repo: git@ec2-52-17-41-107.eu-west-1.compute.amazonaws.com:user/noon-site.git
+      user: www-data
+      group: www-data

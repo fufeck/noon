@@ -1,0 +1,25 @@
+noon-header
+.noon-view
+	.view-faq.visible-mobile
+		.body-faq
+			.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+				.container-faq
+					.title CGU
+						hr
+					accordion(close-others="oneAtATime")
+						accordion-group(is-open="status.open" ng-repeat="data in questions track by $index") {{data.answer}}
+							accordion-heading
+								span {{data.question}}
+								i(class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}")
+		noon-footer
+			
+	.view-faq.hidden-mobile
+		.body-faq
+			.container-faq
+				.title CGU
+					hr
+				accordion(close-others="oneAtATime")
+					accordion-group(is-open="status.open" ng-repeat="data in questions track by $index" ng-click="gotoAnchor($index, status.open)" id="anchor{{$index}}") {{data.answer}}
+						accordion-heading {{data.question}}
+							i(class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}")
+		noon-footer

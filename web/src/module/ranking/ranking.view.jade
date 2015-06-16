@@ -1,0 +1,35 @@
+noon-header
+.noon-view
+	.view-ranking.visible-mobile
+		.body-ranking
+			.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+				.results-ranking
+					.title
+						img(src="img/picto-classement.png")
+						h2 CLASSEMENT GÉNÉRAL
+					input(src="img/picto-loupe.png" ng-change="change(pseudo)" ng-model="pseudo" placeholder="Recherche un pseudo")
+					table(ng-table="tableParams")
+						tr(ng-repeat="line in $data")
+							td(data-title="'RANK'") {{ $index + 1 }}
+							td(data-title="'PSEUDO'") {{ line.speudo }}
+							td(data-title="'RATIO'") {{ line.ratio }}
+							td(data-title="'SOMME €'") {{ line.somme }}
+		noon-footer
+
+	.view-ranking.hidden-mobile
+		.body-ranking
+			.comming-soon.animated.swing
+				img(src="img/picto-soon.png")
+			.results-ranking
+				.title
+					img(src="img/picto-classement.png")
+					h2 CLASSEMENT GÉNÉRAL
+				input(src="img/picto-loupe.png" ng-change="change(pseudo)" ng-model="pseudo" placeholder="Recherche un pseudo")
+				table(ng-table="tableParams")
+					tr(ng-repeat="line in $data")
+						td(data-title="'RANK'") {{ $index + 1 }}
+						td(data-title="'PSEUDO'") {{ line.speudo }}
+						td(data-title="'RÉPONSE VALIDÉES'") {{ line.validRep }}
+						td(data-title="'RATIO'") {{ line.ratio }}
+						td(data-title="'SOMME €'") {{ line.somme }}
+		noon-footer

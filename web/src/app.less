@@ -1,0 +1,86 @@
+@bower-components: '../bower_components';
+@bootstrap-path: '@{bower-components}/bootstrap/less';
+
+// Fonts
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800);
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300italic,300,100italic,100);
+
+// Bootstrap.less
+@import '@{bootstrap-path}/bootstrap';
+
+// Fonts path
+@fa-font-path: "/fonts";
+
+// External
+@import "@{bower-components}/fontawesome/less/font-awesome";
+
+// Global
+@import "style/animate";
+@import "style/variables";
+@import "style/global";
+
+// Module
+@import "module/home/home.mobile.less";
+@import "module/home/home.tablet.less";
+@import "module/home/home.retina.less";
+@import "module/home/home.laptop.less";
+
+@import "module/result/result.mobile.less";
+@import "module/result/result.tablet.less";
+@import "module/result/result.retina.less";
+@import "module/result/result.laptop.less";
+
+@import "module/ranking/ranking.mobile.less";
+@import "module/ranking/ranking.tablet.less";
+@import "module/ranking/ranking.retina.less";
+@import "module/ranking/ranking.laptop.less";
+
+@import "module/advertiser/advertiser.mobile.less";
+@import "module/advertiser/advertiser.tablet.less";
+@import "module/advertiser/advertiser.retina.less";
+@import "module/advertiser/advertiser.laptop.less";
+
+@import "module/faq/faq.mobile.less";
+@import "module/faq/faq.tablet.less";
+@import "module/faq/faq.retina.less";
+@import "module/faq/faq.laptop.less";
+
+@import "module/contact/contact.mobile.less";
+@import "module/contact/contact.tablet.less";
+@import "module/contact/contact.retina.less";
+@import "module/contact/contact.laptop.less";
+
+@import "module/mention/mention.mobile.less";
+@import "module/mention/mention.tablet.less";
+@import "module/mention/mention.retina.less";
+@import "module/mention/mention.laptop.less";
+
+@import "directive/noonHeader/noonHeader";
+@import "directive/noonFooter/noonFooter";
+
+@media(max-width:767px) {
+	.wrapper-mobile {
+		position : relative;
+		top : 0;
+		left : 0;
+		width : 100%;
+		height : 100%;
+	}
+	.noon-view {
+	    position : absolute;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	}
+}
+
+@media(min-width:768px) {
+	.noon-view {
+	    position : absolute;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	}
+}

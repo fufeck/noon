@@ -1,0 +1,112 @@
+noon-header
+.noon-view
+	.view-home.visible-mobile
+		.content-mobile
+			.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+				.container-text(ng-click="$root.slidePhone()")
+					.title Des <strong>quiz</strong>,<br> une <strong>loterie</strong> gratuite<br>et des gains <strong>d'argent</strong><br> tous les jours
+					.store Application gratuite bientôt disponible sur
+						.apple-store
+							img(src="img/Logo_Appstore.png")
+						.google-store
+							img(src="img/Logo_Googlestore.png")
+				.container-slider
+					.nav
+						.wrapper
+							.dot(ng-repeat="slide in slides" ng-class="{'active':isCurrentSlideIndex($index)}" ng-click="setCurrentSlideIndex($index);")
+					.iphone(ng-click="$root.slidePhone()")
+						img(src="img/Smartphones-mobile.png")
+						.slider
+							img(ng-repeat="slide in slides" ng-hide="!isCurrentSlideIndex($index)" ng-src="{{slide}}")
+
+			.container-ccm
+				.title Comment ça marche
+				.container-iphones
+					.container-iphone
+						img(src="img/CCM-1.png")
+						.title Le Jeu
+						.desc Je peux accéder au jeu tous les jours de l'année de 8h00 à 20h00.
+					.container-iphone
+						img(src="img/CCM-2.png")
+						.title Les quiz
+						.desc j'ai un temps limité pour observer une image et repondre aux questions. Il y a plusieurs quiz par jour.
+					.container-iphone
+						img(src="img/CCM-3.png")
+						.title Les tickets
+						.desc En cas de quiz réussi, je gagne un ticket pour participer à la loterie du jour. Chaque quiz représente un ticket différent.
+					.container-iphone
+						img(src="img/CCM-4.png")
+						.title La loterie
+						.desc Tous les soirs à 20h30 à lieu le tirage de la loterie, je vais dans le menu 'Résultats' voir si j'ai gagné de l'argent
+
+			.container-resultclass
+				.container-home-result
+					img(src="img/picto-resultat.png", ui-sref="result")
+					.title-result-class Résultats
+					.desc-result-class Voir les résultats des gagnants du jour en fonction des tickets de loteries qui ont été tirés
+				.container-home-class
+					img(src="img/picto-classement.png", ui-sref="ranking")
+					.title-result-class Classement
+					.desc-result-class Consulter le classement général de tous les utilisateurs de Noon, depuis leurs 1er jeu
+
+			.container-advertiser
+				.title Annonceurs
+				.desc Grâce à l'application Noon, augmentez votre visibilité et votre notoriété
+				.link(ui-sref="advertiser")
+					p Voir nos offres
+					img(src="img/fleche-cta.png")
+			noon-footer
+
+	.view-home.hidden-mobile
+		.container-body-home
+			.container-slider
+				.container-sl
+					.dem
+						.title Des <strong>quiz</strong>,<br> une <strong>loterie</strong> gratuite<br>et des gains <strong>d'argent</strong><br> tous les jours
+						.store Application gratuite bientôt disponible sur
+							.apple-store
+								img(src="img/Logo_Appstore.png")
+							.google-store
+								img(src="img/Logo_Googlestore.png")
+					.iphone
+						img(src="img/Smartphones.png")
+						.slider
+							img(ng-repeat="slide in slides" ng-hide="!isCurrentSlideIndex($index)" ng-src="{{slide}}")
+					.nav
+						.wrapper
+							.dot(ng-repeat="slide in slides" ng-class="{'active':isCurrentSlideIndex($index)}" ng-click="setCurrentSlideIndex($index);")
+		.container-ccm
+			.title Comment ça marche
+			.container-iphones
+				.container-iphone
+					img(src="img/CCM-1.png")
+					.title Le Jeu
+					.desc Je peux accéder au jeu tous les jours de l'année de 8h00 à 20h00.
+				.container-iphone
+					img(src="img/CCM-2.png")
+					.title Les quiz
+					.desc j'ai un temps limité pour observer une image et repondre aux questions. Il y a plusieurs quiz par jour.
+				.container-iphone
+					img(src="img/CCM-3.png")
+					.title Les tickets
+					.desc En cas de quiz réussi, je gagne un ticket pour participer à la loterie du jour. Chaque représente un ticket différent.
+				.container-iphone
+					img(src="img/CCM-4.png")
+					.title La loterie
+					.desc Tous les soirs à 20h30 à lieu le tirage de la loterie, je vais dans le menu 'Résultats' voir si j'ai gagné de l'argent
+		.container-resultclass
+			.container-home-result(ui-sref="result")
+				img(src="img/picto-resultat.png")
+				.title-result-class Résultats
+				.desc-result-class Voir les résultats des gagnants du jour en fonction des tickets de loteries qui ont été tirés
+			.container-home-class(ui-sref="ranking")
+				img(src="img/picto-classement.png")
+				.title-result-class Classement
+				.desc-result-class Consulter le classement général de tous les utilisateurs de Noon, depuis leurs 1er jeu
+		.container-advertiser
+			.title Annonceurs
+			.desc Grâce à l'application Noon, augmentez votre visibilité et votre notoriété
+			.link(ui-sref="advertiser")
+				p Voir nos offres
+				img(src="img/fleche-cta.png")
+		noon-footer

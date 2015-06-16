@@ -1,0 +1,50 @@
+noon-header
+.noon-view
+	.view-result.visible-mobile
+		.body-result
+			.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+				.results
+					.title-result
+						img(src="img/picto-resultat.png")
+						h2 RÉSULTATS DU JOUR
+					button(type="button" class="btn btn-default" ng-click="changeState()")
+						i.glyphicon.glyphicon-calendar
+
+					.container-table
+						.date-tab(ng-hide="!isOpen")
+							datepicker(ng-model="dt"
+								ng-change="change(dt)"
+								min-mode="day"
+								max-mode="day"
+								min-date="minDate"
+								show-weeks="false"
+								custom-class="getDayClass(date, mode)")
+
+						.result-tab(ng-hide="isOpen")
+							table(ng-table="tableParams")
+								tr(ng-repeat="line in $data track by $index")
+									td(data-title="'RANK'") {{ $index + 1 }}
+									td(data-title="'PSEUDO'") {{ line.speudo }}
+									td(data-title="'N°TICKET'") {{ line.ntiket }}
+									td(data-title="'SOMME'") {{ line.somme }}
+		noon-footer
+
+	.view-result.hidden-mobile
+		.body-result
+			.comming-soon.animated.swing
+				img(src="img/picto-soon.png")
+			.container-body
+				.results
+					.title-result
+						img(src="img/picto-resultat.png")
+						h2 RÉSULTATS DU JOUR
+					table(ng-table="tableParams")
+						tr(ng-repeat="line in $data track by $index")
+							td(data-title="'RANK'") {{ $index + 1 }}
+							td(data-title="'PSEUDO'") {{ line.speudo }}
+							td(data-title="'N°TICKET'") {{ line.ntiket }}
+							td(data-title="'SOMME'") {{ line.somme }}
+
+				datepicker(ng-model="dt" ng-change="change(dt)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")
+
+		noon-footer

@@ -1,0 +1,25 @@
+.visible-mobile
+	.header-mobile
+		.title(ui-sref="home")
+			img(src="img/logo.png")
+		.burger(ng-click="($root.showNav == undefined || $root.showNav == false) ? ($root.showNav = true) : ($root.showNav = false)")
+			.fa.fa-navicon
+		.menu(ng-hide="$root.showNav == undefined || $root.showNav == false")
+			.nav(ng-class="{ 'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}"
+				ng-click="$root.showNav = false")
+				.nav-link(ui-sref="result") Résultats
+				.nav-link(ui-sref="ranking") Classement
+				.nav-link(ui-sref="advertiser") Annonceurs
+
+.hidden-mobile
+	.header-noon
+		.header-container
+			.title(ui-sref="home")
+				img(src="img/logo.png")
+			.menu
+				.result
+					h2(ui-sref="result") RÉSULTATS
+				.classment
+					h2(ui-sref="ranking") CLASSEMENTS
+				.announcer
+					h2(ui-sref="advertiser") ANNONCEURS
