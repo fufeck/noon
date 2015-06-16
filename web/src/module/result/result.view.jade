@@ -34,10 +34,10 @@ noon-header
 			.comming-soon.animated.swing
 				img(src="img/picto-soon.png")
 			.container-body
+				.title-result
+					img(src="img/picto-resultat.png")
+					h2 RÉSULTATS DU JOUR
 				.results
-					.title-result
-						img(src="img/picto-resultat.png")
-						h2 RÉSULTATS DU JOUR
 					table(ng-table="tableParams" show-filter="true")
 						tr(ng-repeat="line in $data track by $index")
 							td(data-title="'RANK'") {{ $index + 1 }}

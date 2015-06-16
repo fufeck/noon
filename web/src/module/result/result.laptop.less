@@ -14,43 +14,40 @@
 			height : 100%;
 			background: #34495E;
 			font-weight : 200px;
-			padding-top : 4%;
+			padding-top : 0;
 
 			.container-body {
-				display : none;
 				position : relative;
 				top : 0;
 				left : 0;
-				padding-top : 20px;
 				height : 100%;
 				width : 1200px;
 				margin: auto;
-
+				padding-top: 10px;
+				.title-result {
+					position: relative;
+					height : 60px;
+					width: 280px;
+					margin-left: auto;
+					margin-right: auto;
+					h2 {
+						font-size : 1.7em;
+						font-weight : 200 !important;
+						.text-center;
+						color : white;
+						float: right;
+					}
+					img {
+						position: absolute;
+						top : 12px;
+						height: 35px;
+					}
+				}
 				.results {
 					position : absolute;
-					width : 750px;
+					width : 800px;
 					height : 100%;
 					left : 0px;
-
-					.title-result {
-						padding: 0;
-						height : 80px;
-						padding-bottom : 80px;
-						.text-center;
-						h2 {
-							display : inline;
-							font-size : 1.7em;
-							font-weight: 300 !important;
-							color : rgba(255, 255, 255, 0.9);
-						}
-						img {
-							display : inline;
-							height : 40px;
-							width : 40px;
-							margin-right : 10px !important;
-							margin-top : -10px !important;
-						}
-					}
 					table {
 						color: white;
 						border-bottom: 1px solid rgba(255,255,255,0.6);
@@ -59,10 +56,16 @@
 						margin-left: auto;
 						margin-right: auto;
 					}
-					th , td {
+					td {
 						border-collapse: collapse;
 						height : 50px;
-						width : 200px;
+						width : 180px;
+						.text-center;
+					}
+					th {
+						border-collapse: collapse;
+						height : 50px;
+						width : 180px;
 						.text-center;
 					}
 					table tr:nth-child(odd) {
@@ -93,17 +96,18 @@
 					position : absolute;
 					top : 0;
 					right : 0;
-					width : 450px;
+					width : 400px;
 					height : 100%;
-					padding-top : 100px;
+					padding-top : 120px;
 
 					table {
 						color: white;
 						background-color: #495C6D;
 						border-radius: 2px;
-						margin : auto;
 					}
 					th , td {
+						height : 40px !important;
+						width : 40px !important;
 						.text-center;
 						span {
 							font-size : 1.2em;
@@ -122,11 +126,11 @@
 						background-color: #495C6D;
 						color: white;
 						border: 0;
-						font-size: 0.8em;
+						font-size: 1em;
 					}
 					td button {
-						height : 36px !important;
-						width : 36px !important;
+						height : 30px !important;
+						width : 30px !important;
 						background-color: #495C6D;
 						color: white;
 						border: 0;
