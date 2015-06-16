@@ -22,7 +22,8 @@
     "angular-intercom": "~2.0.4",
     "angular-scroll": "~0.6.5",
     "ng-table": "~0.5.4",
-    "angular-bootstrap": "~0.13.0"
+    "angular-bootstrap": "~0.13.0",
+    "moment": "~2.10.3"
   },
   "resolutions": {
     "angular-ui-router": "~0.2.12",

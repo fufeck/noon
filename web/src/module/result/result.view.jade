@@ -38,12 +38,12 @@ noon-header
 					.title-result
 						img(src="img/picto-resultat.png")
 						h2 RÉSULTATS DU JOUR
-					table(ng-table="tableParams")
+					table(ng-table="tableParams" show-filter="true")
 						tr(ng-repeat="line in $data track by $index")
 							td(data-title="'RANK'") {{ $index + 1 }}
-							td(data-title="'PSEUDO'") {{ line.speudo }}
-							td(data-title="'N°TICKET'") {{ line.ntiket }}
-							td(data-title="'SOMME'") {{ line.somme }}
+							td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
+							td(data-title="'N°TICKET'") {{ line.tickets }}
+							td(data-title="'SOMME €'") {{ line.earned }}
 
 				datepicker(ng-model="dt" ng-change="change(dt)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")
 

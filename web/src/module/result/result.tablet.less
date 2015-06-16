@@ -16,6 +16,7 @@
 		padding-top : 2%;
 
 		.comming-soon {
+			display: none;
 			position : relative;
 			top : 0;
 			left : 0;
@@ -27,7 +28,6 @@
 		}
 
 		.container-body {
-			display : none;
 			position : relative;
 			top : 0;
 			left : 0;
@@ -41,6 +41,21 @@
 				width : 500px;
 				height : 100%;
 				left : 0px;
+
+				input {
+					position : relative;
+					left : 0;
+					height : 40px;
+					width : 250px;
+					margin-bottom : 20px;
+					background-color: transparent;
+					border : 0;
+					border-bottom : 1px solid rgba(255, 255, 255, 0.4);
+					color : white;
+					background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
+					padding-left: 30px;
+					box-shadow: none;
+				}
 
 				.title-result {
 					padding: 0;
@@ -62,6 +77,8 @@
 					}
 				}
 				table {
+					position: absolute;
+					top : 50;
 					color: white;
 					border-bottom: 1px solid rgba(255,255,255,0.6);
 					border-left: 1px solid rgba(255,255,255,0.6);
@@ -99,6 +116,13 @@
 					background-image:linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
 					background-size : 400px 40px;
 					background-attachment:fixed;
+				}
+				.ng-table-filters {
+					position: absolute;
+					top : -50px;
+					left : 0;
+					width: 0;
+					height: 50px;
 				}
 
 				.ng-table-counts {

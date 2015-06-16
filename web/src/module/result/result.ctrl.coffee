@@ -1,43 +1,61 @@
 angular.module "starter.result"
 
-.controller "resultCtrl", ($scope, $http, ngTableParams, LotteryRank, $rootScope) ->
+.controller "resultCtrl", ($scope, $http, $filter, ngTableParams, Lottery, LotteryRank, $rootScope) ->
 	$rootScope.showNav = undefined
 	$scope.isOpen = false;
+	$scope.tableParams = undefined
 
-	$scope.data = LotteryRank.find {filter : {limit : 10}}, (success) ->
-		console.log $scope.data
-		console.log "success"
-		console.log success
-	, (error) ->
-		console.log "error"
-		console.log error
+	getLotteryDay = (date = undefined) ->
+		console.log date
+		if date == undefined
+			currentDate = moment()
+		else
+			currentDate = moment(date)
+
+		currentDate.hour(14)
+		currentDate.second(0)
+		currentDate.minute(0)
+		currentDate.millisecond(0)
+		Lottery.find {filter : where : day : currentDate.toISOString()}, (success) ->
+			loadLotteryRank(success)
+		, (error) ->
+			console.log error
+	
+	pushDatas = (datas) ->
+		$scope.datas = datas
+		for d, index in datas
+			$scope.datas[index].username = d.player.username
 		
-	console.log $scope.data
 
-	$scope.dt = new Date()
+	loadLotteryRank = (lotteryDay) ->
+		if lotteryDay.length > 0
+			LotteryRank.find {filter : where : {lotteryId : lotteryDay[0].id}, include : 'player'}
+			, (success) ->
+				pushDatas(success)
+				if $scope.tableParams == undefined
+					createTable()
+				else
+					$scope.tableParams.reload()
+			, (error) ->
+				console.log error
 
-	datas = [{speudo : "mama", ntiket : 8671, somme : 87},
-					{speudo : "mimiopp", ntiket : 81, somme : 45},
-					{speudo : "totoyuuy", ntiket : 867, somme : 27},
-					{speudo : "titiaza", ntiket : 71, somme : 67},
-					{speudo : "tadvdfta", ntiket : 8571, somme : 80},
-					{speudo : "tddfxbxfb", ntiket : 1, somme : 55},
-					{speudo : "tdfdfxbxfd", ntiket : 7, somme : 44},
-					{speudo : "ttfxdb", ntiket : 8, somme : 33},
-					{speudo : "ttaxdfbx", ntiket : 5, somme : 22},
-					{speudo : "taty,guyu", ntiket : 85871, somme : 1}]
+	createTable = ->
 
-	ngTable = 
-		page: 1,
-		count: 10
+		$scope.tableParams = new ngTableParams({
+			page: 1
+			count: 10
+			filter: username: ''
+		},
+			total: $scope.datas.length
+			getData: ($defer, params) ->
+				orderedData = if params.filter() then $filter('filter')($scope.datas, params.filter()) else $scope.datas
+				$scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count())
+				params.total orderedData.length
+				$defer.resolve $scope.users
+				return
+		)
 
-	getData =
-		total : datas.length,
-		getData : ($defer, params) ->
-			$defer.resolve(datas.slice((params.page() - 1) * params.count(), params.page() * params.count()));	
-
-	$scope.tableParams = new ngTableParams(ngTable, getData)
-
+	getLotteryDay()
 
 	$scope.changeState = ->
 		if ($scope.isOpen == false)
@@ -47,4 +65,4 @@ angular.module "starter.result"
 
 	$scope.change = (date) ->
 		$scope.isOpen = false;
-		console.log date
+		getLotteryDay(date)
