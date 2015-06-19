@@ -7,8 +7,8 @@ noon-header
 					.title-ranking
 						img(src="img/picto-classement.png")
 						h2 CLASSEMENT GÉNÉRAL
-					table(ng-table="tableParams", show-filter="true")
-						tr(ng-repeat="line in $data")
+					table(ng-table="tableParamsMobile" show-filter="true")
+						tr(ng-repeat="line in $data track by $index")
 							td(data-title="'RANK'") {{ $index + 1 }}
 							td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
 							td(data-title="'RATIO'") {{ (line.goodAnswers / line.totalAnswers) }}
@@ -24,7 +24,7 @@ noon-header
 					img(src="img/picto-classement.png")
 					h2 CLASSEMENT GÉNÉRAL
 				table(ng-table="tableParams" show-filter="true")
-					tr(ng-repeat="line in $data")
+					tr(ng-repeat="line in $data track by $index")
 						td(data-title="'RANK'") {{ $index + 1 }}
 						td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
 						td(data-title="'RÉPONSE VALIDÉES'") {{ line.goodAnswers }}

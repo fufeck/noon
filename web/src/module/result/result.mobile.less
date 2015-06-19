@@ -5,6 +5,7 @@
 		width: 100%;
 		height: 100%;
 		background: #34495E;
+		padding-top: 50px;
 		.body-result {
 			position : relative;
 			top : 0;
@@ -23,7 +24,8 @@
 
 				.title-result {
 					padding: 0;
-					height : 30px;
+					padding-top: 20px;
+					height : 50px;
 					.text-center;
 					h2 {
 						display : inline;
@@ -36,12 +38,13 @@
 						height : 30px;
 						width : 30px;
 						margin-right : 10px !important;
-						margin-top : -10px !important;
+						margin-top : -7px !important;
 					}
 				}
 				.container-table {
 					position : relative;
 					padding-top : 10px;
+					height: 350px;
 					.result-tab {
 						position : relative;
 						height : 100%;
@@ -51,6 +54,9 @@
 							color: white;
 							margin-left: auto;
 							margin-right: auto;
+							border-bottom: 1px solid rgba(255,255,255,0.6);
+							border-left: 1px solid rgba(255,255,255,0.6);
+							border-right: 1px solid rgba(255,255,255,0.6);
 							th , td {
 								border-collapse: collapse;
 								height : 25px;
@@ -76,6 +82,58 @@
 								background-size : 400px 40px;
 								background-attachment:fixed;
 							}
+						}
+						.ng-table-pager {
+							right : 0;
+							a {
+								color : white;
+								border: 2px solid #34495E;
+								background-color : #495C6D;
+							}
+							.active a {
+								z-index : 0;
+								background-color : #838F9B;
+
+							}
+							li:first-child a {
+								background-color: white;
+								color : #34495E;
+							}
+							li:last-child a {
+								background-color: white;
+								color : #34495E;
+							}
+						}
+						.ng-table-filters {
+							position: absolute;
+							top : -40px;
+							left : 0;
+							background:none;
+							th {
+								position: absolute;
+								left: 0;
+								top : 0;
+							}
+							input {
+								left: 0;
+								height : 35px;
+								width : 250px;
+								background-color: transparent;
+								border : 0;
+								border-bottom : 1px solid rgba(255, 255, 255, 0.4);
+								color : white;
+								background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
+								padding-left: 30px;
+								box-shadow: none;
+							}
+						}
+						.pagination.ng-table-pagination {
+							position : absolute;
+							right : 0px !important;
+							bottom: 0px;
+						}
+						.ng-table-counts {
+							.hide;
 						}
 					}
 					.date-tab {

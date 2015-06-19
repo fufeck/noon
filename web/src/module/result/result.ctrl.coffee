@@ -22,10 +22,14 @@ angular.module "starter.result"
 			console.log error
 	
 	pushDatas = (datas) ->
-		$scope.datas = datas
-		for d, index in datas
-			$scope.datas[index].username = d.player.username
-		
+		$scope.datas = []
+		console.log datas
+		for d in datas
+			if d.player && d.player.username
+				tmp = d
+				tmp.username = d.player.username
+				$scope.datas.push tmp
+		console.log $scope.datas
 
 	loadLotteryRank = (lotteryDay) ->
 		if lotteryDay.length > 0
@@ -36,12 +40,26 @@ angular.module "starter.result"
 					createTable()
 				else
 					$scope.tableParams.reload()
+					$scope.tableParamsMobile.reload()
 			, (error) ->
 				console.log error
 
 	createTable = ->
 
 		$scope.tableParams = new ngTableParams({
+			page: 1
+			count: 10
+			filter: username: ''
+		},
+			total: $scope.datas.length
+			getData: ($defer, params) ->
+				orderedData = if params.filter() then $filter('filter')($scope.datas, params.filter()) else $scope.datas
+				$scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count())
+				params.total orderedData.length
+				$defer.resolve $scope.users
+				return
+		)
+		$scope.tableParamsMobile = new ngTableParams({
 			page: 1
 			count: 10
 			filter: username: ''

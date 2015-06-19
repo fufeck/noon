@@ -21,12 +21,12 @@ noon-header
 								custom-class="getDayClass(date, mode)")
 
 						.result-tab(ng-hide="isOpen")
-							table(ng-table="tableParams")
+							table(ng-table="tableParamsMobile")
 								tr(ng-repeat="line in $data track by $index")
 									td(data-title="'RANK'") {{ $index + 1 }}
-									td(data-title="'PSEUDO'") {{ line.speudo }}
-									td(data-title="'N°TICKET'") {{ line.ntiket }}
-									td(data-title="'SOMME'") {{ line.somme }}
+									td(data-title="'PSEUDO'") {{ line.username }}
+									td(data-title="'N°TICKET'") {{ line.tickets }}
+									td(data-title="'SOMME'") {{ line.earned }}
 		noon-footer
 
 	.view-result.hidden-mobile

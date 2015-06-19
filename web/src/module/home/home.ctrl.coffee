@@ -9,7 +9,7 @@ angular.module "starter.home"
 	SliderPicture.getFiles (pictures) ->
 		i = 0
 		for pict in pictures
-			$scope.slides.push('http://ns502537.ip-198-100-147.net/api/slider-pictures/download/' + pict.name)
+			$scope.slides.push('ec2-52-11-211-225.us-west-2.compute.amazonaws.com/api/slider-pictures/download/' + pict.name)
 			i++
 		console.log $scope.slides
 		console.log $scope.slides.length
