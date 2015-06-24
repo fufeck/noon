@@ -23,11 +23,13 @@ angular.module "starter.result"
 	
 	pushDatas = (datas) ->
 		$scope.datas = []
-		console.log datas
+		rank = 1
 		for d in datas
 			if d.player && d.player.username
 				tmp = d
 				tmp.username = d.player.username
+				tmp.rank = rank
+				rank += 1
 				$scope.datas.push tmp
 		console.log $scope.datas
 

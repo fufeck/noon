@@ -23,7 +23,7 @@ noon-header
 						.result-tab(ng-hide="isOpen")
 							table(ng-table="tableParamsMobile")
 								tr(ng-repeat="line in $data track by $index")
-									td(data-title="'RANK'") {{ $index + 1 }}
+									td(data-title="'RANK'") {{ line.rank }}
 									td(data-title="'PSEUDO'") {{ line.username }}
 									td(data-title="'N°TICKET'") {{ line.tickets }}
 									td(data-title="'SOMME'") {{ line.earned }}
@@ -40,7 +40,7 @@ noon-header
 				.results
 					table(ng-table="tableParams" show-filter="true")
 						tr(ng-repeat="line in $data track by $index")
-							td(data-title="'RANK'") {{ $index + 1 }}
+							td(data-title="'RANK'") {{ line.rank }}
 							td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
 							td(data-title="'N°TICKET'") {{ line.tickets }}
 							td(data-title="'SOMME €'") {{ line.earned }}

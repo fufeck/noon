@@ -9,7 +9,7 @@ noon-header
 						h2 CLASSEMENT GÉNÉRAL
 					table(ng-table="tableParamsMobile" show-filter="true")
 						tr(ng-repeat="line in $data track by $index")
-							td(data-title="'RANK'") {{ $index + 1 }}
+							td(data-title="'RANK'") {{ line.rank }}
 							td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
 							td(data-title="'RATIO'") {{ (line.goodAnswers / line.totalAnswers) }}
 							td(data-title="'SOMME €'") {{ line.earned }}
@@ -25,9 +25,9 @@ noon-header
 					h2 CLASSEMENT GÉNÉRAL
 				table(ng-table="tableParams" show-filter="true")
 					tr(ng-repeat="line in $data track by $index")
-						td(data-title="'RANK'") {{ $index + 1 }}
+						td(data-title="'RANK'") {{ line.rank }}
 						td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-						td(data-title="'RÉPONSE VALIDÉES'") {{ line.goodAnswers }}
+						td(data-title="'RÉPONSES VALIDÉES'") {{ line.goodAnswers }}
 						td(data-title="'RATIO'") {{ (line.goodAnswers / line.totalAnswers) }}
 						td(data-title="'SOMME €'") {{ line.earned }}
 		noon-footer
