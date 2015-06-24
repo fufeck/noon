@@ -1,42 +1,58 @@
 noon-header
 .noon-view
 	.view-advertiser.visible-mobile
-		.body-advertiser
-			.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
-				.body-advertiser-footer
-					.container-contact(ui-sref="contact")
-						p Contactez-nous
-						img(src="img/fleche-cta.png")
-					a.container-media(href="/img/MediaKitFinal.pdf" target="_blanck")
-						p Voir le media kit
-						img(src="img/fleche-cta.png")
-				.body-advertiser-title
-					h2 Grâce à l'application Noon, augmentez votre visibilité et votre notoriété
-				.container-perso
-					.picture-trio
-						img(src="img/picto-A1.png")
-					.title-trio Développez votre message
-					.desc-trio Grace au questions et réponses, personalisez et adaptez votre message publicitaire, celui ci sera mémorisé en intégralité par une audience captivée et intérésée. Différents procédés sont mis en place, permettant d'accroitre votre trafic tel que le CTA (Call To Action)
-				hr
-				.container-actio
-					.picture-trio
-						img(src="img/picto-A2.png")
-					.title-trio Actionnez les bons leviers
-					.desc-trio Noon est la première application mobile qui "gamifie" la publicité, la rendant ainsi ludique et intéractive. Finis la publicité perçue comme intrusive, et laissez vous tenter par cette nouvelle forme de communication.
-				hr
-				.container-cible
-					.picture-trio
-						img(src="img/picto-A3.png")
-					.title-trio Analysez votre campagne
-					.desc-trio A chaque fin de campagne publicitaire, une rapport détaillé vous permettra de connaître le profile de votre audience, l'impact de votre message mais aussi d'optimiser votre stratégie et vos efforts de communication.
-				.body-advertiser-footer
-					.container-contact(ui-sref="contact")
-						p Contactez-nous
-						img(src="img/fleche-cta.png")
-					a.container-media(href="/img/MediaKitFinal.pdf" target="_blanck")
-						p Voir le media kit
-						img(src="img/fleche-cta.png")
-				noon-footer
+		.content-mobile
+			.body-advertiser
+				.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+					.body-advertiser-title
+						h2 Grâce à l'application Noon, augmentez votre visibilité et votre notoriété
+					.body-advertiser-footer
+						.container-contact(ui-sref="contact")
+							p Contactez-nous
+							img(src="img/fleche-cta.png")
+						a.container-media(href="/img/MediaKitFinal.pdf" target="_blanck")
+							p Voir le media kit
+							img(src="img/fleche-cta.png")
+					hr
+					.container-cible
+						.picture-trio
+							img(src="img/picto1annonceur.png")
+						.title-trio « Gamifiez » vos campagnes
+						.desc-trio Nos espaces publicitaires ont été entièrement pensé afin de « gamifier » votre annonce. Il en résulte un taux de mémorisation bien plus important que sur n’importe quel autre support publicitaire. De plus, la gamification de votre campagne, grâce au Quiz, permet de valoriser votre image, d’augmenter votre notoriété et d’optimiser votre message auprès de votre audience.
+					hr
+					.container-perso
+						.picture-trio
+							img(src="img/text.png")
+						.title-trio Développez <br/>votre message
+						.desc-trio La rédaction de vos propres <br>questions et réponses vous <br>permet d’axer votre message <br>publicitaire sur les aspects de <br>votre choix. Grace à la mécanique <br>du jeu, l’audience se retrouve <br>alors intéressée et captivée par <br>votre message. Fini la publicité <br>perçue comme intrusive.
+					hr
+					.container-actio
+						.picture-trio
+							img(src="img/eye.png")
+						.title-trio Augmentez <br/>votre visibilité 
+						.desc-trio NOON vous donne la possibilité <br>d’atteindre une audience <br>nationale et hétérogène de plus<br> de 30 millions de mobinautes.<br> Nos espaces publicitaires sont<br> directement accessibles dans la<br> poche de vos potentiels clients<br> qui iront intentionnellement voir<br> votre annonce.
+					hr
+					.container-cible
+						.picture-trio
+							img(src="img/anal.png")
+						.title-trio Optimisez <br/>votre communication 
+						.desc-trio Un rapport analytique détaillé<br> vous sera remis<br> à chaque fin de campagne.<br> Celui-ci a pour but de vous aider<br> à mieux connaître le profil de<br> votre cible et de mesurer<br> l'impact de votre message afin<br> d’optimiser votre stratégie de<br> communication.
+					hr
+					.container-cible
+						.picture-trio
+							img(src="img/plus.png")
+						.title-trio Créez plus <br/>de trafic
+						.desc-trio Nous avons mis en place des<br> boutons « Call To Action » qui<br> permettent d’accroitre le trafic<br> sur la page de votre choix.<br> En redirigeant votre audience<br> vers votre lien, ce bouton fait<br> office de véritable porte<br> d’entrée digitale dans votre<br> business.
+					hr
+
+					.body-advertiser-footer
+						.container-contact(ui-sref="contact")
+							p Contactez-nous
+							img(src="img/fleche-cta.png")
+						a.container-media(href="/img/MediaKitFinal.pdf" target="_blanck")
+							p Voir le media kit
+							img(src="img/fleche-cta.png")
+					noon-footer
 
 	.view-advertiser.hidden-mobile
 		.body-advertiser
