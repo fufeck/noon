@@ -11,7 +11,7 @@ noon-header
 						i.glyphicon.glyphicon-calendar
 
 					.container-table
-						.date-tab(ng-hide="!isOpen")
+						.date-tab(ng-show="isOpen")
 							datepicker(ng-model="dt"
 								ng-change="change(dt)"
 								min-mode="day"
@@ -20,11 +20,11 @@ noon-header
 								show-weeks="false"
 								custom-class="getDayClass(date, mode)")
 
-						.result-tab(ng-hide="isOpen")
-							table(ng-table="tableParamsMobile")
+						.result-tab(ng-show="!isOpen")
+							table(ng-table="tableResultMobile" show-filter="true")
 								tr(ng-repeat="line in $data track by $index")
 									td(data-title="'RANK'") {{ line.rank }}
-									td(data-title="'PSEUDO'") {{ line.username }}
+									td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
 									td(data-title="'N°TICKET'") {{ line.tickets }}
 									td(data-title="'SOMME'") {{ line.earned }}
 		noon-footer
@@ -38,11 +38,11 @@ noon-header
 					img(src="img/picto-resultat.png")
 					h2 RÉSULTATS DU JOUR
 				.results
-					table(ng-table="tableParams" show-filter="true")
+					table(ng-table="tableResult" show-filter="true")
 						tr(ng-repeat="line in $data track by $index")
 							td(data-title="'RANK'") {{ line.rank }}
 							td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-							td(data-title="'N°TICKET'") {{ line.tickets }}
+							td(data-title="'N°TICKET'") {{ line.id }}
 							td(data-title="'SOMME €'") {{ line.earned }}
 
 				datepicker(ng-model="dt" ng-change="change(dt)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")

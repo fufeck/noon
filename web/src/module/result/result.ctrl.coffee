@@ -48,7 +48,7 @@ angular.module "starter.result"
 
 	createTable = ->
 
-		$scope.tableParams = new ngTableParams({
+		$scope.tableResult = new ngTableParams({
 			page: 1
 			count: 10
 			filter: username: ''
@@ -61,7 +61,7 @@ angular.module "starter.result"
 				$defer.resolve $scope.users
 				return
 		)
-		$scope.tableParamsMobile = new ngTableParams({
+		$scope.tableResultMobile = new ngTableParams({
 			page: 1
 			count: 10
 			filter: username: ''
