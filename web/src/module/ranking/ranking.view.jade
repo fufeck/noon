@@ -2,18 +2,19 @@ noon-header
 .noon-view
 	.view-ranking.visible-mobile
 		ion-view
-			.body-ranking
-				.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
-					.results-ranking
-						.title-ranking
-							img(src="img/picto-classement.png")
-							h2 CLASSEMENT GÉNÉRAL
-						table(ng-table="tableParamsMobile" show-filter="true")
-							tr(ng-repeat="line in $data track by $index")
-								td(data-title="'RANK'") {{ line.rank }}
-								td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-								td(data-title="'RATIO'") {{ (line.goodAnswers / line.totalAnswers) }}
-								td(data-title="'SOMME €'") {{ line.earned }}
+			ion-content
+				.body-ranking
+					.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+						.results-ranking
+							.title-ranking
+								img(src="img/picto-classement.png")
+								h2 CLASSEMENT GÉNÉRAL
+							table(ng-table="tableParamsMobile" show-filter="true")
+								tr(ng-repeat="line in $data track by $index")
+									td(data-title="'RANK'") {{ line.rank }}
+									td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
+									td(data-title="'RATIO'") {{ (line.goodAnswers / line.totalAnswers) }}
+									td(data-title="'SOMME €'") {{ line.earned }}
 			noon-footer
 
 	.view-ranking.hidden-mobile
