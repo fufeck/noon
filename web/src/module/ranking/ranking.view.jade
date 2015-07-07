@@ -5,6 +5,9 @@ noon-header
 			ion-content
 				.body-ranking
 					.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+						.container-comming-soon
+							.comming-soon.animated.swing
+								img(src="img/picto-soon.png")
 						.results-ranking
 							.title-ranking
 								img(src="img/picto-classement.png")
@@ -20,8 +23,6 @@ noon-header
 
 	.view-ranking.hidden-mobile
 		.body-ranking
-			.comming-soon.animated.swing
-				img(src="img/picto-soon.png")
 			.results-ranking
 				.title-ranking
 					img(src="img/picto-classement.png")
@@ -33,4 +34,6 @@ noon-header
 						td(data-title="'RÉPONSES VALIDÉES'") {{ line.goodAnswers }}
 						td(data-title="'RATIO'") {{ (line.goodAnswers / line.totalAnswers) }}
 						td(data-title="'SOMME €'") {{ line.earned }}
+			.comming-soon.animated.swing
+				img(src="img/picto-soon.png")
 		noon-footer
