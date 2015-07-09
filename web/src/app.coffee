@@ -25,9 +25,11 @@ angular.module "starter", [
 
 	$urlRouterProvider.otherwise '/'
 
+	Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG")
 	return
 
 .run ($rootScope) ->
+
 
 	$rootScope.positionPhone = false
 	$rootScope.showNav = undefined
@@ -35,7 +37,7 @@ angular.module "starter", [
 		$rootScope.positionPhone = !$rootScope.positionPhone
 
 	$rootScope.videoIsOpen = true
-	
+
 	$rootScope.subscribe = (mail) ->
 		$rootScope.toggleVideo()
 		Mail = Parse.Object.extend('Mail')
