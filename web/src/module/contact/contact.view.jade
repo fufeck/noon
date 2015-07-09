@@ -7,9 +7,9 @@ noon-header
 					.title CONTACTEZ-NOUS
 					img(src="img/picto-mail.png")
 					.email contact@noongame.fr
-				.us-contact
+				.us-contact(ng-if="notif == false")
 					img(src="img/picto-contact.png")
-					.title On vous contacte
+					.title On vous contacte mobile
 					input(placeholder="Nom et prénom*" ng-model="mail.name")
 					input(placeholder="Adresse email*" ng-model="mail.mail")
 					input(placeholder="Téléphone" ng-model="mail.phone")
@@ -17,6 +17,8 @@ noon-header
 					.send(ng-click="sendMail()")
 						p Envoyer
 						.fa.fa-long-arrow-right
+				.us-contact(ng-if="notif == true")
+					span Vos informations ont bien été envoyés. Notre équipe reviendra vers vous dès que possible. Merci
 			noon-footer.show-on-keybord
 		noon-footer.hide-on-keybord
 	.view-contact.hidden-mobile
@@ -25,9 +27,9 @@ noon-header
 				.title CONTACTEZ-NOUS
 				img(src="img/picto-mail.png")
 				.email contact@noongame.fr
-			.us-contact
+			.us-contact(ng-if="notif == false")
 				img(src="img/picto-contact.png")
-				.title On vous contacte
+				.title On vous contacte site
 				input(placeholder="Nom et prénom*" ng-model="mail.name")
 				input(placeholder="Adresse email*" ng-model="mail.mail")
 				input(placeholder="Téléphone*" ng-model="mail.phone")
@@ -35,4 +37,6 @@ noon-header
 				.send(ng-click="sendMail()")
 					p Envoyer
 					.fa.fa-long-arrow-right
+			.us-contact(ng-if="notif == true")
+					span Vos informations ont bien été envoyés. Notre équipe reviendra vers vous dès que possible. Merci
 	noon-footer.hidden-mobile
