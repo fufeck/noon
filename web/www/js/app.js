@@ -66,6 +66,18 @@ angular.module('starter').directive('noonHeader', function() {
   };
 }).controller('noonHeaderCtrl', function($scope) {});
 
+angular.module("starter.advertiser", []).config(function($stateProvider) {
+  $stateProvider.state('advertiser', {
+    url: '/advertiser',
+    templateUrl: 'advertiser.view.html',
+    controller: 'advertiserCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.advertiser").controller("advertiserCtrl", function($scope, $rootScope) {
+  $rootScope.showNav = void 0;
+});
+
 angular.module("starter.cgu", []).config(function($stateProvider) {
   $stateProvider.state('cgu', {
     url: '/cgu',
@@ -78,18 +90,6 @@ angular.module("starter.cgu").controller("cguCtrl", function($scope, EndUserLice
   $rootScope.showNav = void 0;
   $scope.questions = EndUserLicenseAgreement.find();
   return $scope.status = false;
-});
-
-angular.module("starter.advertiser", []).config(function($stateProvider) {
-  $stateProvider.state('advertiser', {
-    url: '/advertiser',
-    templateUrl: 'advertiser.view.html',
-    controller: 'advertiserCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.advertiser").controller("advertiserCtrl", function($scope, $rootScope) {
-  $rootScope.showNav = void 0;
 });
 
 angular.module("starter.contact", []).config(function($stateProvider) {
