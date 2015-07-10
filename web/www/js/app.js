@@ -1,5 +1,6 @@
 angular.module("starter", ["ui.router", "ui.bootstrap", "ngCordova", "ngAnimate", "ngStorage", "ngResource", "ngTable", "duScroll", "noon.service", "starter.translate", "starter.home", "starter.result", "starter.ranking", "starter.advertiser", "starter.contact", "starter.faq", "starter.cgu", "starter.mention"]).config(function($urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
+  Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG");
 }).run(function($rootScope) {
   $rootScope.positionPhone = false;
   $rootScope.showNav = void 0;
@@ -13,7 +14,7 @@ angular.module("starter", ["ui.router", "ui.bootstrap", "ngCordova", "ngAnimate"
     Mail = Parse.Object.extend('Mail');
     data = new Mail();
     return data.save({
-      mail: mail
+      mail: $('#' + mail).val()
     }).then(function(obj) {
       return console.log('obj', obj);
     });
@@ -100,14 +101,22 @@ angular.module("starter.contact", []).config(function($stateProvider) {
 }).run(function() {});
 
 angular.module("starter.contact").controller("contactCtrl", function($scope, $rootScope) {
-  $rootScope.showNav = void 0;
+  $scope.notif = false;
   $scope.mail = {
     name: "",
     mail: "",
     phone: "",
     entreprise: ""
   };
-  return $scope.sendMail = function() {};
+  return $scope.sendMail = function() {
+    var Contact, data;
+    $scope.notif = true;
+    Contact = Parse.Object.extend('Contact');
+    data = new Contact();
+    return data.save($scope.mail).then(function(obj) {
+      return console.log('obj', obj);
+    });
+  };
 });
 
 angular.module("starter.faq", []).config(function($stateProvider) {
@@ -132,68 +141,14 @@ angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyA
   };
 });
 
-angular.module("starter.ranking", []).config(function($stateProvider) {
-  $stateProvider.state('ranking', {
-    url: '/ranking',
-    templateUrl: 'ranking.view.html',
-    controller: 'rankingCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
-  var createTable;
-  $rootScope.showNav = void 0;
-  Player.find({}, function(success) {
-    var i, len, line, players, rank;
-    players = [];
-    rank = 1;
-    for (i = 0, len = success.length; i < len; i++) {
-      line = success[i];
-      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
-        line.rank = rank;
-        rank += 1;
-        players.push(line);
-      }
-    }
-    return createTable(players);
-  }, function(error) {
-    return console.log(error);
-  });
-  return createTable = function(data) {
-    console.log("data");
-    console.log(data);
-    $scope.tableParams = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
-    return $scope.tableParamsMobile = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
+angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
+  console.log('tutu');
+  $scope.mail = 'tutu';
+  $scope.user = {
+    mail: 'eree'
+  };
+  return $scope.subscribe = function(user) {
+    return console.log('mail : ', user);
   };
 });
 
@@ -261,6 +216,71 @@ angular.module("starter.mention", []).config(function($stateProvider) {
 
 angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
   $rootScope.showNav = void 0;
+});
+
+angular.module("starter.ranking", []).config(function($stateProvider) {
+  $stateProvider.state('ranking', {
+    url: '/ranking',
+    templateUrl: 'ranking.view.html',
+    controller: 'rankingCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
+  var createTable;
+  $rootScope.showNav = void 0;
+  Player.find({}, function(success) {
+    var i, len, line, players, rank;
+    players = [];
+    rank = 1;
+    for (i = 0, len = success.length; i < len; i++) {
+      line = success[i];
+      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
+        line.rank = rank;
+        rank += 1;
+        players.push(line);
+      }
+    }
+    return createTable(players);
+  }, function(error) {
+    return console.log(error);
+  });
+  return createTable = function(data) {
+    console.log("data");
+    console.log(data);
+    $scope.tableParams = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        username: ''
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        var orderedData;
+        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+        params.total(orderedData.length);
+        $defer.resolve($scope.users);
+      }
+    });
+    return $scope.tableParamsMobile = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        username: ''
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        var orderedData;
+        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+        params.total(orderedData.length);
+        $defer.resolve($scope.users);
+      }
+    });
+  };
 });
 
 angular.module("starter.result", []).config(function($stateProvider) {

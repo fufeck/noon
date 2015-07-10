@@ -43,7 +43,7 @@ angular.module "starter", [
 		Mail = Parse.Object.extend('Mail')
 		data = new Mail()
 		return data.save
-			mail: mail
+			mail: $('#' + mail).val()
 		.then (obj) ->
 			return console.log('obj', obj)
 

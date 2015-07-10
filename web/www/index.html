@@ -40,12 +40,13 @@
     <script src="js/templates.js"></script>
     <script src="http://code.angularjs.org/1.0.8/i18n/angular-locale_fr-fr.js"></script>
     <script src="http://www.parsecdn.com/js/parse-1.4.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   </head>
   <body ng-app="starter" id="fb-root">
     <div ng-click="$root.toggleVideo()" ng-if="$root.videoIsOpen" class="close-video"><i class="fa fa-close"></i></div>
     <div ng-if="$root.videoIsOpen" class="backdrop hidden-mobile">
       <div class="video">
-        <div id="typed"></div>
+        <div id="typed"><span class="light">DÉCOUVREZ </span> NOON</div>
         <h1>DÈS AUJOURD'HUI</h1>
         <iframe width="100%" height="70%" src="https://www.youtube.com/embed/EucXzpkaAdk?rel=0" frameborder="0" allowfullscreen></iframe>
         <iframe width="80px" height="40px" src="sharefb.html" frameborder="0"></iframe>
@@ -65,13 +66,13 @@
           <h4>pour votre soutien</h4>
         </div>
         <div class="get-user">
-          <input type="email" ng-model="email" placeholder="exemple@exemple.com">
+          <input type="email" id="email1" placeholder="exemple@exemple.com">
         </div>
         <div class="warning">
           <p>Saisissez votre adresse email ici</p>
         </div>
         <div class="click-user">
-          <button ng-click="$root.subscribe(email)">S'INSCRIRE</button>
+          <button ng-click="$root.subscribe('email1')">S'INSCRIRE</button>
         </div>
         <div class="warning">
           <p>Attention nombre d'inscriptions limité</p>
@@ -87,31 +88,13 @@
         </div>
         <iframe width="100%" height="50%" src="https://www.youtube.com/embed/EucXzpkaAdk?rel=0" frameborder="0" allowfullscreen></iframe>
         <div class="get-user">
-          <input type="email" ng-model="email" placeholder="exemple@exemple.com">
+          <input type="email" id="email2" placeholder="exemple@exemple.com">
         </div>
         <div class="warning">
           <p>Saisissez votre adresse email ici</p>
         </div>
         <div class="click-user">
-          <button ng-click="$root.subscribe(email)">S'INSCRIRE</button>
-        </div>
-        <div class="warning">
-          <p>Attention nombre d'inscriptions limité</p>
-        </div>
-      </div>
-      <div class="description"><br>
-        <div class="subtitle">
-          <h4>Et recevez des <span class="strong">NOONCODES</span> privilèges</h4>
-          <h4>pour votre soutien</h4>
-        </div>
-        <div class="get-user">
-          <input type="email" ng-model="email" placeholder="exemple@exemple.com">
-        </div>
-        <div class="warning">
-          <p>Saisissez votre adresse email ici</p>
-        </div>
-        <div class="click-user">
-          <button ng-click="$root.subscribe(email)">S'INSCRIRE</button>
+          <button ng-click="$root.subscribe('email2')">S'INSCRIRE</button>
         </div>
         <div class="warning">
           <p>Attention nombre d'inscriptions limité</p>
@@ -120,14 +103,6 @@
     </div>
     <div ui-view autoscroll="true" class="view"></div>
   </body>
-  <script>
-    $(function(){
-        $("#typed").typed({
-            strings: ["<span class=\"light\">DÉCOUVREZ</span> NOON" , "<span class=\"light\">PARTAGEZ</span> NOON"],
-            typeSpeed: 10
-        });
-    });
-  </script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
