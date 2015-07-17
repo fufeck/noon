@@ -92,6 +92,28 @@ angular.module("starter.cgu").controller("cguCtrl", function($scope, EndUserLice
   return $scope.status = false;
 });
 
+angular.module("starter.faq", []).config(function($stateProvider) {
+  $stateProvider.state('faq', {
+    url: '/faq',
+    templateUrl: 'faq.view.html',
+    controller: 'faqCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
+  $rootScope.showNav = void 0;
+  $scope.questions = FrequentlyAskedQuestion.find();
+  return $scope.gotoAnchor = function(x, open) {
+    var newHash, quick;
+    newHash = 'anchor' + x;
+    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
+      return $timeout(quick = function() {
+        return $anchorScroll();
+      }, 300);
+    }
+  };
+});
+
 angular.module("starter.contact", []).config(function($stateProvider) {
   $stateProvider.state('contact', {
     url: '/contact',
@@ -119,26 +141,16 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
   };
 });
 
-angular.module("starter.faq", []).config(function($stateProvider) {
-  $stateProvider.state('faq', {
-    url: '/faq',
-    templateUrl: 'faq.view.html',
-    controller: 'faqCtrl'
+angular.module("starter.mention", []).config(function($stateProvider) {
+  $stateProvider.state('mention', {
+    url: '/mention',
+    templateUrl: 'mention.view.html',
+    controller: 'mentionCtrl'
   });
 }).run(function() {});
 
-angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
+angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
   $rootScope.showNav = void 0;
-  $scope.questions = FrequentlyAskedQuestion.find();
-  return $scope.gotoAnchor = function(x, open) {
-    var newHash, quick;
-    newHash = 'anchor' + x;
-    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
-      return $timeout(quick = function() {
-        return $anchorScroll();
-      }, 300);
-    }
-  };
 });
 
 angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
@@ -204,18 +216,6 @@ angular.module("starter.home").controller("homeCtrl", function($scope, $http, Sl
   $scope.isPhoneActive = function() {
     return $scope.activePhone;
   };
-});
-
-angular.module("starter.mention", []).config(function($stateProvider) {
-  $stateProvider.state('mention', {
-    url: '/mention',
-    templateUrl: 'mention.view.html',
-    controller: 'mentionCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
-  $rootScope.showNav = void 0;
 });
 
 angular.module("starter.ranking", []).config(function($stateProvider) {
