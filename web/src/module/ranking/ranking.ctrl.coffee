@@ -5,12 +5,11 @@ angular.module "starter.ranking"
 
 	Player.find {}
 	, (success) ->
+		console.log "PLAYER : ", success
 		players = []
 		rank = 1
 		for line in success
 			if line.username != undefined && line.goodAnswers != undefined && line.totalAnswers != undefined
-				line.rank = rank
-				rank += 1
 				players.push line
 		createTable(players)
 	, (error) ->
