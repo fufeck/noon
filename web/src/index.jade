@@ -109,7 +109,7 @@ html
                 p(ng-if="!$root.error") Saisissez votre adresse email ici
                 p.red(ng-if="$root.error") Adresse email incorrect
             .click-user
-                submit(ng-click="$root.subscribe('email1')") S'INSCRIRE
+                button(ng-click="$root.subscribe('email1')") S'INSCRIRE
             .warning
                 p Attention nombre d'inscriptions limité
 
@@ -139,7 +139,7 @@ html
                 p(ng-if="!$root.error") Saisissez votre adresse email ici
                 p.red(ng-if="$root.error") Adresse email incorrect
             .click-user
-                submit(ng-click="$root.subscribe('email2')") S'INSCRIRE
+                button(ng-click="$root.subscribe('email2')") S'INSCRIRE
             .warning
                 p Attention nombre d'inscriptions limité
 
