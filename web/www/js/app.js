@@ -1,4 +1,4 @@
-angular.module("starter", ["ui.router", "ui.bootstrap", "ngCordova", "ngAnimate", "ngStorage", "ngResource", "ngTable", "duScroll", "noon.service", "starter.translate", "starter.home", "starter.result", "starter.ranking", "starter.advertiser", "starter.contact", "starter.faq", "starter.cgu", "starter.mention"]).config(function($urlRouterProvider) {
+angular.module("starter", ["ui.router", "ui.bootstrap", "ngAnimate", "ngStorage", "ngResource", "ngTable", "duScroll", "noon.service", "starter.translate", "starter.home", "starter.result", "starter.ranking", "starter.advertiser", "starter.contact", "starter.faq", "starter.cgu", "starter.mention"]).config(function($urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
   Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG");
 }).run(function($rootScope) {
@@ -9,15 +9,27 @@ angular.module("starter", ["ui.router", "ui.bootstrap", "ngCordova", "ngAnimate"
   };
   $rootScope.videoIsOpen = true;
   $rootScope.subscribe = function(mail) {
-    var Mail, data;
-    $rootScope.toggleVideo();
-    Mail = Parse.Object.extend('Mail');
-    data = new Mail();
-    return data.save({
-      mail: $('#' + mail).val()
-    }).then(function(obj) {
-      return console.log('obj', obj);
-    });
+    var Mail, data, email, emailPattern;
+    email = $('#' + mail).val();
+    emailPattern = /^([\w.-]+)@([\w.-]+)\.([a-zA-Z.]{2,6})$/i;
+    if (email.match(emailPattern)) {
+      $rootScope.toggleVideo();
+      window._fbq.push([
+        'track', '6027837446733', {
+          'value': '0.00',
+          'currency': 'EUR'
+        }
+      ]);
+      Mail = Parse.Object.extend('Mail');
+      data = new Mail();
+      return data.save({
+        mail: email
+      }).then(function(obj) {
+        return console.log('obj', obj);
+      });
+    } else {
+      return $rootScope.error = true;
+    }
   };
   $rootScope.toggleVideo = function() {
     return $rootScope.videoIsOpen = false;
@@ -141,18 +153,6 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
   };
 });
 
-angular.module("starter.mention", []).config(function($stateProvider) {
-  $stateProvider.state('mention', {
-    url: '/mention',
-    templateUrl: 'mention.view.html',
-    controller: 'mentionCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
-  $rootScope.showNav = void 0;
-});
-
 angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
   console.log('tutu');
   $scope.mail = 'tutu';
@@ -218,6 +218,18 @@ angular.module("starter.home").controller("homeCtrl", function($scope, $http, Sl
   };
 });
 
+angular.module("starter.mention", []).config(function($stateProvider) {
+  $stateProvider.state('mention', {
+    url: '/mention',
+    templateUrl: 'mention.view.html',
+    controller: 'mentionCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
+  $rootScope.showNav = void 0;
+});
+
 angular.module("starter.ranking", []).config(function($stateProvider) {
   $stateProvider.state('ranking', {
     url: '/ranking',
@@ -231,13 +243,12 @@ angular.module("starter.ranking").controller("rankingCtrl", function($scope, $fi
   $rootScope.showNav = void 0;
   Player.find({}, function(success) {
     var i, len, line, players, rank;
+    console.log("PLAYER : ", success);
     players = [];
     rank = 1;
     for (i = 0, len = success.length; i < len; i++) {
       line = success[i];
       if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
-        line.rank = rank;
-        rank += 1;
         players.push(line);
       }
     }

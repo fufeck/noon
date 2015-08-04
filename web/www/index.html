@@ -41,6 +41,22 @@
     <script src="http://code.angularjs.org/1.0.8/i18n/angular-locale_fr-fr.js"></script>
     <script src="http://www.parsecdn.com/js/parse-1.4.2.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+      (function() {
+      var _fbq = window._fbq || (window._fbq = []);
+      if (!_fbq.loaded) {
+      var fbds = document.createElement('script');
+      fbds.async = true;
+      fbds.src = '//connect.facebook.net/en_US/fbds.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(fbds, s);
+      _fbq.loaded = true;
+      }
+      })();
+      window._fbq = window._fbq || [];
+      
+      
+    </script>
   </head>
   <body ng-app="starter" id="fb-root">
     <div ng-click="$root.toggleVideo()" ng-if="$root.videoIsOpen" class="close-video"><i class="fa fa-close"></i></div>
@@ -69,10 +85,11 @@
           <input type="email" id="email1" placeholder="exemple@exemple.com">
         </div>
         <div class="warning">
-          <p>Saisissez votre adresse email ici</p>
+          <p ng-if="!$root.error">Saisissez votre adresse email ici</p>
+          <p ng-if="$root.error" class="red">Adresse email incorrect</p>
         </div>
         <div class="click-user">
-          <button ng-click="$root.subscribe('email1')">S'INSCRIRE</button>
+          <submit ng-click="$root.subscribe('email1')">S'INSCRIRE</submit>
         </div>
         <div class="warning">
           <p>Attention nombre d'inscriptions limité</p>
@@ -91,10 +108,11 @@
           <input type="email" id="email2" placeholder="exemple@exemple.com">
         </div>
         <div class="warning">
-          <p>Saisissez votre adresse email ici</p>
+          <p ng-if="!$root.error">Saisissez votre adresse email ici</p>
+          <p ng-if="$root.error" class="red">Adresse email incorrect</p>
         </div>
         <div class="click-user">
-          <button ng-click="$root.subscribe('email2')">S'INSCRIRE</button>
+          <submit ng-click="$root.subscribe('email2')">S'INSCRIRE</submit>
         </div>
         <div class="warning">
           <p>Attention nombre d'inscriptions limité</p>

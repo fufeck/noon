@@ -1,7 +1,6 @@
 angular.module "starter", [
 	"ui.router"
 	"ui.bootstrap"
-	"ngCordova"
 	"ngAnimate"
 	"ngStorage"
 	"ngResource"
@@ -39,13 +38,27 @@ angular.module "starter", [
 	$rootScope.videoIsOpen = true
 
 	$rootScope.subscribe = (mail) ->
-		$rootScope.toggleVideo()
-		Mail = Parse.Object.extend('Mail')
-		data = new Mail()
-		return data.save
-			mail: $('#' + mail).val()
-		.then (obj) ->
-			return console.log('obj', obj)
+		email = $('#' + mail).val()
+		emailPattern = /// ^ #begin of line
+			([\w.-]+)         #one or more letters, numbers, _ . or -
+			@                 #followed by an @ sign
+			([\w.-]+)         #then one or more letters, numbers, _ . or -
+			\.                #followed by a period
+			([a-zA-Z.]{2,6})  #followed by 2 to 6 letters or periods
+			$ ///i            #end of line and ignore case
+
+		if email.match emailPattern
+			$rootScope.toggleVideo()
+			window._fbq.push(['track', '6027837446733', {'value':'0.00','currency':'EUR'}])
+			Mail = Parse.Object.extend('Mail')
+			data = new Mail()
+
+			return data.save
+				mail: email
+			.then (obj) ->
+				return console.log('obj', obj)
+		else
+			$rootScope.error = true
 
 	$rootScope.toggleVideo = ->
 		$rootScope.videoIsOpen = false

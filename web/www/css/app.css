@@ -15760,6 +15760,9 @@ body {
     opacity: 1;
   }
 }
+.red {
+  color: red;
+}
 #typed {
   display: inline-block;
   font-size: 36px;
