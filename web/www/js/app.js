@@ -104,6 +104,28 @@ angular.module("starter.cgu").controller("cguCtrl", function($scope, EndUserLice
   return $scope.status = false;
 });
 
+angular.module("starter.faq", []).config(function($stateProvider) {
+  $stateProvider.state('faq', {
+    url: '/faq',
+    templateUrl: 'faq.view.html',
+    controller: 'faqCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
+  $rootScope.showNav = void 0;
+  $scope.questions = FrequentlyAskedQuestion.find();
+  return $scope.gotoAnchor = function(x, open) {
+    var newHash, quick;
+    newHash = 'anchor' + x;
+    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
+      return $timeout(quick = function() {
+        return $anchorScroll();
+      }, 300);
+    }
+  };
+});
+
 angular.module("starter.contact", []).config(function($stateProvider) {
   $stateProvider.state('contact', {
     url: '/contact',
@@ -128,93 +150,6 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
     return data.save($scope.mail).then(function(obj) {
       return console.log('obj', obj);
     });
-  };
-});
-
-angular.module("starter.faq", []).config(function($stateProvider) {
-  $stateProvider.state('faq', {
-    url: '/faq',
-    templateUrl: 'faq.view.html',
-    controller: 'faqCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
-  $rootScope.showNav = void 0;
-  $scope.questions = FrequentlyAskedQuestion.find();
-  return $scope.gotoAnchor = function(x, open) {
-    var newHash, quick;
-    newHash = 'anchor' + x;
-    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
-      return $timeout(quick = function() {
-        return $anchorScroll();
-      }, 300);
-    }
-  };
-});
-
-angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
-  console.log('tutu');
-  $scope.mail = 'tutu';
-  $scope.user = {
-    mail: 'eree'
-  };
-  return $scope.subscribe = function(user) {
-    return console.log('mail : ', user);
-  };
-});
-
-angular.module("starter.home", []).config(function($stateProvider) {
-  $stateProvider.state('home', {
-    url: '/',
-    templateUrl: 'home.view.html',
-    controller: 'homeCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.home").controller("homeCtrl", function($scope, $http, SliderPicture, $timeout, $rootScope) {
-  var lauchSlide;
-  $rootScope.showNav = void 0;
-  $scope.slides = [];
-  $scope.currentIndex = 0;
-  $scope.activePhone = false;
-  SliderPicture.getFiles(function(pictures) {
-    var i, j, len, pict;
-    i = 0;
-    for (j = 0, len = pictures.length; j < len; j++) {
-      pict = pictures[j];
-      $scope.slides.push('http://52.11.211.225/api/slider-pictures/download/' + pict.name);
-      i++;
-    }
-    console.log($scope.slides);
-    return lauchSlide();
-  });
-  lauchSlide = function() {
-    var startslide;
-    return $timeout(startslide = function() {
-      $scope.currentIndex++;
-      if ($scope.currentIndex >= $scope.slides.length) {
-        $scope.currentIndex = 0;
-      }
-      return lauchSlide();
-    }, 5000);
-  };
-  $scope.isCurrentSlideIndex = function(index) {
-    return $scope.currentIndex === index;
-  };
-  $scope.setCurrentSlideIndex = function(index) {
-    return $scope.currentIndex = index;
-  };
-  $scope.setPhoneActive = function() {
-    console.log($scope.activePhone);
-    if ($scope.activePhone === true) {
-      return $scope.activePhone = false;
-    } else {
-      return $scope.activePhone = true;
-    }
-  };
-  $scope.isPhoneActive = function() {
-    return $scope.activePhone;
   };
 });
 
@@ -291,6 +226,71 @@ angular.module("starter.ranking").controller("rankingCtrl", function($scope, $fi
         $defer.resolve($scope.users);
       }
     });
+  };
+});
+
+angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
+  console.log('tutu');
+  $scope.mail = 'tutu';
+  $scope.user = {
+    mail: 'eree'
+  };
+  return $scope.subscribe = function(user) {
+    return console.log('mail : ', user);
+  };
+});
+
+angular.module("starter.home", []).config(function($stateProvider) {
+  $stateProvider.state('home', {
+    url: '/',
+    templateUrl: 'home.view.html',
+    controller: 'homeCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.home").controller("homeCtrl", function($scope, $http, SliderPicture, $timeout, $rootScope) {
+  var lauchSlide;
+  $rootScope.showNav = void 0;
+  $scope.slides = [];
+  $scope.currentIndex = 0;
+  $scope.activePhone = false;
+  SliderPicture.getFiles(function(pictures) {
+    var i, j, len, pict;
+    i = 0;
+    for (j = 0, len = pictures.length; j < len; j++) {
+      pict = pictures[j];
+      $scope.slides.push('http://52.11.211.225/api/slider-pictures/download/' + pict.name);
+      i++;
+    }
+    console.log($scope.slides);
+    return lauchSlide();
+  });
+  lauchSlide = function() {
+    var startslide;
+    return $timeout(startslide = function() {
+      $scope.currentIndex++;
+      if ($scope.currentIndex >= $scope.slides.length) {
+        $scope.currentIndex = 0;
+      }
+      return lauchSlide();
+    }, 5000);
+  };
+  $scope.isCurrentSlideIndex = function(index) {
+    return $scope.currentIndex === index;
+  };
+  $scope.setCurrentSlideIndex = function(index) {
+    return $scope.currentIndex = index;
+  };
+  $scope.setPhoneActive = function() {
+    console.log($scope.activePhone);
+    if ($scope.activePhone === true) {
+      return $scope.activePhone = false;
+    } else {
+      return $scope.activePhone = true;
+    }
+  };
+  $scope.isPhoneActive = function() {
+    return $scope.activePhone;
   };
 });
 
