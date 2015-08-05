@@ -62,14 +62,6 @@ angular.module('starter.translate', ['pascalprecht.translate']).config(function(
   $translateProvider.fallbackLanguage('en');
 });
 
-angular.module('starter').directive('noonFooter', function() {
-  return {
-    restrict: 'AEC',
-    templateUrl: 'noonFooter.view.html',
-    controller: 'noonFooterCtrl'
-  };
-}).controller('noonFooterCtrl', function($scope) {});
-
 angular.module('starter').directive('noonHeader', function() {
   return {
     restrict: 'AEC',
@@ -77,6 +69,14 @@ angular.module('starter').directive('noonHeader', function() {
     controller: 'noonHeaderCtrl'
   };
 }).controller('noonHeaderCtrl', function($scope) {});
+
+angular.module('starter').directive('noonFooter', function() {
+  return {
+    restrict: 'AEC',
+    templateUrl: 'noonFooter.view.html',
+    controller: 'noonFooterCtrl'
+  };
+}).controller('noonFooterCtrl', function($scope) {});
 
 angular.module("starter.advertiser", []).config(function($stateProvider) {
   $stateProvider.state('advertiser', {
@@ -230,6 +230,80 @@ angular.module("starter.mention").controller("mentionCtrl", function($scope, $ro
   $rootScope.showNav = void 0;
 });
 
+angular.module("starter.ranking", []).config(function($stateProvider) {
+  $stateProvider.state('ranking', {
+    url: '/ranking',
+    templateUrl: 'ranking.view.html',
+    controller: 'rankingCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
+  var createTable, filter;
+  $rootScope.showNav = void 0;
+  filter = {
+    order: 'totalEarned desc',
+    where: {
+      totalEarned: {
+        neq: null
+      }
+    }
+  };
+  Player.find({
+    filter: filter
+  }, function(success) {
+    var i, len, line, players, rank;
+    console.log("PLAYER : ", success);
+    players = [];
+    rank = 1;
+    for (i = 0, len = success.length; i < len; i++) {
+      line = success[i];
+      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
+        players.push(line);
+      }
+    }
+    return createTable(players);
+  }, function(error) {
+    return console.log(error);
+  });
+  return createTable = function(data) {
+    console.log("data");
+    console.log(data);
+    $scope.tableParams = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        username: ''
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        var orderedData;
+        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+        params.total(orderedData.length);
+        $defer.resolve($scope.users);
+      }
+    });
+    return $scope.tableParamsMobile = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        username: ''
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        var orderedData;
+        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+        params.total(orderedData.length);
+        $defer.resolve($scope.users);
+      }
+    });
+  };
+});
+
 angular.module("starter.result", []).config(function($stateProvider) {
   $stateProvider.state('result', {
     url: '/result',
@@ -356,69 +430,5 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
   return $scope.change = function(date) {
     $scope.isOpen = false;
     return getLotteryDay(date);
-  };
-});
-
-angular.module("starter.ranking", []).config(function($stateProvider) {
-  $stateProvider.state('ranking', {
-    url: '/ranking',
-    templateUrl: 'ranking.view.html',
-    controller: 'rankingCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
-  var createTable;
-  $rootScope.showNav = void 0;
-  Player.find({}, function(success) {
-    var i, len, line, players, rank;
-    console.log("PLAYER : ", success);
-    players = [];
-    rank = 1;
-    for (i = 0, len = success.length; i < len; i++) {
-      line = success[i];
-      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
-        players.push(line);
-      }
-    }
-    return createTable(players);
-  }, function(error) {
-    return console.log(error);
-  });
-  return createTable = function(data) {
-    console.log("data");
-    console.log(data);
-    $scope.tableParams = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
-    return $scope.tableParamsMobile = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
   };
 });

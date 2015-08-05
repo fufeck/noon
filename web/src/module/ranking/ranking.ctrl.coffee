@@ -3,7 +3,12 @@ angular.module "starter.ranking"
 .controller "rankingCtrl", ($scope, $filter, ngTableParams, $rootScope, Player) ->
 	$rootScope.showNav = undefined
 
-	Player.find {}
+	filter = 
+		order: 'totalEarned desc'
+		where :
+			totalEarned :
+				neq : null
+	Player.find {filter : filter}
 	, (success) ->
 		console.log "PLAYER : ", success
 		players = []
