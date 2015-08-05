@@ -14,7 +14,7 @@
 
   vars:
     general:
-      branch: staging
+      branch: beta
       port: 80
     site:
       name: noon
