@@ -2,7 +2,7 @@
   "name": "noon",
   "version": "1.0.0",
   "scripts": {
-    "deploy:staging": "ansible-playbook -i ../devops/ansible/staging ../devops/ansible/staging.yml",
+    "deploy:beta": "ansible-playbook -i ../devops/ansible/staging ../devops/ansible/staging.yml",
     "deploy:prod": "ansible-playbook -i ../devops/ansible/prod ../devops/ansible/prod.yml"
     },
   "devDependencies": {
