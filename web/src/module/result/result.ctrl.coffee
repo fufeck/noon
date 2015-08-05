@@ -6,17 +6,19 @@ angular.module "starter.result"
 	$scope.tableParams = undefined
 
 	getLotteryDay = (date = undefined) ->
-		console.log date
 		if date == undefined
 			currentDate = moment()
 		else
 			currentDate = moment(date)
 
+		
+		console.log date
 		currentDate.hour(14)
 		currentDate.second(0)
 		currentDate.minute(0)
 		currentDate.millisecond(0)
 		Lottery.find {filter : where : day : currentDate.toISOString()}, (success) ->
+			console.log "ONE : ", success
 			loadLotteryRank(success)
 		, (error) ->
 			console.log error
@@ -31,12 +33,14 @@ angular.module "starter.result"
 				tmp.rank = rank
 				rank += 1
 				$scope.datas.push tmp
+		console.log "RESULT"
 		console.log $scope.datas
 
 	loadLotteryRank = (lotteryDay) ->
 		if lotteryDay.length > 0
 			LotteryRank.find {filter : where : {lotteryId : lotteryDay[0].id}, include : 'player'}
 			, (success) ->
+				console.log "TWO : ", success
 				pushDatas(success)
 				if $scope.tableParams == undefined
 					createTable()

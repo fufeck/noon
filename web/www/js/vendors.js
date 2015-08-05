@@ -52587,7 +52587,7 @@ IonicModule
 })();
 /*!
  * ngCordova
- * v0.1.18-alpha
+ * v0.1.17-alpha
  * Copyright 2014 Drifty Co. http://drifty.com/
  * See LICENSE in this repository for license information
  */
@@ -52720,21 +52720,6 @@ angular.module('ngCordova.plugins.appRate', [])
 
   .provider("$cordovaAppRate", [function () {
 
-    /**
-      * Set defaults settings to AppRate
-      *
-      * @param {Object} defaults - AppRate default settings
-      * @param {string} defaults.language
-      * @param {string} defaults.appName
-      * @param {boolean} defaults.promptForNewVersion
-      * @param {boolean} defaults.openStoreInApp
-      * @param {number} defaults.usesUntilPrompt
-      * @param {boolean} defaults.useCustomRateDialog
-      * @param {string} defaults.iosURL
-      * @param {string} defaults.androidURL
-      * @param {string} defaults.blackberryURL 
-      * @param {string} defaults.windowsURL
-      */
     this.setPreferences = function (defaults) {
       if (!defaults || !angular.isObject(defaults)) {
         return;
@@ -52752,15 +52737,6 @@ angular.module('ngCordova.plugins.appRate', [])
       AppRate.preferences.storeAppURL.windows8 = defaults.windowsURL || null;
     };
 
-    /**
-      * Set custom locale
-      *
-      * @param {Object} customObj
-      * @param {string} customObj.title
-      * @param {string} customObj.cancelButtonLabel
-      * @param {string} customObj.laterButtonLabel
-      * @param {string} customObj.rateButtonLabel
-      */
     this.setCustomLocale = function (customObj) {
       var strings = {
         title: 'Rate %@',
@@ -52814,19 +52790,10 @@ angular.module('ngCordova.plugins.appVersion', [])
   .factory('$cordovaAppVersion', ['$q', function ($q) {
 
     return {
-      getVersionNumber: function () {
+      getAppVersion: function () {
         var q = $q.defer();
-        cordova.getAppVersion.getVersionNumber(function (version) {
+        cordova.getAppVersion(function (version) {
           q.resolve(version);
-        });
-
-        return q.promise;
-      },
-
-      getVersionCode: function () {
-        var q = $q.defer();
-        cordova.getAppVersion.getVersionCode(function (code) {
-          q.resolve(code);
         });
 
         return q.promise;
@@ -52914,7 +52881,7 @@ angular.module('ngCordova.plugins.badge', [])
           if (permission) {
             q.resolve(true);
           } else {
-            q.reject('You do not have permission');
+            q.reject("You do not have permission");
           }
         });
 
@@ -52925,16 +52892,14 @@ angular.module('ngCordova.plugins.badge', [])
         return cordova.plugins.notification.badge.promptForPermission();
       },
 
-      set: function (badge, callback, scope) {
+      set: function (number) {
         var q = $q.defer();
 
         cordova.plugins.notification.badge.hasPermission(function (permission) {
           if (permission) {
-            q.resolve(
-              cordova.plugins.notification.badge.set(badge, callback, scope)
-            );
+            q.resolve(cordova.plugins.notification.badge.set(number));
           } else {
-            q.reject('You do not have permission to set Badge');
+            q.reject("You do not have permission to set Badge");
           }
         });
         return q.promise;
@@ -52948,51 +52913,23 @@ angular.module('ngCordova.plugins.badge', [])
               q.resolve(badge);
             });
           } else {
-            q.reject('You do not have permission to get Badge');
+            q.reject("You do not have permission to get Badge");
           }
         });
 
         return q.promise;
       },
 
-      clear: function (callback, scope) {
+      clear: function () {
         var q = $q.defer();
 
         cordova.plugins.notification.badge.hasPermission(function (permission) {
           if (permission) {
-            q.resolve(cordova.plugins.notification.badge.clear(callback, scope));
+            q.resolve(cordova.plugins.notification.badge.clear());
           } else {
-            q.reject('You do not have permission to clear Badge');
+            q.reject("You do not have permission to clear Badge");
           }
         });
-        return q.promise;
-      },
-
-      increase: function (count, callback, scope) {
-        var q = $q.defer();
-
-        this.hasPermission().then(function (){
-          q.resolve(
-            cordova.plugins.notification.badge.increase(count, callback, scope)
-          );
-        }, function (){
-          q.reject('You do not have permission to increase Badge');
-        }) ;
-
-        return q.promise;
-      },
-
-      decrease: function (count, callback, scope) {
-        var q = $q.defer();
-
-        this.hasPermission().then(function (){
-          q.resolve(
-            cordova.plugins.notification.badge.decrease(count, callback, scope)
-          );
-        }, function (){
-          q.reject('You do not have permission to decrease Badge');
-        }) ;
-
         return q.promise;
       },
 
@@ -53044,27 +52981,18 @@ angular.module('ngCordova.plugins.batteryStatus', [])
 
   .factory('$cordovaBatteryStatus', ['$rootScope', '$window', '$timeout', function ($rootScope, $window, $timeout) {
 
-    /**
-      * @param {string} status
-      */
     var batteryStatus = function (status) {
       $timeout(function () {
         $rootScope.$broadcast('$cordovaBatteryStatus:status', status);
       });
     };
 
-    /**
-      * @param {string} status
-      */
     var batteryCritical = function (status) {
       $timeout(function () {
         $rootScope.$broadcast('$cordovaBatteryStatus:critical', status);
       });
     };
 
-    /**
-      * @param {string} status
-      */
     var batteryLow = function (status) {
       $timeout(function () {
         $rootScope.$broadcast('$cordovaBatteryStatus:low', status);
@@ -53089,26 +53017,16 @@ angular.module('ngCordova.plugins.batteryStatus', [])
 
 angular.module('ngCordova.plugins.ble', [])
 
-  .factory('$cordovaBLE', ['$q', '$timeout', function ($q, $timeout) {
+  .factory('$cordovaBLE', ['$q', function ($q) {
 
     return {
       scan: function (services, seconds) {
         var q = $q.defer();
-
-        ble.startScan(services, function (result) {
-          q.notify(result);
+        ble.scan(services, seconds, function (result) {
+          q.resolve(result);
         }, function (error) {
           q.reject(error);
         });
-
-        $timeout(function() {
-            ble.stopScan(function() {
-              q.resolve();
-            }, function(error) {
-              q.reject(error);
-            });
-        }, seconds*1000);
-
         return q.promise;
       },
 
@@ -53214,15 +53132,9 @@ angular.module('ngCordova.plugins.bluetoothSerial', [])
     return {
       connect: function (address) {
         var q = $q.defer();
-        var disconnectionPromise = $q.defer();
-        var isConnected = false;
         $window.bluetoothSerial.connect(address, function () {
-          isConnected = true;
-          q.resolve(disconnectionPromise);
+          q.resolve();
         }, function (error) {
-          if(isConnected === false) {
-            disconnectionPromise.reject(error);
-          }
           q.reject(error);
         });
         return q.promise;
@@ -53434,15 +53346,11 @@ angular.module('ngCordova.plugins.brightness', [])
       get: function () {
         var q = $q.defer();
 
-        if (!$window.cordova) {
-          q.reject("Not supported without cordova.js");
-        } else {
-          $window.cordova.plugins.brightness.getBrightness(function (result) {
-            q.resolve(result);
-          }, function (err) {
-            q.reject(err);
-          });
-        }
+        $window.cordova.plugins.brightness.getBrightness(function (result) {
+          q.resolve(result);
+        }, function (err) {
+          q.reject(err);
+        });
 
         return q.promise;
       },
@@ -53450,15 +53358,11 @@ angular.module('ngCordova.plugins.brightness', [])
       set: function (data) {
         var q = $q.defer();
 
-        if (!$window.cordova) {
-          q.reject("Not supported without cordova.js");
-        } else {
-          $window.cordova.plugins.brightness.setBrightness(data, function (result) {
-            q.resolve(result);
-          }, function (err) {
-            q.reject(err);
-          });
-        }
+        $window.cordova.plugins.brightness.setBrightness(data, function (result) {
+          q.resolve(result);
+        }, function (err) {
+          q.reject(err);
+        });
 
         return q.promise;
       },
@@ -53466,15 +53370,11 @@ angular.module('ngCordova.plugins.brightness', [])
       setKeepScreenOn: function (bool) {
         var q = $q.defer();
 
-        if (!$window.cordova) {
-          q.reject("Not supported without cordova.js");
-        } else {
-          $window.cordova.plugins.brightness.setKeepScreenOn(bool, function (result) {
-            q.resolve(result);
-          }, function (err) {
-            q.reject(err);
-          });
-        }
+        $window.cordova.plugins.brightness.setKeepScreenOn(bool, function (result) {
+          q.resolve(result);
+        }, function (err) {
+          q.reject(err);
+        });
 
         return q.promise;
       }
@@ -53488,7 +53388,6 @@ angular.module('ngCordova.plugins.brightness', [])
 angular.module('ngCordova.plugins.calendar', [])
 
   .factory('$cordovaCalendar', ['$q', '$window', function ($q, $window) {
-    
     return {
       createCalendar: function (options) {
         var d = $q.defer(),
@@ -53876,115 +53775,6 @@ angular.module('ngCordova.plugins.capture', [])
     };
   }]);
 
-// install : cordova plugin add https://github.com/vkeepe/card.io.git
-// link    : https://github.com/vkeepe/card.io.git
-
-angular.module('ngCordova.plugins.cardIO', [])
-
-  .provider(
-  '$cordovaNgCardIO', [function () {
-
-    /**
-     * Default array of response data from cardIO scan card
-     */
-    var defaultRespFields = [
-      "card_type",
-      "redacted_card_number",
-      "card_number",
-      "expiry_month",
-      "expiry_year",
-      "short_expiry_year",
-      "cvv",
-      "zip"
-    ];
-
-    /**
-     * Default config for cardIO scan function
-     */
-    var defaultScanConfig = {
-      "expiry": true,
-      "cvv": true,
-      "zip": false,
-      "suppressManual": false,
-      "suppressConfirm": false,
-      "hideLogo": true
-    };
-
-    /**
-     * Configuring defaultRespFields using $cordovaNgCardIOProvider
-     *
-     */
-    this.setCardIOResponseFields = function (filelds) {
-      if (!filelds || !angular.isArray(filelds)) {
-        return;
-      }
-      defaultRespFields = filelds;
-    };
-
-    /**
-     *
-     * Configuring defaultScanConfig using $cordovaNgCardIOProvider
-     */
-    this.setScanerConfig = function (config) {
-      if (!config || !angular.isObject(config)) {
-        return;
-      }
-
-      defaultScanConfig.expiry = config.expiry || true;
-      defaultScanConfig.cvv = config.cvv || true;
-      defaultScanConfig.zip = config.zip || false;
-      defaultScanConfig.suppressManual = config.suppressManual
-      || false;
-      defaultScanConfig.suppressConfirm = config.suppressConfirm
-      || false;
-      defaultScanConfig.hideLogo = config.hideLogo || true;
-    };
-
-    /**
-     * Function scanCard for $cordovaNgCardIO service to make scan of card
-     *
-     */
-    this.$get = ['$q', function ($q) {
-      return {
-        scanCard: function () {
-
-          var deferred = $q.defer();
-          CardIO.scan(
-            defaultScanConfig,
-            function (response) {
-
-              if (response == null) {
-                deferred.reject(null);
-              } else {
-
-                var respData = {};
-                for (
-                  var i = 0, len = defaultRespFields.length; i < len; i++) {
-                  var field = defaultRespFields[i];
-
-                  if (field == "short_expiry_year") {
-                    respData[field] = String(response['expiry_year']).substr(
-                      2, 2
-                    )
-                    || "";
-                  } else {
-                    respData[field] = response[field] || "";
-                  }
-                }
-                deferred.resolve(respData);
-              }
-            },
-            function () {
-              deferred.reject(null);
-            }
-          );
-          return deferred.promise;
-        }
-      }
-    }]
-  }]
-);
-
 // install   :     cordova plugin add https://github.com/VersoSolutions/CordovaClipboard.git
 // link      :     https://github.com/VersoSolutions/CordovaClipboard
 
@@ -54061,20 +53851,13 @@ angular.module('ngCordova.plugins.contacts', [])
         var q = $q.defer();
         var fields = options.fields || ['id', 'displayName'];
         delete options.fields;
-        if (Object.keys(options).length === 0) {
-          navigator.contacts.find(fields, function (results) {
-            q.resolve(results);
-          },function (err) {
-            q.reject(err)
-          });
-        }
-        else {
-          navigator.contacts.find(fields, function (results) {
-            q.resolve(results);
-          }, function (err) {
-            q.reject(err);
-          }, options);
-        }
+
+        navigator.contacts.find(fields, function (results) {
+          q.resolve(results);
+        }, function (err) {
+          q.reject(err);
+        }, options);
+
         return q.promise;
       },
 
@@ -54102,9 +53885,7 @@ angular.module('ngCordova.plugins.contacts', [])
 // link      :      https://github.com/VitaliiBlagodir/cordova-plugin-datepicker
 
 angular.module('ngCordova.plugins.datePicker', [])
-
   .factory('$cordovaDatePicker', ['$window', '$q', function ($window, $q) {
-    
     return {
       show: function (options) {
         var q = $q.defer();
@@ -54185,14 +53966,6 @@ angular.module('ngCordova.plugins.device', [])
        */
       getVersion: function () {
         return device.version;
-      },
-
-      /**
-       * Returns the device manufacturer.
-       * @returns {String}
-       */
-      getManufacturer: function () {
-        return device.manufacturer;
       }
     };
   }]);
@@ -54208,11 +53981,6 @@ angular.module('ngCordova.plugins.deviceMotion', [])
       getCurrentAcceleration: function () {
         var q = $q.defer();
 
-        if (angular.isUndefined(navigato.accelerometer) ||
-        !angular.isFunction(navigator.accelerometer.getCurrentAcceleration)) {
-          q.reject('Device do not support watchAcceleration');
-        }
-
         navigator.accelerometer.getCurrentAcceleration(function (result) {
           q.resolve(result);
         }, function (err) {
@@ -54224,11 +53992,6 @@ angular.module('ngCordova.plugins.deviceMotion', [])
 
       watchAcceleration: function (options) {
         var q = $q.defer();
-
-        if (angular.isUndefined(navigato.accelerometer) ||
-        !angular.isFunction(navigator.accelerometer.watchAcceleration)) {
-          q.reject('Device do not support watchAcceleration');
-        }
 
         var watchID = navigator.accelerometer.watchAcceleration(function (result) {
           q.notify(result);
@@ -54261,19 +54024,12 @@ angular.module('ngCordova.plugins.deviceMotion', [])
 angular.module('ngCordova.plugins.deviceOrientation', [])
 
   .factory('$cordovaDeviceOrientation', ['$q', function ($q) {
-
     var defaultOptions = {
       frequency: 3000 // every 3s
     };
-    
     return {
       getCurrentHeading: function () {
         var q = $q.defer();
-
-        if(!navigator.compass) {
-            q.reject('No compass on Device');
-            return q.promise;
-        }
 
         navigator.compass.getCurrentHeading(function (result) {
           q.resolve(result);
@@ -54286,11 +54042,6 @@ angular.module('ngCordova.plugins.deviceOrientation', [])
 
       watchHeading: function (options) {
         var q = $q.defer();
-
-        if(!navigator.compass) {
-            q.reject('No compass on Device');
-            return q.promise;
-        }
 
         var _options = angular.extend(defaultOptions, options);
         var watchID = navigator.compass.watchHeading(function (result) {
@@ -54428,12 +54179,6 @@ angular.module('ngCordova.plugins.facebook', [])
 
   .provider('$cordovaFacebook', [function () {
 
-    /**
-      * Init browser settings for Facebook plugin
-      *
-      * @param {number} id
-      * @param {string} version
-      */
     this.browserInit = function (id, version) {
       this.appID = id;
       this.appVersion = version || "v2.0";
@@ -54510,7 +54255,6 @@ angular.module('ngCordova.plugins.facebook', [])
 // link     :     https://github.com/floatinghotpot/cordova-plugin-facebookads
 
 angular.module('ngCordova.plugins.facebookAds', [])
-
   .factory('$cordovaFacebookAds', ['$q', '$window', function ($q, $window) {
 
     return {
@@ -55860,7 +55604,6 @@ angular.module('ngCordova.plugins.globalization', [])
 // link     :     https://github.com/floatinghotpot/cordova-admob-pro
 
 angular.module('ngCordova.plugins.googleAds', [])
-
   .factory('$cordovaGoogleAds', ['$q', '$window', function ($q, $window) {
 
     return {
@@ -56154,6 +55897,7 @@ angular.module('ngCordova.plugins.googlePlayGame', [])
   .factory('$cordovaGooglePlayGame', ['$q', function ($q) {
 
     return {
+
       auth: function () {
         var q = $q.defer();
 
@@ -56271,7 +56015,7 @@ angular.module('ngCordova.plugins.googlePlayGame', [])
 // install  :     cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git
 // link     :     https://github.com/EddyVerbruggen/cordova-plugin-googleplus
 
-angular.module('ngCordova.plugins.googlePlus', [])
+angular.module('ngCordova.plugins.googleplus', [])
 
   .factory('$cordovaGooglePlus', ['$q', '$window', function ($q, $window) {
 
@@ -56318,19 +56062,6 @@ angular.module('ngCordova.plugins.googlePlus', [])
         $window.plugins.googleplus.disconnect(function (response) {
           q.resolve(response);
         });
-      },
-
-      isAvailable: function () {
-        var q = $q.defer();
-        $window.plugins.googleplus.isAvailable(function (available) {
-          if (available) {
-            q.resolve(available);
-          } else {
-            q.reject(available);
-          }
-        });
-        
-        return q.promise;
       }
     };
 
@@ -56568,7 +56299,6 @@ angular.module('ngCordova.plugins.healthKit', [])
 // link     :     https://github.com/floatinghotpot/cordova-httpd
 
 angular.module('ngCordova.plugins.httpd', [])
-
   .factory('$cordovaHttpd', ['$q', function ($q) {
 
     return {
@@ -56914,7 +56644,7 @@ angular.module('ngCordova.plugins.instagram', [])
 
 angular.module('ngCordova.plugins.keyboard', [])
 
-  .factory('$cordovaKeyboard', ['$rootScope', function ($rootScope) {
+  .factory('$cordovaKeyboard', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
 
     var keyboardShowEvent = function () {
       $rootScope.$evalAsync(function () {
@@ -57003,32 +56733,6 @@ angular.module('ngCordova.plugins.keychain', [])
         return defer.promise;
       }
     };
-  }]);
-
-// install   :      cordova plugin add uk.co.workingedge.phonegap.plugin.launchnavigator
-// link      :      https://github.com/dpa99c/phonegap-launch-navigator
-
-angular.module('ngCordova.plugins.launchNavigator', [])
-
-  .factory('$cordovaLaunchNavigator', ['$q', function ($q) {
-
-    return {
-      navigate: function (destination, start, successFn, errorFn, options) {
-        var q = $q.defer();
-        launchnavigator.navigate(
-          destination,
-          start,
-          function(){
-            q.resolve();
-          },
-          function(error){
-            q.reject(error);
-          },
-		  options);
-        return q.promise;
-      }
-    };
-
   }]);
 
 // install   :  cordova plugin add https://github.com/katzer/cordova-plugin-local-notifications.git
@@ -57393,7 +57097,6 @@ angular.module('ngCordova.plugins.localNotification', [])
 // link     :     https://github.com/floatinghotpot/cordova-plugin-mmedia
 
 angular.module('ngCordova.plugins.mMediaAds', [])
-
   .factory('$cordovaMMediaAds', ['$q', '$window', function ($q, $window) {
 
     return {
@@ -57500,142 +57203,83 @@ angular.module('ngCordova.plugins.mMediaAds', [])
 
 angular.module('ngCordova.plugins.media', [])
 
-.service('NewMedia', ['$q', '$interval', function ($q, $interval) {
-  var q, q2, q3, mediaStatus = null, mediaPosition = -1, mediaTimer, mediaDuration = -1;
+  .factory('$cordovaMedia', ['$q', function ($q) {
 
-  function setTimer(media) {
-      if (angular.isDefined(mediaTimer)) return;
-
-      mediaTimer = $interval(function () {
-          if (mediaDuration < 0) {
-              mediaDuration = media.getDuration();
-              if (q && mediaDuration > 0) q.notify({duration: mediaDuration});
-          }
-
-          media.getCurrentPosition(
-            // success callback
-            function (position) {
-                if (position > -1) {
-                    mediaPosition = position;
-                }
-            },
-            // error callback
-            function (e) {
-                console.log("Error getting pos=" + e);
-            });
-
-          if (q) q.notify({position: mediaPosition});
-
-      }, 1000);
-  }
-
-  function clearTimer() {
-      if (angular.isDefined(mediaTimer)) {
-          $interval.cancel(mediaTimer);
-          mediaTimer = undefined;
-      }
-  }
-
-  function resetValues() {
-      mediaPosition = -1;
-      mediaDuration = -1;
-  }
-
-  function NewMedia(src) {
-      this.media = new Media(src,
-        function (success) {
-            clearTimer();
-            resetValues();
-            q.resolve(success);
-        }, function (error) {
-            clearTimer();
-            resetValues();
-            q.reject(error);
-        }, function (status) {
-            mediaStatus = status;
-            q.notify({status: mediaStatus});
-        });
-  }
-
-  // iOS quirks :
-  // -  myMedia.play({ numberOfLoops: 2 }) -> looping
-  // -  myMedia.play({ playAudioWhenScreenIsLocked : false })
-  NewMedia.prototype.play = function (options) {
-      q = $q.defer();
-
-      if (typeof options !== "object") {
-          options = {};
-      }
-
-      this.media.play(options);
-
-      setTimer(this.media);
-
-      return q.promise;
-  };
-
-  NewMedia.prototype.pause = function () {
-      clearTimer();
-      this.media.pause();
-  };
-
-  NewMedia.prototype.stop  = function () {
-      this.media.stop();
-  };
-
-  NewMedia.prototype.release  = function () {
-      this.media.release();
-      this.media = undefined;
-  };
-
-  NewMedia.prototype.seekTo  = function (timing) {
-      this.media.seekTo(timing);
-  };
-
-  NewMedia.prototype.setVolume = function (volume) {
-      this.media.setVolume(volume);
-  };
-
-  NewMedia.prototype.startRecord = function () {
-      this.media.startRecord();
-  };
-
-  NewMedia.prototype.stopRecord  = function () {
-      this.media.stopRecord();
-  };
-
-  NewMedia.prototype.currentTime = function () {
-      q2 = $q.defer();
-      this.media.getCurrentPosition(function(position){
-      q2.resolve(position);
-      });
-      return q2.promise;
-  };
-
-  NewMedia.prototype.getDuration = function () {
-    q3 = $q.defer();
-    this.media.getDuration(function(duration){
-    q3.resolve(duration);
-    });
-    return q3.promise;
-  }
-
-  return NewMedia;
-
-}])
-.factory('$cordovaMedia2', ['NewMedia', function (NewMedia) {
-  return {
+    return {
       newMedia: function (src) {
-          return new NewMedia(src);
+        var q = $q.defer();
+        var mediaStatus = null;
+        var media;
+
+        media = new Media(src,
+          function (success) {
+            q.resolve(success);
+          }, function (error) {
+            q.reject(error);
+          }, function (status) {
+            mediaStatus = status;
+          });
+
+        // getCurrentPosition NOT WORKING!
+        q.promise.getCurrentPosition = function () {
+          media.getCurrentPosition(function (success) {
+          }, function (error) {
+          });
+        };
+
+        q.promise.getDuration = function () {
+          media.getDuration();
+        };
+
+        // iOS quirks :
+        // -  myMedia.play({ numberOfLoops: 2 }) -> looping
+        // -  myMedia.play({ playAudioWhenScreenIsLocked : false })
+        q.promise.play = function (options) {
+          if (typeof options !== "object") {
+            options = {};
+          }
+          media.play(options);
+        };
+
+        q.promise.pause = function () {
+          media.pause();
+        };
+
+        q.promise.stop = function () {
+          media.stop();
+        };
+
+        q.promise.release = function () {
+          media.release();
+        };
+
+        q.promise.seekTo = function (timing) {
+          media.seekTo(timing);
+        };
+
+        q.promise.setVolume = function (volume) {
+          media.setVolume(volume);
+        };
+
+        q.promise.startRecord = function () {
+          media.startRecord();
+        };
+
+        q.promise.stopRecord = function () {
+          media.stopRecord();
+        };
+
+        q.promise.media = media;
+
+        return q.promise;
       }
-  };
-}]);
+    };
+  }]);
 
 // install  :     cordova plugin add https://github.com/floatinghotpot/cordova-mobfox-pro.git
 // link     :     https://github.com/floatinghotpot/cordova-mobfox-pro
 
 angular.module('ngCordova.plugins.mobfoxAds', [])
-
   .factory('$cordovaMobFoxAds', ['$q', '$window', function ($q, $window) {
 
     return {
@@ -57775,16 +57419,13 @@ angular.module('ngCordova.plugins', [
   'ngCordova.plugins.googleAnalytics',
   'ngCordova.plugins.googleMap',
   'ngCordova.plugins.googlePlayGame',
-  'ngCordova.plugins.googlePlus',
   'ngCordova.plugins.healthKit',
   'ngCordova.plugins.httpd',
   'ngCordova.plugins.iAd',
   'ngCordova.plugins.imagePicker',
   'ngCordova.plugins.inAppBrowser',
-  'ngCordova.plugins.instagram',
   'ngCordova.plugins.keyboard',
   'ngCordova.plugins.keychain',
-  'ngCordova.plugins.launchNavigator',
   'ngCordova.plugins.localNotification',
   'ngCordova.plugins.media',
   'ngCordova.plugins.mMediaAds',
@@ -57792,7 +57433,8 @@ angular.module('ngCordova.plugins', [
   'ngCordova.plugins.mopubAds',
   'ngCordova.plugins.nativeAudio',
   'ngCordova.plugins.network',
-  'ngCordovaOauth',
+  'ngCordova.plugins.oauth',
+  'ngCordova.plugins.oauthUtility',
   'ngCordova.plugins.pinDialog',
   'ngCordova.plugins.prefs',
   'ngCordova.plugins.printer',
@@ -57949,12 +57591,10 @@ angular.module('ngCordova.plugins.nativeAudio', [])
 
       play: function (id, completeCallback) {
         var q = $q.defer();
-        $window.plugins.NativeAudio.play(id, completeCallback
-        ,function (err) {
-          q.reject(err);
-        }
-        , function (result) {
+        $window.plugins.NativeAudio.play(id, completeCallback, function (result) {
           q.resolve(result);
+        }, function (err) {
+          q.reject(err);
         });
 
         return q.promise;
@@ -58012,10 +57652,6 @@ angular.module('ngCordova.plugins.network', [])
 
   .factory('$cordovaNetwork', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
 
-
-    /**
-      * Fires offline a event
-      */
     var offlineEvent = function () {
       var networkState = navigator.connection.type;
       $timeout(function () {
@@ -58023,9 +57659,6 @@ angular.module('ngCordova.plugins.network', [])
       });
     };
 
-    /**
-      * Fires online a event
-      */
     var onlineEvent = function () {
       var networkState = navigator.connection.type;
       $timeout(function () {
@@ -58061,12 +57694,1056 @@ angular.module('ngCordova.plugins.network', [])
       },
 
       clearOnlineWatch: function () {
-        document.removeEventListener("online", onlineEvent);
+        document.removeEventListener("online", offlineEvent);
         $rootScope.$$listeners["$cordovaNetwork:online"] = [];
       }
     };
   }])
   .run(['$cordovaNetwork', function ($cordovaNetwork) {
+  }]);
+
+/* Created by Nic Raboy
+ * http://www.nraboy.com
+ *
+ * DESCRIPTION: Use Oauth sign in for various web services.
+ *
+ * REQUIRES:  Apache Cordova 3.5+, Apache InAppBrowser Plugin, jsSHA (Twitter, Magento only)
+ *
+ * SUPPORTS:
+ *    Dropbox
+ *    Digital Ocean
+ *    Google
+ *    GitHub
+ *    Facebook
+ *    LinkedIn
+ *    Instagram
+ *    Box
+ *    Reddit
+ *    Twitter
+ *    Meetup
+ *    Foursquare
+ *    Salesforce
+ *    Strava
+ *    Magento
+ *    vkontakte
+ *    ADFS
+ *    Imgur
+ */
+
+angular.module("ngCordova.plugins.oauth", ["ngCordova.plugins.oauthUtility"])
+
+  .factory('$cordovaOauth', ['$q', '$http', '$cordovaOauthUtility', function ($q, $http, $cordovaOauthUtility) {
+
+    return {
+
+      /*
+       * Sign into the ADFS service (ADFS 3.0 onwards)
+       *
+       * @param    string clientId (client registered in ADFS, with redirect_uri configured to: http://localhost/callback)
+       * @param	 string adfsServer (url of the ADFS Server)
+       * @param	 string relyingPartyId (url of the Relying Party (resource relying on ADFS for authentication) configured in ADFS)
+       * @return   promise
+       */
+      adfs: function (clientId, adfsServer, relyingPartyId) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open(adfsServer + '/adfs/oauth2/authorize?response_type=code&client_id=' + clientId + '&redirect_uri=http://localhost/callback&resource=' + relyingPartyId, '_blank', 'location=no');
+
+            browserRef.addEventListener("loadstart", function (event) {
+              if ((event.url).indexOf('http://localhost/callback') === 0) {
+                var requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http({method: "post", url: adfsServer + "/adfs/oauth2/token", data: "client_id=" + clientId + "&code=" + requestToken + "&redirect_uri=http://localhost/callback&grant_type=authorization_code"})
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Dropbox service
+       *
+       * @param    string appKey
+       * @return   promise
+       */
+      dropbox: function (appKey) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open("https://www.dropbox.com/1/oauth2/authorize?client_id=" + appKey + "&redirect_uri=http://localhost/callback" + "&response_type=token", "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
+            browserRef.addEventListener("loadstart", function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve({access_token: parameterMap.access_token, token_type: parameterMap.token_type, uid: parameterMap.uid});
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Digital Ocean service
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @return   promise
+       */
+      digitalOcean: function (clientId, clientSecret) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open("https://cloud.digitalocean.com/v1/oauth/authorize?client_id=" + clientId + "&redirect_uri=http://localhost/callback&response_type=code&scope=read%20write", "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
+            browserRef.addEventListener("loadstart", function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http({
+                  method: "post",
+                  url: "https://cloud.digitalocean.com/v1/oauth/token",
+                  data: "client_id=" + clientId + "&client_secret=" + clientSecret + "&redirect_uri=http://localhost/callback" + "&grant_type=authorization_code" + "&code=" + requestToken
+                })
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Google service
+       *
+       * @param    string clientId
+       * @param    array appScope
+       * @return   promise
+       */
+      google: function (clientId, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://accounts.google.com/o/oauth2/auth?client_id=' + clientId + '&redirect_uri=http://localhost/callback&scope=' + appScope.join(" ") + '&approval_prompt=force&response_type=token', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener("loadstart", function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve({access_token: parameterMap.access_token, token_type: parameterMap.token_type, expires_in: parameterMap.expires_in});
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the GitHub service
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @param    array appScope
+       * @return   promise
+       */
+      github: function (clientId, clientSecret, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://github.com/login/oauth/authorize?client_id=' + clientId + '&redirect_uri=http://localhost/callback&scope=' + appScope.join(","), '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http.defaults.headers.post.accept = 'application/json';
+                $http({method: "post", url: "https://github.com/login/oauth/access_token", data: "client_id=" + clientId + "&client_secret=" + clientSecret + "&redirect_uri=http://localhost/callback" + "&code=" + requestToken})
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Facebook service
+       *
+       * @param    string clientId
+       * @param    array appScope
+       * @return   promise
+       */
+      facebook: function (clientId, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://www.facebook.com/dialog/oauth?client_id=' + clientId + '&redirect_uri=http://localhost/callback&response_type=token&scope=' + appScope.join(","), '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve({access_token: parameterMap.access_token, expires_in: parameterMap.expires_in});
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the LinkedIn service
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @param    array appScope
+       * @param    string state
+       * @return   promise
+       */
+      linkedin: function (clientId, clientSecret, appScope, state) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://www.linkedin.com/uas/oauth2/authorization?client_id=' + clientId + '&redirect_uri=http://localhost/callback&scope=' + appScope.join(" ") + '&response_type=code&state=' + state, '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http({
+                  method: "post",
+                  url: "https://www.linkedin.com/uas/oauth2/accessToken",
+                  data: "client_id=" + clientId + "&client_secret=" + clientSecret + "&redirect_uri=http://localhost/callback" + "&grant_type=authorization_code" + "&code=" + requestToken
+                })
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Instagram service
+       *
+       * @param    string clientId
+       * @param    array appScope
+       * @return   promise
+       */
+      instagram: function (clientId, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=http://localhost/callback&scope=' + appScope.join(" ") + '&response_type=token', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve({access_token: parameterMap.access_token});
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Box service
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @param    string appState
+       * @return   promise
+       */
+      box: function (clientId, clientSecret, appState) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://app.box.com/api/oauth2/authorize/?client_id=' + clientId + '&redirect_uri=http://localhost/callback&state=' + appState + '&response_type=code', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http({
+                  method: "post",
+                  url: "https://app.box.com/api/oauth2/token",
+                  data: "client_id=" + clientId + "&client_secret=" + clientSecret + "&redirect_uri=http://localhost/callback" + "&grant_type=authorization_code" + "&code=" + requestToken
+                })
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Reddit service
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @param    array appScope
+       * @return   promise
+       */
+      reddit: function (clientId, clientSecret, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://ssl.reddit.com/api/v1/authorize?client_id=' + clientId + '&redirect_uri=http://localhost/callback&duration=permanent&state=ngcordovaoauth&scope=' + appScope.join(",") + '&response_type=code', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http.defaults.headers.post.Authorization = 'Basic ' + btoa(clientId + ":" + clientSecret);
+                $http({method: "post", url: "https://ssl.reddit.com/api/v1/access_token", data: "redirect_uri=http://localhost/callback" + "&grant_type=authorization_code" + "&code=" + requestToken})
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Twitter service
+       * Note that this service requires jsSHA for generating HMAC-SHA1 Oauth 1.0 signatures
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @return   promise
+       */
+      twitter: function (clientId, clientSecret) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            if (typeof jsSHA !== "undefined") {
+              var oauthObject = {
+                oauth_consumer_key: clientId,
+                oauth_nonce: $cordovaOauthUtility.createNonce(10),
+                oauth_signature_method: "HMAC-SHA1",
+                oauth_timestamp: Math.round((new Date()).getTime() / 1000.0),
+                oauth_version: "1.0"
+              };
+              var signatureObj = $cordovaOauthUtility.createSignature("POST", "https://api.twitter.com/oauth/request_token", oauthObject, {oauth_callback: "http://localhost/callback"}, clientSecret);
+              $http({
+                method: "post",
+                url: "https://api.twitter.com/oauth/request_token",
+                headers: {
+                  "Authorization": signatureObj.authorization_header,
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                data: "oauth_callback=" + encodeURIComponent("http://localhost/callback")
+              })
+                .success(function (requestTokenResult) {
+                  var requestTokenParameters = (requestTokenResult).split("&");
+                  var parameterMap = {};
+                  for (var i = 0; i < requestTokenParameters.length; i++) {
+                    parameterMap[requestTokenParameters[i].split("=")[0]] = requestTokenParameters[i].split("=")[1];
+                  }
+                  if (parameterMap.hasOwnProperty("oauth_token") === false) {
+                    deferred.reject("Oauth request token was not received");
+                  }
+                  var browserRef = window.open('https://api.twitter.com/oauth/authenticate?oauth_token=' + parameterMap.oauth_token, '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+                  browserRef.addEventListener('loadstart', function (event) {
+                    if ((event.url).indexOf("http://localhost/callback") === 0) {
+                      var callbackResponse = (event.url).split("?")[1];
+                      var responseParameters = (callbackResponse).split("&");
+                      var parameterMap = {};
+                      for (var i = 0; i < responseParameters.length; i++) {
+                        parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                      }
+                      if (parameterMap.hasOwnProperty("oauth_verifier") === false) {
+                        deferred.reject("Browser authentication failed to complete.  No oauth_verifier was returned");
+                      }
+                      delete oauthObject.oauth_signature;
+                      oauthObject.oauth_token = parameterMap.oauth_token;
+                      var signatureObj = $cordovaOauthUtility.createSignature("POST", "https://api.twitter.com/oauth/access_token", oauthObject, {oauth_verifier: parameterMap.oauth_verifier}, clientSecret);
+                      $http({
+                        method: "post",
+                        url: "https://api.twitter.com/oauth/access_token",
+                        headers: {
+                          "Authorization": signatureObj.authorization_header
+                        },
+                        params: {
+                          "oauth_verifier": parameterMap.oauth_verifier
+                        }
+                      })
+                        .success(function (result) {
+                          var accessTokenParameters = result.split("&");
+                          var parameterMap = {};
+                          for (var i = 0; i < accessTokenParameters.length; i++) {
+                            parameterMap[accessTokenParameters[i].split("=")[0]] = accessTokenParameters[i].split("=")[1];
+                          }
+                          if (parameterMap.hasOwnProperty("oauth_token_secret") === false) {
+                            deferred.reject("Oauth access token was not received");
+                          }
+                          deferred.resolve(parameterMap);
+                        })
+                        .error(function (error) {
+                          deferred.reject(error);
+                        })
+                        .finally(function () {
+                          setTimeout(function () {
+                            browserRef.close();
+                          }, 10);
+                        });
+                    }
+                  });
+                  browserRef.addEventListener('exit', function (event) {
+                    deferred.reject("The sign in flow was canceled");
+                  });
+                })
+                .error(function (error) {
+                  deferred.reject(error);
+                });
+            } else {
+              deferred.reject("Missing jsSHA JavaScript library");
+            }
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Meetup service
+       *
+       * @param    string clientId
+       * @return   promise
+       */
+      meetup: function (clientId) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://secure.meetup.com/oauth2/authorize/?client_id=' + clientId + '&redirect_uri=http://localhost/callback&response_type=token', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = {};
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve(parameterMap);
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Salesforce service
+       *
+       * Suggestion: use salesforce oauth with forcetk.js(as SDK)
+       *
+       * @param    string loginUrl (such as: https://login.salesforce.com ; please notice community login)
+       * @param    string clientId (copy from connection app info)
+       * @param    string redirectUri (callback url in connection app info)
+       * @return   promise
+       */
+      salesforce: function (loginUrl, clientId) {
+        var redirectUri = 'http://localhost/callback';
+        var getAuthorizeUrl = function (loginUrl, clientId, redirectUri) {
+          return loginUrl + 'services/oauth2/authorize?display=touch' +
+            '&response_type=token&client_id=' + escape(clientId) +
+            '&redirect_uri=' + escape(redirectUri);
+        };
+        var startWith = function (string, str) {
+          return (string.substr(0, str.length) === str);
+        };
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open(getAuthorizeUrl(loginUrl, clientId, redirectUri), "_blank", "location=no,clearsessioncache=yes,clearcache=yes");
+            browserRef.addEventListener("loadstart", function (event) {
+              if (startWith(event.url, redirectUri)) {
+                var oauthResponse = {};
+
+                var fragment = (event.url).split('#')[1];
+
+                if (fragment) {
+                  var nvps = fragment.split('&');
+                  for (var nvp in nvps) {
+                    var parts = nvps[nvp].split('=');
+                    oauthResponse[parts[0]] = unescape(parts[1]);
+                  }
+                }
+
+                if (typeof oauthResponse === 'undefined' ||
+                  typeof oauthResponse.access_token === 'undefined') {
+                  deferred.reject("Problem authenticating");
+                } else {
+                  deferred.resolve(oauthResponse);
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Strava service
+       *
+       * @param    string clientId
+       * @param    string clientSecret
+       * @param    array appScope
+       * @return   promise
+       */
+      strava: function (clientId, clientSecret, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://www.strava.com/oauth/authorize?client_id=' + clientId + '&redirect_uri=http://localhost/callback&scope=' + appScope.join(",") + '&response_type=code&approval_prompt=force', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                requestToken = (event.url).split("code=")[1];
+                $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                $http({method: "post", url: "https://www.strava.com/oauth/token", data: "client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + requestToken})
+                  .success(function (data) {
+                    deferred.resolve(data);
+                  })
+                  .error(function (data, status) {
+                    deferred.reject("Problem authenticating");
+                  })
+                  .finally(function () {
+                    setTimeout(function () {
+                      browserRef.close();
+                    }, 10);
+                  });
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Foursquare service
+       *
+       * @param    string clientId
+       * @return   promise
+       */
+      foursquare: function (clientId) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://foursquare.com/oauth2/authenticate?client_id=' + clientId + '&redirect_uri=http://localhost/callback&response_type=token', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  var promiseResponse = {
+                    access_token: parameterMap.access_token,
+                    expires_in: parameterMap.expires_in
+                  };
+                  deferred.resolve(promiseResponse);
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Magento service
+       * Note that this service requires jsSHA for generating HMAC-SHA1 Oauth 1.0 signatures
+       *
+       * @param    string baseUrl
+       * @param    string clientId
+       * @param    string clientSecret
+       * @return   promise
+       */
+      magento: function (baseUrl, clientId, clientSecret) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            if (typeof jsSHA !== "undefined") {
+              var oauthObject = {
+                oauth_callback: "http://localhost/callback",
+                oauth_consumer_key: clientId,
+                oauth_nonce: $cordovaOauthUtility.createNonce(5),
+                oauth_signature_method: "HMAC-SHA1",
+                oauth_timestamp: Math.round((new Date()).getTime() / 1000.0),
+                oauth_version: "1.0"
+              };
+              var signatureObj = $cordovaOauthUtility.createSignature("POST", baseUrl + "/oauth/initiate", oauthObject, {oauth_callback: "http://localhost/callback"}, clientSecret);
+              $http.defaults.headers.post.Authorization = signatureObj.authorization_header;
+              $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+              $http({method: "post", url: baseUrl + "/oauth/initiate", data: "oauth_callback=http://localhost/callback"})
+                .success(function (requestTokenResult) {
+                  var requestTokenParameters = (requestTokenResult).split("&");
+                  var parameterMap = {};
+                  for (var i = 0; i < requestTokenParameters.length; i++) {
+                    parameterMap[requestTokenParameters[i].split("=")[0]] = requestTokenParameters[i].split("=")[1];
+                  }
+                  if (parameterMap.hasOwnProperty("oauth_token") === false) {
+                    deferred.reject("Oauth request token was not received");
+                  }
+                  var tokenSecret = parameterMap.oauth_token_secret;
+                  var browserRef = window.open(baseUrl + '/oauth/authorize?oauth_token=' + parameterMap.oauth_token, '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+                  browserRef.addEventListener('loadstart', function (event) {
+                    if ((event.url).indexOf("http://localhost/callback") === 0) {
+                      var callbackResponse = (event.url).split("?")[1];
+                      var responseParameters = (callbackResponse).split("&");
+                      var parameterMap = {};
+                      for (var i = 0; i < responseParameters.length; i++) {
+                        parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                      }
+                      if (parameterMap.hasOwnProperty("oauth_verifier") === false) {
+                        deferred.reject("Browser authentication failed to complete.  No oauth_verifier was returned");
+                      }
+                      delete oauthObject.oauth_signature;
+                      delete oauthObject.oauth_callback;
+                      oauthObject.oauth_token = parameterMap.oauth_token;
+                      oauthObject.oauth_nonce = $cordovaOauthUtility.createNonce(5);
+                      oauthObject.oauth_verifier = parameterMap.oauth_verifier;
+                      var signatureObj = $cordovaOauthUtility.createSignature("POST", baseUrl + "/oauth/token", oauthObject, {}, clientSecret, tokenSecret);
+                      $http.defaults.headers.post.Authorization = signatureObj.authorization_header;
+                      $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                      $http({method: "post", url: baseUrl + "/oauth/token"})
+                        .success(function (result) {
+                          var accessTokenParameters = result.split("&");
+                          var parameterMap = {};
+                          for (var i = 0; i < accessTokenParameters.length; i++) {
+                            parameterMap[accessTokenParameters[i].split("=")[0]] = accessTokenParameters[i].split("=")[1];
+                          }
+                          if (parameterMap.hasOwnProperty("oauth_token_secret") === false) {
+                            deferred.reject("Oauth access token was not received");
+                          }
+                          deferred.resolve(parameterMap);
+                        })
+                        .error(function (error) {
+                          deferred.reject(error);
+                        })
+                        .finally(function () {
+                          setTimeout(function () {
+                            browserRef.close();
+                          }, 10);
+                        });
+                    }
+                  });
+                  browserRef.addEventListener('exit', function (event) {
+                    deferred.reject("The sign in flow was canceled");
+                  });
+                })
+                .error(function (error) {
+                  deferred.reject(error);
+                });
+            } else {
+              deferred.reject("Missing jsSHA JavaScript library");
+            }
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Vkontakte service
+       *
+       * @param    string clientId
+       * @param    array appScope (for example: "friends,wall,photos,messages")
+       * @return   promise
+       */
+      vkontakte: function (clientId, appScope) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://oauth.vk.com/authorize?client_id=' + clientId + '&redirect_uri=http://oauth.vk.com/blank.html&response_type=token&scope=' + appScope.join(",") + '&display=touch&response_type=token', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              var tmp = (event.url).split("#");
+              if (tmp[0] == 'https://oauth.vk.com/blank.html' || tmp[0] == 'http://oauth.vk.com/blank.html') {
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve({access_token: parameterMap.access_token, expires_in: parameterMap.expires_in, user_id: parameterMap.user_id});
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+                setTimeout(function () {
+                  browserRef.close();
+                }, 10);
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      },
+
+      /*
+       * Sign into the Imgur service
+       *
+       * @param    string clientId
+       * @return   promise
+       */
+      imgur: function (clientId) {
+        var deferred = $q.defer();
+        if (window.cordova) {
+          var cordovaMetadata = cordova.require("cordova/plugin_list").metadata;
+          if (cordovaMetadata.hasOwnProperty("org.apache.cordova.inappbrowser") === true) {
+            var browserRef = window.open('https://api.imgur.com/oauth2/authorize?client_id=' + clientId + '&response_type=token', '_blank', 'location=no,clearsessioncache=yes,clearcache=yes');
+            browserRef.addEventListener('loadstart', function (event) {
+              if ((event.url).indexOf("http://localhost/callback") === 0) {
+                browserRef.removeEventListener("exit", function (event) {
+                });
+                browserRef.close();
+                var callbackResponse = (event.url).split("#")[1];
+                var responseParameters = (callbackResponse).split("&");
+                var parameterMap = [];
+                for (var i = 0; i < responseParameters.length; i++) {
+                  parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+                }
+                if (parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
+                  deferred.resolve({access_token: parameterMap.access_token, expires_in: parameterMap.expires_in, account_username: parameterMap.account_username});
+                } else {
+                  deferred.reject("Problem authenticating");
+                }
+              }
+            });
+            browserRef.addEventListener('exit', function (event) {
+              deferred.reject("The sign in flow was canceled");
+            });
+          } else {
+            deferred.reject("Could not find InAppBrowser plugin");
+          }
+        } else {
+          deferred.reject("Cannot authenticate via a web browser");
+        }
+        return deferred.promise;
+      }
+
+    };
+  }]);
+
+angular.module("ngCordova.plugins.oauthUtility", [])
+
+  .factory('$cordovaOauthUtility', ['$q', function ($q) {
+
+    return {
+
+      /*
+       * Sign an Oauth 1.0 request
+       *
+       * @param    string method
+       * @param    string endPoint
+       * @param    object headerParameters
+       * @param    object bodyParameters
+       * @param    string secretKey
+       * @return   object
+       */
+      createSignature: function (method, endPoint, headerParameters, bodyParameters, secretKey, tokenSecret) {
+        if (typeof jsSHA !== "undefined") {
+          var headerAndBodyParameters = angular.copy(headerParameters);
+          var bodyParameterKeys = Object.keys(bodyParameters);
+          for (var i = 0; i < bodyParameterKeys.length; i++) {
+            headerAndBodyParameters[bodyParameterKeys[i]] = encodeURIComponent(bodyParameters[bodyParameterKeys[i]]);
+          }
+          var signatureBaseString = method + "&" + encodeURIComponent(endPoint) + "&";
+          var headerAndBodyParameterKeys = (Object.keys(headerAndBodyParameters)).sort();
+          for (i = 0; i < headerAndBodyParameterKeys.length; i++) {
+            if (i == headerAndBodyParameterKeys.length - 1) {
+              signatureBaseString += encodeURIComponent(headerAndBodyParameterKeys[i] + "=" + headerAndBodyParameters[headerAndBodyParameterKeys[i]]);
+            } else {
+              signatureBaseString += encodeURIComponent(headerAndBodyParameterKeys[i] + "=" + headerAndBodyParameters[headerAndBodyParameterKeys[i]] + "&");
+            }
+          }
+          var oauthSignatureObject = new jsSHA(signatureBaseString, "TEXT");
+
+          var encodedTokenSecret = '';
+          if (tokenSecret) {
+            encodedTokenSecret = encodeURIComponent(tokenSecret);
+          }
+
+          headerParameters.oauth_signature = encodeURIComponent(oauthSignatureObject.getHMAC(encodeURIComponent(secretKey) + "&" + encodedTokenSecret, "TEXT", "SHA-1", "B64"));
+          var headerParameterKeys = Object.keys(headerParameters);
+          var authorizationHeader = 'OAuth ';
+          for (i = 0; i < headerParameterKeys.length; i++) {
+            if (i == headerParameterKeys.length - 1) {
+              authorizationHeader += headerParameterKeys[i] + '="' + headerParameters[headerParameterKeys[i]] + '"';
+            } else {
+              authorizationHeader += headerParameterKeys[i] + '="' + headerParameters[headerParameterKeys[i]] + '",';
+            }
+          }
+          return {signature_base_string: signatureBaseString, authorization_header: authorizationHeader, signature: headerParameters.oauth_signature};
+        } else {
+          return "Missing jsSHA JavaScript library";
+        }
+      },
+
+      /*
+       * Create Random String Nonce
+       *
+       * @param    integer length
+       * @return   string
+       */
+      createNonce: function (length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < length; i++) {
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+      }
+
+    };
+
   }]);
 
 // install   :      cordova plugin add https://github.com/Paldom/PinDialog.git
@@ -58097,6 +58774,7 @@ angular.module('ngCordova.plugins.prefs', [])
   .factory('$cordovaPreferences', ['$window', '$q', function ($window, $q) {
 
     return {
+
       set: function (key, value) {
         var q = $q.defer();
 
@@ -58248,7 +58926,6 @@ angular.module('ngCordova.plugins.progressIndicator', [])
 angular.module('ngCordova.plugins.push', [])
 
   .factory('$cordovaPush', ['$q', '$window', '$rootScope', '$timeout', function ($q, $window, $rootScope, $timeout) {
-    
     return {
       onNotification: function (notification) {
         $timeout(function () {
@@ -58514,15 +59191,16 @@ angular.module('ngCordova.plugins.sqlite', [])
   .factory('$cordovaSQLite', ['$q', '$window', function ($q, $window) {
 
     return {
-      openDB: function (options, background) {
-        if (typeof options !== 'object') {
-          options = {name: options};
-        }
-        if (typeof background !== 'undefined') {
-          options.bgType = background;
+      openDB: function (dbName, background) {
+
+        if (typeof background === 'undefined') {
+          background = 0;
         }
 
-        return $window.sqlitePlugin.openDatabase(options);
+        return $window.sqlitePlugin.openDatabase({
+          name: dbName,
+          bgType: background
+        });
       },
 
       execute: function (db, query, binding) {
@@ -58601,74 +59279,67 @@ angular.module('ngCordova.plugins.sqlite', [])
 
 angular.module('ngCordova.plugins.statusbar', [])
 
-.factory('$cordovaStatusbar', [function () {
+  .factory('$cordovaStatusbar', [function () {
 
-  return {
+    return {
+      overlaysWebView: function (bool) {
+        return StatusBar.overlaysWebView(!!bool);
+      },
 
-    /**
-      * @param {boolean} bool
-      */
-    overlaysWebView: function (bool) {
-      return StatusBar.overlaysWebView(!!bool);
-    },
+      STYLES: {
+        DEFAULT: 0,
+        LIGHT_CONTENT: 1,
+        BLACK_TRANSLUCENT: 2,
+        BLACK_OPAQUE: 3
+      },
 
-    STYLES: {
-      DEFAULT: 0,
-      LIGHT_CONTENT: 1,
-      BLACK_TRANSLUCENT: 2,
-      BLACK_OPAQUE: 3
-    },
+      style: function (style) {
+        switch (style) {
+          // Default
+          case 0:
+            return StatusBar.styleDefault();
 
-    /**
-      * @param {number} style
-      */
-    style: function (style) {
-      switch (style) {
-        // Default
-        case 0:
-        return StatusBar.styleDefault();
+          // LightContent
+          case 1:
+            return StatusBar.styleLightContent();
 
-        // LightContent
-        case 1:
-        return StatusBar.styleLightContent();
+          // BlackTranslucent
+          case 2:
+            return StatusBar.styleBlackTranslucent();
 
-        // BlackTranslucent
-        case 2:
-        return StatusBar.styleBlackTranslucent();
+          // BlackOpaque
+          case 3:
+            return StatusBar.styleBlackOpaque();
 
-        // BlackOpaque
-        case 3:
-        return StatusBar.styleBlackOpaque();
+          default:
+            return StatusBar.styleDefault();
+        }
+      },
 
-        default:
-        return StatusBar.styleDefault();
+      // supported names:
+      // black, darkGray, lightGray, white, gray, red, green,
+      // blue, cyan, yellow, magenta, orange, purple, brown
+      styleColor: function (color) {
+        return StatusBar.backgroundColorByName(color);
+      },
+
+      styleHex: function (colorHex) {
+        return StatusBar.backgroundColorByHexString(colorHex);
+      },
+
+      hide: function () {
+        return StatusBar.hide();
+      },
+
+      show: function () {
+        return StatusBar.show();
+      },
+
+      isVisible: function () {
+        return StatusBar.isVisible;
       }
-    },
-
-    // supported names:
-    // black, darkGray, lightGray, white, gray, red, green,
-    // blue, cyan, yellow, magenta, orange, purple, brown
-    styleColor: function (color) {
-      return StatusBar.backgroundColorByName(color);
-    },
-
-    styleHex: function (colorHex) {
-      return StatusBar.backgroundColorByHexString(colorHex);
-    },
-
-    hide: function () {
-      return StatusBar.hide();
-    },
-
-    show: function () {
-      return StatusBar.show();
-    },
-
-    isVisible: function () {
-      return StatusBar.isVisible;
-    }
-  };
-}]);
+    };
+  }]);
 
 // install   :      cordova plugin add https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
 // link      :      https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin
@@ -83796,11 +84467,11 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
  * angular-ui-bootstrap
  * http://angular-ui.github.io/bootstrap/
 
- * Version: 0.13.2 - 2015-08-02
+ * Version: 0.13.0 - 2015-05-02
  * License: MIT
  */
 angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.bindHtml","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.position","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.modal","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.transition","ui.bootstrap.typeahead"]);
-angular.module("ui.bootstrap.tpls", ["template/accordion/accordion-group.html","template/accordion/accordion.html","template/alert/alert.html","template/carousel/carousel.html","template/carousel/slide.html","template/datepicker/datepicker.html","template/datepicker/day.html","template/datepicker/month.html","template/datepicker/popup.html","template/datepicker/year.html","template/modal/backdrop.html","template/modal/window.html","template/pagination/pager.html","template/pagination/pagination.html","template/tooltip/tooltip-html-popup.html","template/tooltip/tooltip-html-unsafe-popup.html","template/tooltip/tooltip-popup.html","template/tooltip/tooltip-template-popup.html","template/popover/popover-html.html","template/popover/popover-template.html","template/popover/popover.html","template/progressbar/bar.html","template/progressbar/progress.html","template/progressbar/progressbar.html","template/rating/rating.html","template/tabs/tab.html","template/tabs/tabset.html","template/timepicker/timepicker.html","template/typeahead/typeahead-match.html","template/typeahead/typeahead-popup.html"]);
+angular.module("ui.bootstrap.tpls", ["template/accordion/accordion-group.html","template/accordion/accordion.html","template/alert/alert.html","template/carousel/carousel.html","template/carousel/slide.html","template/datepicker/datepicker.html","template/datepicker/day.html","template/datepicker/month.html","template/datepicker/popup.html","template/datepicker/year.html","template/modal/backdrop.html","template/modal/window.html","template/pagination/pager.html","template/pagination/pagination.html","template/tooltip/tooltip-html-popup.html","template/tooltip/tooltip-html-unsafe-popup.html","template/tooltip/tooltip-popup.html","template/tooltip/tooltip-template-popup.html","template/popover/popover-template.html","template/popover/popover.html","template/progressbar/bar.html","template/progressbar/progress.html","template/progressbar/progressbar.html","template/rating/rating.html","template/tabs/tab.html","template/tabs/tabset.html","template/timepicker/timepicker.html","template/typeahead/typeahead-match.html","template/typeahead/typeahead-popup.html"]);
 angular.module('ui.bootstrap.collapse', [])
 
   .directive('collapse', ['$animate', function ($animate) {
@@ -83808,11 +84479,7 @@ angular.module('ui.bootstrap.collapse', [])
     return {
       link: function (scope, element, attrs) {
         function expand() {
-          element.removeClass('collapse')
-            .addClass('collapsing')
-            .attr('aria-expanded', true)
-            .attr('aria-hidden', false);
-
+          element.removeClass('collapse').addClass('collapsing');
           $animate.addClass(element, 'in', {
             to: { height: element[0].scrollHeight + 'px' }
           }).then(expandDone);
@@ -83824,10 +84491,6 @@ angular.module('ui.bootstrap.collapse', [])
         }
 
         function collapse() {
-          if(! element.hasClass('collapse') && ! element.hasClass('in')) {
-            return collapseDone();
-          }
-
           element
             // IMPORTANT: The height must be set before adding "collapsing" class.
             // Otherwise, the browser attempts to animate from height 0 (in
@@ -83836,9 +84499,7 @@ angular.module('ui.bootstrap.collapse', [])
             // initially all panel collapse have the collapse class, this removal
             // prevents the animation from jumping to collapsed state
             .removeClass('collapse')
-            .addClass('collapsing')
-            .attr('aria-expanded', false)
-            .attr('aria-hidden', true);
+            .addClass('collapsing');
 
           $animate.removeClass(element, 'in', {
             to: {height: '0'}
@@ -83985,8 +84646,8 @@ angular.module('ui.bootstrap.accordion', ['ui.bootstrap.collapse'])
     link: function(scope, element, attr, controller) {
       scope.$watch(function() { return controller[attr.accordionTransclude]; }, function(heading) {
         if ( heading ) {
-          element.find('span').html('');
-          element.find('span').append(heading);
+          element.html('');
+          element.append(heading);
         }
       });
     }
@@ -83998,7 +84659,7 @@ angular.module('ui.bootstrap.accordion', ['ui.bootstrap.collapse'])
 angular.module('ui.bootstrap.alert', [])
 
 .controller('AlertController', ['$scope', '$attrs', function ($scope, $attrs) {
-  $scope.closeable = !!$attrs.close;
+  $scope.closeable = 'close' in $attrs;
   this.close = $scope.close;
 }])
 
@@ -84029,19 +84690,14 @@ angular.module('ui.bootstrap.alert', [])
 
 angular.module('ui.bootstrap.bindHtml', [])
 
-  .value('$bindHtmlUnsafeSuppressDeprecated', false)
-
-  .directive('bindHtmlUnsafe', ['$log', '$bindHtmlUnsafeSuppressDeprecated', function ($log, $bindHtmlUnsafeSuppressDeprecated) {
+  .directive('bindHtmlUnsafe', function () {
     return function (scope, element, attr) {
-      if (!$bindHtmlUnsafeSuppressDeprecated) {
-        $log.warn('bindHtmlUnsafe is now deprecated. Use ngBindHtml instead');
-      }
       element.addClass('ng-binding').data('$binding', attr.bindHtmlUnsafe);
       scope.$watch(attr.bindHtmlUnsafe, function bindHtmlUnsafeWatchAction(value) {
         element.html(value || '');
       });
     };
-  }]);
+  });
 angular.module('ui.bootstrap.buttons', [])
 
 .constant('buttonConfig', {
@@ -84068,10 +84724,6 @@ angular.module('ui.bootstrap.buttons', [])
 
       //ui->model
       element.bind(buttonsCtrl.toggleEvent, function () {
-        if ('disabled' in attrs) {
-          return;
-        }
-
         var isActive = element.hasClass(buttonsCtrl.activeClass);
 
         if (!isActive || angular.isDefined(attrs.uncheckable)) {
@@ -84112,10 +84764,6 @@ angular.module('ui.bootstrap.buttons', [])
 
       //ui->model
       element.bind(buttonsCtrl.toggleEvent, function () {
-        if ('disabled' in attrs) {
-          return;
-        }
-
         scope.$apply(function () {
           ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getFalseValue() : getTrueValue());
           ngModelCtrl.$render();
@@ -84134,12 +84782,9 @@ angular.module('ui.bootstrap.buttons', [])
 *
 */
 angular.module('ui.bootstrap.carousel', [])
-.constant('ANIMATE_CSS', angular.version.minor >= 4)
-.controller('CarouselController', ['$scope', '$element', '$interval', '$animate', 'ANIMATE_CSS', function ($scope, $element, $interval, $animate, ANIMATE_CSS) {
+.controller('CarouselController', ['$scope', '$interval', '$animate', function ($scope, $interval, $animate) {
   var self = this,
     slides = self.slides = $scope.slides = [],
-    NO_TRANSITION = 'uib-noTransition',
-    SLIDE_DIRECTION = 'uib-slideDirection',
     currentIndex = -1,
     currentInterval, isPlaying;
   self.currentSlide = null;
@@ -84152,43 +84797,28 @@ angular.module('ui.bootstrap.carousel', [])
     if (direction === undefined) {
       direction = nextIndex > self.getCurrentIndex() ? 'next' : 'prev';
     }
-    //Prevent this user-triggered transition from occurring if there is already one in progress
-    if (nextSlide && nextSlide !== self.currentSlide && !$scope.$currentTransition) {
-      goNext(nextSlide, nextIndex, direction);
+    if (nextSlide && nextSlide !== self.currentSlide) {
+      goNext();
     }
-  };
+    function goNext() {
+      // Scope has been destroyed, stop here.
+      if (destroyed) { return; }
 
-  function goNext(slide, index, direction) {
-    // Scope has been destroyed, stop here.
-    if (destroyed) { return; }
-
-    angular.extend(slide, {direction: direction, active: true});
-    angular.extend(self.currentSlide || {}, {direction: direction, active: false});
-    if ($animate.enabled() && !$scope.noTransition && !$scope.$currentTransition &&
-      slide.$element) {
-      slide.$element.data(SLIDE_DIRECTION, slide.direction);
-      $scope.$currentTransition = true;
-      if (ANIMATE_CSS) {
-        $animate.on('addClass', slide.$element, function (element, phase) {
-          $scope.$currentTransition = null;
-          if (!$scope.$currentTransition) {
-            $animate.off('addClass', element);
-          }
-        });
-      } else {
-        slide.$element.one('$animate:close', function closeFn() {
+      angular.extend(nextSlide, {direction: direction, active: true});
+      angular.extend(self.currentSlide || {}, {direction: direction, active: false});
+      if ($animate.enabled() && !$scope.noTransition && nextSlide.$element) {
+        $scope.$currentTransition = true;
+        nextSlide.$element.one('$animate:close', function closeFn() {
           $scope.$currentTransition = null;
         });
       }
+
+      self.currentSlide = nextSlide;
+      currentIndex = nextIndex;
+      //every time you change slides, reset the timer
+      restartTimer();
     }
-
-    self.currentSlide = slide;
-    currentIndex = index;
-
-    //every time you change slides, reset the timer
-    restartTimer();
-  }
-
+  };
   $scope.$on('$destroy', function () {
     destroyed = true;
   });
@@ -84220,23 +84850,19 @@ angular.module('ui.bootstrap.carousel', [])
   $scope.next = function() {
     var newIndex = (self.getCurrentIndex() + 1) % slides.length;
 
-    if (newIndex === 0 && $scope.noWrap()) {
-      $scope.pause();
-      return;
+    //Prevent this user-triggered transition from occurring if there is already one in progress
+    if (!$scope.$currentTransition) {
+      return self.select(getSlideByIndex(newIndex), 'next');
     }
-
-    return self.select(getSlideByIndex(newIndex), 'next');
   };
 
   $scope.prev = function() {
     var newIndex = self.getCurrentIndex() - 1 < 0 ? slides.length - 1 : self.getCurrentIndex() - 1;
 
-    if ($scope.noWrap() && newIndex === slides.length - 1){
-      $scope.pause();
-      return;
+    //Prevent this user-triggered transition from occurring if there is already one in progress
+    if (!$scope.$currentTransition) {
+      return self.select(getSlideByIndex(newIndex), 'prev');
     }
-
-    return self.select(getSlideByIndex(newIndex), 'prev');
   };
 
   $scope.isActive = function(slide) {
@@ -84263,7 +84889,7 @@ angular.module('ui.bootstrap.carousel', [])
 
   function timerFn() {
     var interval = +$scope.interval;
-    if (isPlaying && !isNaN(interval) && interval > 0 && slides.length) {
+    if (isPlaying && !isNaN(interval) && interval > 0) {
       $scope.next();
     } else {
       $scope.pause();
@@ -84284,12 +84910,6 @@ angular.module('ui.bootstrap.carousel', [])
   };
 
   self.addSlide = function(slide, element) {
-    // add default direction for initial transition
-    // necessary for angular 1.4+
-    if (!slides.length && element) {
-      element.data(SLIDE_DIRECTION, 'next');
-    }
-
     slide.$element = element;
     slides.push(slide);
     //if this is the first slide or the slide is set to active, select it
@@ -84321,16 +84941,7 @@ angular.module('ui.bootstrap.carousel', [])
     } else if (currentIndex > index) {
       currentIndex--;
     }
-    
-    //clean the currentSlide when no more slide
-    if (slides.length === 0) {
-      self.currentSlide = null;
-    }
   };
-
-  $scope.$watch('noTransition', function(noTransition) {
-    $element.data(NO_TRANSITION, noTransition);
-  });
 
 }])
 
@@ -84383,8 +84994,7 @@ angular.module('ui.bootstrap.carousel', [])
     scope: {
       interval: '=',
       noTransition: '=',
-      noPause: '=',
-      noWrap: '&'
+      noPause: '='
     }
   };
 }])
@@ -84459,43 +85069,23 @@ function CarouselDemoCtrl($scope) {
 })
 
 .animation('.item', [
-         '$injector', '$animate', 'ANIMATE_CSS',
-function ($injector, $animate, ANIMATE_CSS) {
-  var NO_TRANSITION = 'uib-noTransition',
-    SLIDE_DIRECTION = 'uib-slideDirection',
-    $animateCss = ANIMATE_CSS ? $injector.get('$animateCss') : null;
-
-  function removeClass(element, className, callback) {
-    element.removeClass(className);
-    if (callback) {
-      callback();
-    }
-  }
-
+         '$animate',
+function ($animate) {
   return {
     beforeAddClass: function (element, className, done) {
       // Due to transclusion, noTransition property is on parent's scope
       if (className == 'active' && element.parent() &&
-          !element.parent().data(NO_TRANSITION)) {
+          !element.parent().scope().noTransition) {
         var stopped = false;
-        var direction = element.data(SLIDE_DIRECTION);
+        var direction = element.isolateScope().direction;
         var directionClass = direction == 'next' ? 'left' : 'right';
-        var removeClassFn = removeClass.bind(this, element,
-          directionClass + ' ' + direction, done);
         element.addClass(direction);
-
-        if ($animateCss) {
-          $animateCss(element, {addClass: directionClass})
-            .start()
-            .done(removeClassFn);
-        } else {
-          $animate.addClass(element, directionClass).then(function () {
-            if (!stopped) {
-              removeClassFn();
-            }
-            done();
-          });
-        }
+        $animate.addClass(element, directionClass).then(function () {
+          if (!stopped) {
+            element.removeClass(directionClass + ' ' + direction);
+          }
+          done();
+        });
 
         return function () {
           stopped = true;
@@ -84505,25 +85095,17 @@ function ($injector, $animate, ANIMATE_CSS) {
     },
     beforeRemoveClass: function (element, className, done) {
       // Due to transclusion, noTransition property is on parent's scope
-      if (className === 'active' && element.parent() &&
-          !element.parent().data(NO_TRANSITION)) {
+      if (className == 'active' && element.parent() &&
+          !element.parent().scope().noTransition) {
         var stopped = false;
-        var direction = element.data(SLIDE_DIRECTION);
+        var direction = element.isolateScope().direction;
         var directionClass = direction == 'next' ? 'left' : 'right';
-        var removeClassFn = removeClass.bind(this, element, directionClass, done);
-
-        if ($animateCss) {
-          $animateCss(element, {addClass: directionClass})
-            .start()
-            .done(removeClassFn);
-        } else {
-          $animate.addClass(element, directionClass).then(function () {
-            if (!stopped) {
-              removeClassFn();
-            }
-            done();
-          });
-        }
+        $animate.addClass(element, directionClass).then(function () {
+          if (!stopped) {
+            element.removeClass(directionClass);
+          }
+          done();
+        });
         return function () {
           stopped = true;
         };
@@ -84539,7 +85121,7 @@ function ($injector, $animate, ANIMATE_CSS) {
 
 angular.module('ui.bootstrap.dateparser', [])
 
-.service('dateParser', ['$log', '$locale', 'orderByFilter', function($log, $locale, orderByFilter) {
+.service('dateParser', ['$locale', 'orderByFilter', function($locale, orderByFilter) {
   // Pulled from https://github.com/mbostock/d3/blob/master/src/format/requote.js
   var SPECIAL_CHARACTERS_REGEXP = /[\\\^\$\*\+\?\|\[\]\(\)\.\{\}]/g;
 
@@ -84664,7 +85246,7 @@ angular.module('ui.bootstrap.dateparser', [])
 
     if ( results && results.length ) {
       var fields, dt;
-      if (angular.isDate(baseDate) && !isNaN(baseDate.getTime())) {
+      if (baseDate) {
         fields = {
           year: baseDate.getFullYear(),
           month: baseDate.getMonth(),
@@ -84675,9 +85257,6 @@ angular.module('ui.bootstrap.dateparser', [])
           milliseconds: baseDate.getMilliseconds()
         };
       } else {
-        if (baseDate) {
-          $log.warn('dateparser:', 'baseDate is not a valid date');
-        }
         fields = { year: 1900, month: 0, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 };
       }
 
@@ -84889,7 +85468,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   shortcutPropagation: false
 })
 
-.controller('DatepickerController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'datepickerConfig', function($scope, $attrs, $parse, $interpolate, $log, dateFilter, datepickerConfig) {
+.controller('DatepickerController', ['$scope', '$attrs', '$parse', '$interpolate', '$timeout', '$log', 'dateFilter', 'datepickerConfig', function($scope, $attrs, $parse, $interpolate, $timeout, $log, dateFilter, datepickerConfig) {
   var self = this,
       ngModelCtrl = { $setViewValue: angular.noop }; // nullModelCtrl;
 
@@ -84956,6 +85535,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       } else {
         $log.error('Datepicker directive: "ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
       }
+      ngModelCtrl.$setValidity('date', isValid);
     }
     this.refreshView();
   };
@@ -84998,17 +85578,6 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
     return arrays;
   };
 
-  // Fix a hard-reprodusible bug with timezones
-  // The bug depends on OS, browser, current timezone and current date
-  // i.e.
-  // var date = new Date(2014, 0, 1);
-  // console.log(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
-  // can result in "2013 11 31 23" because of the bug.
-  this.fixTimeZone = function(date) {
-    var hours = date.getHours();
-    date.setHours(hours === 23 ? hours + 2 : 0);
-  };
-
   $scope.select = function( date ) {
     if ( $scope.datepickerMode === self.minMode ) {
       var dt = ngModelCtrl.$viewValue ? new Date( ngModelCtrl.$viewValue ) : new Date(0, 0, 0, 0, 0, 0, 0);
@@ -85042,7 +85611,9 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   $scope.keys = { 13:'enter', 32:'space', 33:'pageup', 34:'pagedown', 35:'end', 36:'home', 37:'left', 38:'up', 39:'right', 40:'down' };
 
   var focusElement = function() {
-    self.element[0].focus();
+    $timeout(function() {
+      self.element[0].focus();
+    }, 0 , false);
   };
 
   // Listen for focus requests from popup directive
@@ -85117,11 +85688,10 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       }
 
       function getDates(startDate, n) {
-        var dates = new Array(n), current = new Date(startDate), i = 0, date;
+        var dates = new Array(n), current = new Date(startDate), i = 0;
+        current.setHours(12); // Prevent repeated dates because of timezone bug
         while ( i < n ) {
-          date = new Date(current);
-          ctrl.fixTimeZone(date);
-          dates[i++] = date;
+          dates[i++] = new Date(current);
           current.setDate( current.getDate() + 1 );
         }
         return dates;
@@ -85223,13 +85793,10 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
       ctrl._refreshView = function() {
         var months = new Array(12),
-            year = ctrl.activeDate.getFullYear(),
-            date;
+            year = ctrl.activeDate.getFullYear();
 
         for ( var i = 0; i < 12; i++ ) {
-          date = new Date(year, i, 1);
-          ctrl.fixTimeZone(date);
-          months[i] = angular.extend(ctrl.createDateObject(date, ctrl.formatMonth), {
+          months[i] = angular.extend(ctrl.createDateObject(new Date(year, i, 1), ctrl.formatMonth), {
             uid: scope.uniqueId + '-' + i
           });
         }
@@ -85286,12 +85853,10 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       }
 
       ctrl._refreshView = function() {
-        var years = new Array(range), date;
+        var years = new Array(range);
 
         for ( var i = 0, start = getStartingYear(ctrl.activeDate.getFullYear()); i < range; i++ ) {
-          date = new Date(start + i, 0, 1);
-          ctrl.fixTimeZone(date);
-          years[i] = angular.extend(ctrl.createDateObject(date, ctrl.formatYear), {
+          years[i] = angular.extend(ctrl.createDateObject(new Date(start + i, 0, 1), ctrl.formatYear), {
             uid: scope.uniqueId + '-' + i
           });
         }
@@ -85345,8 +85910,8 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   showButtonBar: true
 })
 
-.directive('datepickerPopup', ['$compile', '$parse', '$document', '$position', 'dateFilter', 'dateParser', 'datepickerPopupConfig', '$timeout',
-function ($compile, $parse, $document, $position, dateFilter, dateParser, datepickerPopupConfig, $timeout) {
+.directive('datepickerPopup', ['$compile', '$parse', '$document', '$position', 'dateFilter', 'dateParser', 'datepickerPopupConfig',
+function ($compile, $parse, $document, $position, dateFilter, dateParser, datepickerPopupConfig) {
   return {
     restrict: 'EA',
     require: 'ngModel',
@@ -85402,7 +85967,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
       var popupEl = angular.element('<div datepicker-popup-wrap><div datepicker></div></div>');
       popupEl.attr({
         'ng-model': 'date',
-        'ng-change': 'dateSelection(date)'
+        'ng-change': 'dateSelection()'
       });
 
       function cameltoDash( string ){
@@ -85420,7 +85985,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       if ( attrs.datepickerOptions ) {
         var options = scope.$parent.$eval(attrs.datepickerOptions);
-        if(options && options.initDate) {
+        if(options.initDate) {
           scope.initDate = options.initDate;
           datepickerEl.attr( 'init-date', 'initDate' );
           delete options.initDate;
@@ -85443,7 +86008,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
           if ( key === 'datepickerMode' ) {
             var setAttribute = getAttribute.assign;
             scope.$watch('watchData.' + key, function(value, oldvalue) {
-              if ( angular.isFunction(setAttribute) && value !== oldvalue ) {
+              if ( value !== oldvalue ) {
                 setAttribute(scope.$parent, value);
               }
             });
@@ -85473,7 +86038,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
         } else if (angular.isDate(viewValue) && !isNaN(viewValue)) {
           return viewValue;
         } else if (angular.isString(viewValue)) {
-          var date = dateParser.parse(viewValue, dateFormat, scope.date);
+          var date = dateParser.parse(viewValue, dateFormat, scope.date) || new Date(viewValue);
           if (isNaN(date)) {
             return undefined;
           } else {
@@ -85486,11 +86051,6 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       function validator(modelValue, viewValue) {
         var value = modelValue || viewValue;
-
-        if (!attrs.ngRequired && !value) {
-          return true;
-        }
-
         if (angular.isNumber(value)) {
           value = new Date(value);
         }
@@ -85499,7 +86059,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
         } else if (angular.isDate(value) && !isNaN(value)) {
           return true;
         } else if (angular.isString(value)) {
-          var date = dateParser.parse(value, dateFormat);
+          var date = dateParser.parse(value, dateFormat) || new Date(value);
           return !isNaN(date);
         } else {
           return false;
@@ -85528,7 +86088,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
         if (angular.isDefined(dt)) {
           scope.date = dt;
         }
-        var date = scope.date ? dateFilter(scope.date, dateFormat) : null; // Setting to NULL is necessary for form validators to function
+        var date = scope.date ? dateFilter(scope.date, dateFormat) : '';
         element.val(date);
         ngModel.$setViewValue(date);
 
@@ -85540,51 +86100,41 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       // Detect changes in the view from the text box
       ngModel.$viewChangeListeners.push(function () {
-        scope.date = dateParser.parse(ngModel.$viewValue, dateFormat, scope.date);
+        scope.date = dateParser.parse(ngModel.$viewValue, dateFormat, scope.date) || new Date(ngModel.$viewValue);
       });
 
       var documentClickBind = function(event) {
-        if (scope.isOpen && !element[0].contains(event.target)) {
+        if (scope.isOpen && event.target !== element[0]) {
           scope.$apply(function() {
             scope.isOpen = false;
           });
         }
       };
 
-      var inputKeydownBind = function(evt) {
-        if (evt.which === 27 && scope.isOpen) {
-          evt.preventDefault();
-          evt.stopPropagation();
-          scope.$apply(function() {
-            scope.isOpen = false;
-          });
-          element[0].focus();
-        } else if (evt.which === 40 && !scope.isOpen) {
-          evt.preventDefault();
-          evt.stopPropagation();
-          scope.$apply(function() {
-            scope.isOpen = true;
-          });
-        }
+      var keydown = function(evt, noApply) {
+        scope.keydown(evt);
       };
-      element.bind('keydown', inputKeydownBind);
+      element.bind('keydown', keydown);
 
       scope.keydown = function(evt) {
         if (evt.which === 27) {
-          scope.isOpen = false;
-          element[0].focus();
+          evt.preventDefault();
+          if (scope.isOpen) {
+            evt.stopPropagation();
+          }
+          scope.close();
+        } else if (evt.which === 40 && !scope.isOpen) {
+          scope.isOpen = true;
         }
       };
 
       scope.$watch('isOpen', function(value) {
         if (value) {
+          scope.$broadcast('datepicker.focus');
           scope.position = appendToBody ? $position.offset(element) : $position.position(element);
           scope.position.top = scope.position.top + element.prop('offsetHeight');
 
-          $timeout(function() {
-            scope.$broadcast('datepicker.focus');
-            $document.bind('click', documentClickBind);
-          }, 0, false);
+          $document.bind('click', documentClickBind);
         } else {
           $document.unbind('click', documentClickBind);
         }
@@ -85619,14 +86169,8 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
       }
 
       scope.$on('$destroy', function() {
-        if (scope.isOpen === true) {
-          scope.$apply(function() {
-            scope.isOpen = false;
-          });
-        }
-
         $popup.remove();
-        element.unbind('keydown', inputKeydownBind);
+        element.unbind('keydown', keydown);
         $document.unbind('click', documentClickBind);
       });
     }
@@ -85638,7 +86182,13 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
     restrict:'EA',
     replace: true,
     transclude: true,
-    templateUrl: 'template/datepicker/popup.html'
+    templateUrl: 'template/datepicker/popup.html',
+    link:function (scope, element, attrs) {
+      element.bind('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    }
   };
 });
 
@@ -85654,11 +86204,11 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
   this.open = function( dropdownScope ) {
     if ( !openScope ) {
       $document.bind('click', closeDropdown);
-      $document.bind('keydown', keybindFilter);
+      $document.bind('keydown', escapeKeyBind);
     }
 
     if ( openScope && openScope !== dropdownScope ) {
-      openScope.isOpen = false;
+        openScope.isOpen = false;
     }
 
     openScope = dropdownScope;
@@ -85668,7 +86218,7 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
     if ( openScope === dropdownScope ) {
       openScope = null;
       $document.unbind('click', closeDropdown);
-      $document.unbind('keydown', keybindFilter);
+      $document.unbind('keydown', escapeKeyBind);
     }
   };
 
@@ -85681,12 +86231,11 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
 
     var toggleElement = openScope.getToggleElement();
     if ( evt && toggleElement && toggleElement[0].contains(evt.target) ) {
-      return;
+        return;
     }
 
-    var dropdownElement = openScope.getDropdownElement();
-    if (evt && openScope.getAutoClose() === 'outsideClick' &&
-      dropdownElement && dropdownElement[0].contains(evt.target)) {
+    var $element = openScope.getElement();
+    if( evt && openScope.getAutoClose() === 'outsideClick' && $element && $element[0].contains(evt.target) ) {
       return;
     }
 
@@ -85697,30 +86246,22 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
     }
   };
 
-  var keybindFilter = function( evt ) {
+  var escapeKeyBind = function( evt ) {
     if ( evt.which === 27 ) {
       openScope.focusToggleElement();
       closeDropdown();
     }
-    else if ( openScope.isKeynavEnabled() && /(38|40)/.test(evt.which) && openScope.isOpen ) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      openScope.focusDropdownEntry(evt.which);
-    }
   };
 }])
 
-.controller('DropdownController', ['$scope', '$attrs', '$parse', 'dropdownConfig', 'dropdownService', '$animate', '$position', '$document', '$compile', '$templateRequest', function($scope, $attrs, $parse, dropdownConfig, dropdownService, $animate, $position, $document, $compile, $templateRequest) {
+.controller('DropdownController', ['$scope', '$attrs', '$parse', 'dropdownConfig', 'dropdownService', '$animate', '$position', '$document', function($scope, $attrs, $parse, dropdownConfig, dropdownService, $animate, $position, $document) {
   var self = this,
-    scope = $scope.$new(), // create a child scope so we are not polluting original one
-	templateScope,
-    openClass = dropdownConfig.openClass,
-    getIsOpen,
-    setIsOpen = angular.noop,
-    toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop,
-    appendToBody = false,
-    keynavEnabled =false,
-    selectedOption = null;
+      scope = $scope.$new(), // create a child scope so we are not polluting original one
+      openClass = dropdownConfig.openClass,
+      getIsOpen,
+      setIsOpen = angular.noop,
+      toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop,
+      appendToBody = false;
 
   this.init = function( element ) {
     self.$element = element;
@@ -85735,7 +86276,6 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
     }
 
     appendToBody = angular.isDefined($attrs.dropdownAppendToBody);
-    keynavEnabled = angular.isDefined($attrs.keyboardNav);
 
     if ( appendToBody && self.dropdownMenu ) {
       $document.find('body').append( self.dropdownMenu );
@@ -85766,44 +86306,6 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
     return self.$element;
   };
 
-  scope.isKeynavEnabled = function() {
-    return keynavEnabled;
-  };
-
-  scope.focusDropdownEntry = function(keyCode) {
-    var elems = self.dropdownMenu ? //If append to body is used.
-      (angular.element(self.dropdownMenu).find('a')) :
-      (angular.element(self.$element).find('ul').eq(0).find('a'));
-
-    switch (keyCode) {
-      case (40): {
-        if ( !angular.isNumber(self.selectedOption)) {
-          self.selectedOption = 0;
-        } else {
-          self.selectedOption = (self.selectedOption === elems.length -1 ?
-            self.selectedOption :
-            self.selectedOption + 1);
-        }
-        break;
-      }
-      case (38): {
-        if ( !angular.isNumber(self.selectedOption)) {
-          return;
-        } else {
-          self.selectedOption = (self.selectedOption === 0 ?
-            0 :
-            self.selectedOption - 1);
-        }
-        break;
-      }
-    }
-    elems[self.selectedOption].focus();
-  };
-
-  scope.getDropdownElement = function() {
-    return self.dropdownMenu;
-  };
-
   scope.focusToggleElement = function() {
     if ( self.toggleElement ) {
       self.toggleElement[0].focus();
@@ -85811,68 +86313,32 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
   };
 
   scope.$watch('isOpen', function( isOpen, wasOpen ) {
-    if (appendToBody && self.dropdownMenu) {
-        var pos = $position.positionElements(self.$element, self.dropdownMenu, 'bottom-left', true);
-        var css = {
-            top: pos.top + 'px',
-            display: isOpen ? 'block' : 'none'
-        };
-
-        var rightalign = self.dropdownMenu.hasClass('dropdown-menu-right');
-        if (!rightalign) {
-            css.left = pos.left + 'px';
-            css.right = 'auto';
-        } else {
-            css.left = 'auto';
-            css.right = (window.innerWidth - (pos.left + self.$element.prop('offsetWidth'))) + 'px';
-        }
-
-        self.dropdownMenu.css(css);
+    if ( appendToBody && self.dropdownMenu ) {
+      var pos = $position.positionElements(self.$element, self.dropdownMenu, 'bottom-left', true);
+      self.dropdownMenu.css({
+        top: pos.top + 'px',
+        left: pos.left + 'px',
+        display: isOpen ? 'block' : 'none'
+      });
     }
 
-    $animate[isOpen ? 'addClass' : 'removeClass'](self.$element, openClass).then(function() {
-        if (angular.isDefined(isOpen) && isOpen !== wasOpen) {
-           toggleInvoker($scope, { open: !!isOpen });
-        }
-    });
+    $animate[isOpen ? 'addClass' : 'removeClass'](self.$element, openClass);
 
     if ( isOpen ) {
-      if (self.dropdownMenuTemplateUrl) {
-        $templateRequest(self.dropdownMenuTemplateUrl).then(function(tplContent) {
-          templateScope = scope.$new();
-          $compile(tplContent.trim())(templateScope, function(dropdownElement) {
-            var newEl = dropdownElement;
-            self.dropdownMenu.replaceWith(newEl);
-            self.dropdownMenu = newEl;
-          });
-        });
-      }
-
       scope.focusToggleElement();
       dropdownService.open( scope );
     } else {
-      if (self.dropdownMenuTemplateUrl) {
-        if (templateScope) {
-          templateScope.$destroy();
-        }
-        var newEl = angular.element('<ul class="dropdown-menu"></ul>');
-        self.dropdownMenu.replaceWith(newEl);
-        self.dropdownMenu = newEl;
-      }
-
       dropdownService.close( scope );
-      self.selectedOption = null;
     }
 
-    if (angular.isFunction(setIsOpen)) {
-      setIsOpen($scope, isOpen);
+    setIsOpen($scope, isOpen);
+    if (angular.isDefined(isOpen) && isOpen !== wasOpen) {
+      toggleInvoker($scope, { open: !!isOpen });
     }
   });
 
   $scope.$on('$locationChangeSuccess', function() {
-    if (scope.getAutoClose() !== 'disabled') {
-      scope.isOpen = false;
-    }
+    scope.isOpen = false;
   });
 
   $scope.$on('$destroy', function() {
@@ -85885,7 +86351,6 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
     controller: 'DropdownController',
     link: function(scope, element, attrs, dropdownCtrl) {
       dropdownCtrl.init( element );
-      element.addClass('dropdown');
     }
   };
 })
@@ -85895,55 +86360,11 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
     restrict: 'AC',
     require: '?^dropdown',
     link: function(scope, element, attrs, dropdownCtrl) {
-      if (!dropdownCtrl) {
+      if ( !dropdownCtrl ) {
         return;
       }
-      var tplUrl = attrs.templateUrl;
-      if (tplUrl) {
-        dropdownCtrl.dropdownMenuTemplateUrl = tplUrl;
-      }
-      if (!dropdownCtrl.dropdownMenu) {
-        dropdownCtrl.dropdownMenu = element;
-      }
+      dropdownCtrl.dropdownMenu = element;
     }
-  };
-})
-
-.directive('keyboardNav', function() {
-  return {
-    restrict: 'A',
-    require: '?^dropdown',
-    link: function (scope, element, attrs, dropdownCtrl) {
-
-      element.bind('keydown', function(e) {
-
-        if ([38, 40].indexOf(e.which) !== -1) {
-
-          e.preventDefault();
-          e.stopPropagation();
-
-          var elems = angular.element(element).find('a');
-
-          switch (e.keyCode) {
-            case (40): { // Down
-              if ( !angular.isNumber(dropdownCtrl.selectedOption)) {
-                dropdownCtrl.selectedOption = 0;
-              } else {
-                dropdownCtrl.selectedOption = (dropdownCtrl.selectedOption === elems.length -1 ? dropdownCtrl.selectedOption : dropdownCtrl.selectedOption+1);
-              }
-
-            }
-            break;
-            case (38): { // Up
-              dropdownCtrl.selectedOption = (dropdownCtrl.selectedOption === 0 ? 0 : dropdownCtrl.selectedOption-1);
-            }
-            break;
-          }
-          elems[dropdownCtrl.selectedOption].focus();
-        }
-      });
-    }
-
   };
 })
 
@@ -85954,8 +86375,6 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
       if ( !dropdownCtrl ) {
         return;
       }
-
-      element.addClass('dropdown-toggle');
 
       dropdownCtrl.toggleElement = element;
 
@@ -86043,9 +86462,7 @@ angular.module('ui.bootstrap.modal', [])
 /**
  * A helper directive for the $modal service. It creates a backdrop element.
  */
-  .directive('modalBackdrop', [
-           '$animate', '$modalStack',
-  function ($animate ,  $modalStack) {
+  .directive('modalBackdrop', ['$timeout', function ($timeout) {
     return {
       restrict: 'EA',
       replace: true,
@@ -86057,24 +86474,21 @@ angular.module('ui.bootstrap.modal', [])
     };
 
     function linkFn(scope, element, attrs) {
-      if (attrs.modalInClass) {
-        $animate.addClass(element, attrs.modalInClass);
+      scope.animate = false;
 
-        scope.$on($modalStack.NOW_CLOSING_EVENT, function (e, setIsAsync) {
-          var done = setIsAsync();
-          $animate.removeClass(element, attrs.modalInClass).then(done);
-        });
-      }
+      //trigger CSS transitions
+      $timeout(function () {
+        scope.animate = true;
+      });
     }
   }])
 
-  .directive('modalWindow', [
-           '$modalStack', '$q', '$animate',
-  function ($modalStack ,  $q ,  $animate) {
+  .directive('modalWindow', ['$modalStack', '$q', function ($modalStack, $q) {
     return {
       restrict: 'EA',
       scope: {
-        index: '@'
+        index: '@',
+        animate: '='
       },
       replace: true,
       transclude: true,
@@ -86110,14 +86524,8 @@ angular.module('ui.bootstrap.modal', [])
         });
 
         modalRenderDeferObj.promise.then(function () {
-          if (attrs.modalInClass) {
-            $animate.addClass(element, attrs.modalInClass);
-
-            scope.$on($modalStack.NOW_CLOSING_EVENT, function (e, setIsAsync) {
-              var done = setIsAsync();
-              $animate.removeClass(element, attrs.modalInClass).then(done);
-            });
-          }
+          // trigger CSS transitions
+          scope.animate = true;
 
           var inputsWithAutofocus = element[0].querySelectorAll('[autofocus]');
           /**
@@ -86166,28 +86574,14 @@ angular.module('ui.bootstrap.modal', [])
     };
   })
 
-  .factory('$modalStack', [
-             '$animate', '$timeout', '$document', '$compile', '$rootScope',
-             '$q',
-             '$$stackedMap',
-    function ($animate ,  $timeout ,  $document ,  $compile ,  $rootScope ,
-              $q,
-              $$stackedMap) {
+  .factory('$modalStack', ['$animate', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
+    function ($animate, $timeout, $document, $compile, $rootScope, $$stackedMap) {
 
       var OPENED_MODAL_CLASS = 'modal-open';
 
       var backdropDomEl, backdropScope;
       var openedWindows = $$stackedMap.createNew();
-      var $modalStack = {
-        NOW_CLOSING_EVENT: 'modal.stack.now-closing'
-      };
-
-      //Modal focus behavior
-      var focusableElementList;
-      var focusIndex = 0;
-      var tababbleSelector = 'a[href], area[href], input:not([disabled]), ' +
-        'button:not([disabled]),select:not([disabled]), textarea:not([disabled]), ' +
-        'iframe, object, embed, *[tabindex], *[contenteditable=true]';
+      var $modalStack = {};
 
       function backdropIndex() {
         var topBackdropIndex = -1;
@@ -86200,13 +86594,13 @@ angular.module('ui.bootstrap.modal', [])
         return topBackdropIndex;
       }
 
-      $rootScope.$watch(backdropIndex, function(newBackdropIndex) {
+      $rootScope.$watch(backdropIndex, function(newBackdropIndex){
         if (backdropScope) {
           backdropScope.index = newBackdropIndex;
         }
       });
 
-      function removeModalWindow(modalInstance, elementToReceiveFocus) {
+      function removeModalWindow(modalInstance) {
 
         var body = $document.find('body').eq(0);
         var modalWindow = openedWindows.get(modalInstance).value;
@@ -86214,17 +86608,11 @@ angular.module('ui.bootstrap.modal', [])
         //clean up the stack
         openedWindows.remove(modalInstance);
 
+        //remove window DOM element
         removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, function() {
           body.toggleClass(OPENED_MODAL_CLASS, openedWindows.length() > 0);
+          checkRemoveBackdrop();
         });
-        checkRemoveBackdrop();
-
-        //move focus to specified element if available, or else to body
-        if (elementToReceiveFocus && elementToReceiveFocus.focus) {
-          elementToReceiveFocus.focus();
-        } else {
-          body.focus();
-        }
       }
 
       function checkRemoveBackdrop() {
@@ -86240,24 +86628,18 @@ angular.module('ui.bootstrap.modal', [])
       }
 
       function removeAfterAnimate(domEl, scope, done) {
-        var asyncDeferred;
-        var asyncPromise = null;
-        var setIsAsync = function () {
-          if (!asyncDeferred) {
-            asyncDeferred = $q.defer();
-            asyncPromise = asyncDeferred.promise;
-          }
+        // Closing animation
+        scope.animate = false;
 
-          return function asyncDone() {
-            asyncDeferred.resolve();
-          };
-        };
-        scope.$broadcast($modalStack.NOW_CLOSING_EVENT, setIsAsync);
-
-        // Note that it's intentional that asyncPromise might be null.
-        // That's when setIsAsync has not been called during the
-        // NOW_CLOSING_EVENT broadcast.
-        return $q.when(asyncPromise).then(afterAnimating);
+        if (domEl.attr('modal-animation') && $animate.enabled()) {
+          // transition out
+          domEl.one('$animate:close', function closeFn() {
+            $rootScope.$evalAsync(afterAnimating);
+          });
+        } else {
+          // Ensure this call is async
+          $timeout(afterAnimating);
+        }
 
         function afterAnimating() {
           if (afterAnimating.done) {
@@ -86265,7 +86647,7 @@ angular.module('ui.bootstrap.modal', [])
           }
           afterAnimating.done = true;
 
-          $animate.leave(domEl);
+          domEl.remove();
           scope.$destroy();
           if (done) {
             done();
@@ -86274,35 +86656,15 @@ angular.module('ui.bootstrap.modal', [])
       }
 
       $document.bind('keydown', function (evt) {
-        var modal = openedWindows.top();
-        if (modal && modal.value.keyboard) {
-          switch (evt.which){
-            case 27: {
-              evt.preventDefault();
-              $rootScope.$apply(function () {
-                $modalStack.dismiss(modal.key, 'escape key press');
-              });
-              break;
-            }
-            case 9: {
-              $modalStack.loadFocusElementList(modal);
-              var focusChanged = false;
-              if (evt.shiftKey) {
-                if ($modalStack.isFocusInFirstItem(evt)) {
-                  focusChanged = $modalStack.focusLastFocusableElement();
-                }
-              } else {
-                if ($modalStack.isFocusInLastItem(evt)) {
-                  focusChanged = $modalStack.focusFirstFocusableElement();
-                }
-              }
+        var modal;
 
-              if (focusChanged) {
-                evt.preventDefault();
-                evt.stopPropagation();
-              }
-              break;
-            }
+        if (evt.which === 27) {
+          modal = openedWindows.top();
+          if (modal && modal.value.keyboard) {
+            evt.preventDefault();
+            $rootScope.$apply(function () {
+              $modalStack.dismiss(modal.key, 'escape key press');
+            });
           }
         }
       });
@@ -86351,7 +86713,6 @@ angular.module('ui.bootstrap.modal', [])
         openedWindows.top().value.modalOpener = modalOpener;
         body.append(modalDomEl);
         body.addClass(OPENED_MODAL_CLASS);
-        $modalStack.clearFocusListCache();
       };
 
       function broadcastClosing(modalWindow, resultOrReason, closing) {
@@ -86362,7 +86723,8 @@ angular.module('ui.bootstrap.modal', [])
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow && broadcastClosing(modalWindow, result, true)) {
           modalWindow.value.deferred.resolve(result);
-          removeModalWindow(modalInstance, modalWindow.value.modalOpener);
+          removeModalWindow(modalInstance);
+          modalWindow.value.modalOpener.focus();
           return true;
         }
         return !modalWindow;
@@ -86372,7 +86734,8 @@ angular.module('ui.bootstrap.modal', [])
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow && broadcastClosing(modalWindow, reason, false)) {
           modalWindow.value.deferred.reject(reason);
-          removeModalWindow(modalInstance, modalWindow.value.modalOpener);
+          removeModalWindow(modalInstance);
+          modalWindow.value.modalOpener.focus();
           return true;
         }
         return !modalWindow;
@@ -86393,51 +86756,6 @@ angular.module('ui.bootstrap.modal', [])
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
           modalWindow.value.renderDeferred.resolve();
-        }
-      };
-
-      $modalStack.focusFirstFocusableElement = function() {
-        if (focusableElementList.length > 0) {
-          focusableElementList[0].focus();
-          return true;
-        }
-        return false;
-      };
-      $modalStack.focusLastFocusableElement = function() {
-        if (focusableElementList.length > 0) {
-          focusableElementList[focusableElementList.length - 1].focus();
-          return true;
-        }
-        return false;
-      };
-
-      $modalStack.isFocusInFirstItem = function(evt) {
-        if (focusableElementList.length > 0) {
-          return (evt.target || evt.srcElement) == focusableElementList[0];
-        }
-        return false;
-      };
-
-      $modalStack.isFocusInLastItem = function(evt) {
-        if (focusableElementList.length > 0) {
-          return (evt.target || evt.srcElement) == focusableElementList[focusableElementList.length - 1];
-        }
-        return false;
-      };
-
-      $modalStack.clearFocusListCache = function() {
-        focusableElementList = [];
-        focusIndex = 0;
-      };
-
-      $modalStack.loadFocusElementList = function(modalWindow) {
-        if (focusableElementList === undefined || !focusableElementList.length0) {
-          if (modalWindow) {
-            var modalDomE1 = modalWindow.value.modalDomEl;
-            if (modalDomE1 && modalDomE1.length) {
-              focusableElementList = modalDomE1[0].querySelectorAll(tababbleSelector);
-            }
-          }
         }
       };
 
@@ -86523,10 +86841,6 @@ angular.module('ui.bootstrap.modal', [])
 
                 ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
                 if (modalOptions.controllerAs) {
-                  if (modalOptions.bindToController) {
-                    angular.extend(ctrlInstance, modalScope);
-                  }
-
                   modalScope[modalOptions.controllerAs] = ctrlInstance;
                 }
               }
@@ -86566,6 +86880,7 @@ angular.module('ui.bootstrap.modal', [])
   });
 
 angular.module('ui.bootstrap.pagination', [])
+
 .controller('PaginationController', ['$scope', '$attrs', '$parse', function ($scope, $attrs, $parse) {
   var self = this,
       ngModelCtrl = { $setViewValue: angular.noop }, // nullModelCtrl
@@ -86613,8 +86928,7 @@ angular.module('ui.bootstrap.pagination', [])
   };
 
   $scope.selectPage = function(page, evt) {
-    var clickAllowed = !$scope.ngDisabled || !evt;
-    if (clickAllowed && $scope.page !== page && page > 0 && page <= $scope.totalPages) {
+    if ( $scope.page !== page && page > 0 && page <= $scope.totalPages) {
       if (evt && evt.target) {
         evt.target.blur();
       }
@@ -86653,8 +86967,7 @@ angular.module('ui.bootstrap.pagination', [])
       firstText: '@',
       previousText: '@',
       nextText: '@',
-      lastText: '@',
-      ngDisabled:'='
+      lastText: '@'
     },
     require: ['pagination', '?ngModel'],
     controller: 'PaginationController',
@@ -86922,10 +87235,6 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
               tooltip.css( ttPosition );
             };
 
-            var positionTooltipAsync = function () {
-              $timeout(positionTooltip, 0, false);
-            };
-
             // Set up the correct scope to allow transclusion later
             ttScope.origScope = scope;
 
@@ -87036,9 +87345,12 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
                 }
               });
 
+              tooltipLinkedScope.$watch(function () {
+                $timeout(positionTooltip, 0, false);
+              });
+
               if (options.useContentExp) {
                 tooltipLinkedScope.$watch('contentExp()', function (val) {
-                  positionTooltipAsync();
                   if (!val && ttScope.isOpen ) {
                     hide();
                   }
@@ -87074,7 +87386,6 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             if (!options.useContentExp) {
               attrs.$observe( type, function ( val ) {
                 ttScope.content = val;
-                positionTooltipAsync();
 
                 if (!val && ttScope.isOpen ) {
                   hide();
@@ -87090,16 +87401,6 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 
             attrs.$observe( prefix+'Title', function ( val ) {
               ttScope.title = val;
-              positionTooltipAsync();
-            });
-
-            attrs.$observe( prefix + 'Placement', function () {
-              if (ttScope.isOpen) {
-                $timeout(function () {
-                  prepPlacement();
-                  show()();
-                }, 0, false);
-              }
             });
 
             function prepPopupClass() {
@@ -87328,7 +87629,7 @@ function ( $tooltip ,  tooltipHtmlUnsafeSuppressDeprecated ,  $log) {
 /**
  * The following features are still outstanding: popup delay, animation as a
  * function, placement as a function, inside, support for more triggers than
- * just mouse enter/leave, and selector delegatation.
+ * just mouse enter/leave, html popovers, and selector delegatation.
  */
 angular.module( 'ui.bootstrap.popover', [ 'ui.bootstrap.tooltip' ] )
 
@@ -87346,21 +87647,6 @@ angular.module( 'ui.bootstrap.popover', [ 'ui.bootstrap.tooltip' ] )
   return $tooltip( 'popoverTemplate', 'popover', 'click', {
     useContentExp: true
   } );
-}])
-
-.directive( 'popoverHtmlPopup', function () {
-  return {
-    restrict: 'EA',
-    replace: true,
-    scope: { contentExp: '&', title: '@', placement: '@', popupClass: '@', animation: '&', isOpen: '&' },
-    templateUrl: 'template/popover/popover-html.html'
-  };
-})
-
-.directive( 'popoverHtml', [ '$tooltip', function ( $tooltip ) {
-  return $tooltip( 'popoverHtml', 'popover', 'click', {
-    useContentExp: true
-  });
 }])
 
 .directive( 'popoverPopup', function () {
@@ -87397,24 +87683,9 @@ angular.module('ui.bootstrap.progressbar', [])
 
         this.bars.push(bar);
 
-        bar.max = $scope.max;
-
         bar.$watch('value', function( value ) {
-            bar.recalculatePercentage();
+            bar.percent = +(100 * value / $scope.max).toFixed(2);
         });
-
-        bar.recalculatePercentage = function() {
-            bar.percent = +(100 * bar.value / bar.max).toFixed(2);
-			
-            var totalPercentage = 0;
-            self.bars.forEach(function (bar) {
-                totalPercentage += bar.percent;
-            });
-
-            if (totalPercentage > 100) {
-                bar.percent -= totalPercentage - 100;
-            }
-        };
 
         bar.$on('$destroy', function() {
             element = null;
@@ -87425,13 +87696,6 @@ angular.module('ui.bootstrap.progressbar', [])
     this.removeBar = function(bar) {
         this.bars.splice(this.bars.indexOf(bar), 1);
     };
-
-    $scope.$watch('max', function(max) {
-        self.bars.forEach(function (bar) {
-            bar.max = $scope.max;
-            bar.recalculatePercentage();
-        });
-    });
 }])
 
 .directive('progress', function() {
@@ -87441,9 +87705,7 @@ angular.module('ui.bootstrap.progressbar', [])
         transclude: true,
         controller: 'ProgressController',
         require: 'progress',
-        scope: {
-          max: '=?'
-        },
+        scope: {},
         templateUrl: 'template/progressbar/progress.html'
     };
 })
@@ -87456,6 +87718,7 @@ angular.module('ui.bootstrap.progressbar', [])
         require: '^progress',
         scope: {
             value: '=',
+            max: '=?',
             type: '@'
         },
         templateUrl: 'template/progressbar/bar.html',
@@ -87488,8 +87751,7 @@ angular.module('ui.bootstrap.rating', [])
 .constant('ratingConfig', {
   max: 5,
   stateOn: null,
-  stateOff: null,
-  titles : ['one', 'two', 'three', 'four', 'five']
+  stateOff: null
 })
 
 .controller('RatingController', ['$scope', '$attrs', 'ratingConfig', function($scope, $attrs, ratingConfig) {
@@ -87508,10 +87770,7 @@ angular.module('ui.bootstrap.rating', [])
 
     this.stateOn = angular.isDefined($attrs.stateOn) ? $scope.$parent.$eval($attrs.stateOn) : ratingConfig.stateOn;
     this.stateOff = angular.isDefined($attrs.stateOff) ? $scope.$parent.$eval($attrs.stateOff) : ratingConfig.stateOff;
-    var tmpTitles = angular.isDefined($attrs.titles)  ? $scope.$parent.$eval($attrs.titles) : ratingConfig.titles ;    
-    this.titles = angular.isArray(tmpTitles) && tmpTitles.length > 0 ?
-      tmpTitles : ratingConfig.titles;
-    
+
     var ratingStates = angular.isDefined($attrs.ratingStates) ? $scope.$parent.$eval($attrs.ratingStates) :
                         new Array( angular.isDefined($attrs.max) ? $scope.$parent.$eval($attrs.max) : ratingConfig.max );
     $scope.range = this.buildTemplateObjects(ratingStates);
@@ -87519,22 +87778,14 @@ angular.module('ui.bootstrap.rating', [])
 
   this.buildTemplateObjects = function(states) {
     for (var i = 0, n = states.length; i < n; i++) {
-      states[i] = angular.extend({ index: i }, { stateOn: this.stateOn, stateOff: this.stateOff, title: this.getTitle(i) }, states[i]);
+      states[i] = angular.extend({ index: i }, { stateOn: this.stateOn, stateOff: this.stateOff }, states[i]);
     }
     return states;
   };
-  
-  this.getTitle = function(index) {
-    if (index >= this.titles.length) {
-      return index + 1;
-    } else {
-      return this.titles[index];
-    }
-  };
-  
+
   $scope.rate = function(value) {
     if ( !$scope.readonly && value >= 0 && value <= $scope.range.length ) {
-      ngModelCtrl.$setViewValue(ngModelCtrl.$viewValue === value ? 0 : value);
+      ngModelCtrl.$setViewValue(value);
       ngModelCtrl.$render();
     }
   };
@@ -87582,7 +87833,6 @@ angular.module('ui.bootstrap.rating', [])
     }
   };
 });
-
 
 /**
  * @ngdoc overview
@@ -87784,45 +88034,47 @@ angular.module('ui.bootstrap.tabs', [])
     controller: function() {
       //Empty controller so other directives can require being 'under' a tab
     },
-    link: function(scope, elm, attrs, tabsetCtrl, transclude) {
-      scope.$watch('active', function(active) {
-        if (active) {
-          tabsetCtrl.select(scope);
-        }
-      });
-
-      scope.disabled = false;
-      if ( attrs.disable ) {
-        scope.$parent.$watch($parse(attrs.disable), function(value) {
-          scope.disabled = !! value;
+    compile: function(elm, attrs, transclude) {
+      return function postLink(scope, elm, attrs, tabsetCtrl) {
+        scope.$watch('active', function(active) {
+          if (active) {
+            tabsetCtrl.select(scope);
+          }
         });
-      }
 
-      // Deprecation support of "disabled" parameter
-      // fix(tab): IE9 disabled attr renders grey text on enabled tab #2677
-      // This code is duplicated from the lines above to make it easy to remove once
-      // the feature has been completely deprecated
-      if ( attrs.disabled ) {
-        $log.warn('Use of "disabled" attribute has been deprecated, please use "disable"');
-        scope.$parent.$watch($parse(attrs.disabled), function(value) {
-          scope.disabled = !! value;
-        });
-      }
-
-      scope.select = function() {
-        if ( !scope.disabled ) {
-          scope.active = true;
+        scope.disabled = false;
+        if ( attrs.disable ) {
+          scope.$parent.$watch($parse(attrs.disable), function(value) {
+            scope.disabled = !! value;
+          });
         }
+
+        // Deprecation support of "disabled" parameter
+        // fix(tab): IE9 disabled attr renders grey text on enabled tab #2677
+        // This code is duplicated from the lines above to make it easy to remove once
+        // the feature has been completely deprecated
+        if ( attrs.disabled ) {
+          $log.warn('Use of "disabled" attribute has been deprecated, please use "disable"');
+          scope.$parent.$watch($parse(attrs.disabled), function(value) {
+            scope.disabled = !! value;
+          });
+        }
+
+        scope.select = function() {
+          if ( !scope.disabled ) {
+            scope.active = true;
+          }
+        };
+
+        tabsetCtrl.addTab(scope);
+        scope.$on('$destroy', function() {
+          tabsetCtrl.removeTab(scope);
+        });
+
+        //We need to transclude later, once the content container is ready.
+        //when this link happens, we're inside a tab heading.
+        scope.$transcludeFn = transclude;
       };
-
-      tabsetCtrl.addTab(scope);
-      scope.$on('$destroy', function() {
-        tabsetCtrl.removeTab(scope);
-      });
-
-      //We need to transclude later, once the content container is ready.
-      //when this link happens, we're inside a tab heading.
-      scope.$transcludeFn = transclude;
     }
   };
 }])
@@ -87884,8 +88136,7 @@ angular.module('ui.bootstrap.timepicker', [])
   meridians: null,
   readonlyInput: false,
   mousewheel: true,
-  arrowkeys: true,
-  showSpinners: true
+  arrowkeys: true
 })
 
 .controller('TimepickerController', ['$scope', '$attrs', '$parse', '$log', '$locale', 'timepickerConfig', function($scope, $attrs, $parse, $log, $locale, timepickerConfig) {
@@ -88136,10 +88387,7 @@ angular.module('ui.bootstrap.timepicker', [])
     selected.setHours( dt.getHours(), dt.getMinutes() );
     refresh();
   }
-  
-  $scope.showSpinners = angular.isDefined($attrs.showSpinners) ?
-    $scope.$parent.$eval($attrs.showSpinners) : timepickerConfig.showSpinners;
-  
+
   $scope.incrementHours = function() {
     addMinutes( hourStep * 60 );
   };
@@ -88296,11 +88544,10 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
   };
 }])
 
-  .directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$window', '$rootScope', '$position', 'typeaheadParser',
-       function ($compile, $parse, $q, $timeout, $document, $window, $rootScope, $position, typeaheadParser) {
+  .directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$position', 'typeaheadParser',
+    function ($compile, $parse, $q, $timeout, $document, $position, typeaheadParser) {
 
   var HOT_KEYS = [9, 13, 27, 38, 40];
-  var eventDebounceTime = 200;
 
   return {
     require:'ngModel',
@@ -88309,10 +88556,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       //SUPPORTED ATTRIBUTES (OPTIONS)
 
       //minimal no of characters that needs to be entered before typeahead kicks-in
-      var minLength = originalScope.$eval(attrs.typeaheadMinLength);
-      if (!minLength && minLength !== 0) {
-        minLength = 1;
-      }
+      var minSearch = originalScope.$eval(attrs.typeaheadMinLength) || 1;
 
       //minimal wait time after last character typed before typeahead kicks-in
       var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
@@ -88326,20 +88570,11 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       //a callback executed when a match is selected
       var onSelectCallback = $parse(attrs.typeaheadOnSelect);
 
-      //should it select highlighted popup value when losing focus?
-      var isSelectOnBlur = angular.isDefined(attrs.typeaheadSelectOnBlur) ? originalScope.$eval(attrs.typeaheadSelectOnBlur) : false;
-
-      //binding to a variable that indicates if there were no results after the query is completed
-      var isNoResultsSetter = $parse(attrs.typeaheadNoResults).assign || angular.noop;
-
       var inputFormatter = attrs.typeaheadInputFormatter ? $parse(attrs.typeaheadInputFormatter) : undefined;
 
       var appendToBody =  attrs.typeaheadAppendToBody ? originalScope.$eval(attrs.typeaheadAppendToBody) : false;
 
       var focusFirst = originalScope.$eval(attrs.typeaheadFocusFirst) !== false;
-
-      //If input matches an item of the list exactly, select it automatically
-      var selectOnExact = attrs.typeaheadSelectOnExact ? originalScope.$eval(attrs.typeaheadSelectOnExact) : false;
 
       //INTERNAL VARIABLES
 
@@ -88350,11 +88585,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       var parserResult = typeaheadParser.parse(attrs.typeahead);
 
       var hasFocus;
-
-      //Used to avoid bug in iOS webview where iOS keyboard does not fire
-      //mousedown & mouseup events
-      //Issue #3699
-      var selected;
 
       //create a child scope for the typeahead directive so we are not polluting original scope
       //with typeahead-specific data (matches, query etc.)
@@ -88378,7 +88608,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         matches: 'matches',
         active: 'activeIdx',
         select: 'select(activeIdx)',
-        'move-in-progress': 'moveInProgress',
         query: 'query',
         position: 'position'
       });
@@ -88407,20 +88636,10 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         }
       });
 
-      var inputIsExactMatch = function(inputValue, index) {
-
-        if (scope.matches.length > index && inputValue) {
-          return inputValue.toUpperCase() === scope.matches[index].label.toUpperCase();
-        }
-
-        return false;
-      };
-
       var getMatchesAsync = function(inputValue) {
 
         var locals = {$viewValue: inputValue};
         isLoadingSetter(originalScope, true);
-        isNoResultsSetter(originalScope, false);
         $q.when(parserResult.source(originalScope, locals)).then(function(matches) {
 
           //it might happen that several async queries were in progress if a user were typing fast
@@ -88430,7 +88649,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
             if (matches && matches.length > 0) {
 
               scope.activeIdx = focusFirst ? 0 : -1;
-              isNoResultsSetter(originalScope, false);
               scope.matches.length = 0;
 
               //transform labels
@@ -88447,17 +88665,12 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
               //position pop-up with matches - we need to re-calculate its position each time we are opening a window
               //with matches as a pop-up might be absolute-positioned and position of an input might have changed on a page
               //due to other elements being rendered
-              recalculatePosition();
+              scope.position = appendToBody ? $position.offset(element) : $position.position(element);
+              scope.position.top = scope.position.top + element.prop('offsetHeight');
 
               element.attr('aria-expanded', true);
-
-              //Select the single remaining option if user input matches
-              if (selectOnExact && scope.matches.length === 1 && inputIsExactMatch(inputValue, 0)) {
-                scope.select(0);
-              }
             } else {
               resetMatches();
-              isNoResultsSetter(originalScope, true);
             }
           }
           if (onCurrentRequest) {
@@ -88466,51 +88679,8 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         }, function(){
           resetMatches();
           isLoadingSetter(originalScope, false);
-          isNoResultsSetter(originalScope, true);
         });
       };
-
-      // bind events only if appendToBody params exist - performance feature
-      if (appendToBody) {
-        angular.element($window).bind('resize', fireRecalculating);
-        $document.find('body').bind('scroll', fireRecalculating);
-      }
-
-      // Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
-      var timeoutEventPromise;
-
-      // Default progress type
-      scope.moveInProgress = false;
-
-      function fireRecalculating() {
-        if(!scope.moveInProgress){
-          scope.moveInProgress = true;
-          scope.$digest();
-        }
-
-        // Cancel previous timeout
-        if (timeoutEventPromise) {
-          $timeout.cancel(timeoutEventPromise);
-        }
-
-        // Debounced executing recalculate after events fired
-        timeoutEventPromise = $timeout(function () {
-          // if popup is visible
-          if (scope.matches.length) {
-            recalculatePosition();
-          }
-
-          scope.moveInProgress = false;
-          scope.$digest();
-        }, eventDebounceTime);
-      }
-
-      // recalculate actual position and set new values to scope
-      // after digest loop is popup in right position
-      function recalculatePosition() {
-        scope.position = appendToBody ? $position.offset(element) : $position.position(element);
-        scope.position.top += element.prop('offsetHeight');
-      }
 
       resetMatches();
 
@@ -88538,7 +88708,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 
         hasFocus = true;
 
-        if (minLength === 0 || inputValue && inputValue.length >= minLength) {
+        if (inputValue && inputValue.length >= minSearch) {
           if (waitTime > 0) {
             cancelPreviousTimeout();
             scheduleSearchWithTimeout(inputValue);
@@ -88600,7 +88770,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         var locals = {};
         var model, item;
 
-        selected = true;
         locals[parserResult.itemName] = item = scope.matches[activeIdx].model;
         model = parserResult.modelMapper(originalScope, locals);
         $setModelValue(originalScope, model);
@@ -88628,10 +88797,8 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
           return;
         }
 
-        // if there's nothing selected (i.e. focusFirst) and enter or tab is hit, clear the results
-        if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13)) {
-          resetMatches();
-          scope.$digest();
+        // if there's nothing selected (i.e. focusFirst) and enter is hit, don't do anything
+        if (scope.activeIdx == -1 && (evt.which === 13 || evt.which === 9)) {
           return;
         }
 
@@ -88658,26 +88825,15 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         }
       });
 
-      element.bind('blur', function () {
-        if (isSelectOnBlur && scope.matches.length && scope.activeIdx !== -1 && !selected) {
-          selected = true;
-          scope.$apply(function () {
-            scope.select(scope.activeIdx);
-          });
-        }
+      element.bind('blur', function (evt) {
         hasFocus = false;
-        selected = false;
       });
 
       // Keep reference to click handler to unbind it.
       var dismissClickHandler = function (evt) {
-        // Issue #3973
-        // Firefox treats right click as a click on document
-        if (element[0] !== evt.target && evt.which !== 3 && scope.matches.length !== 0) {
+        if (element[0] !== evt.target) {
           resetMatches();
-          if (!$rootScope.$$phase) {
-            scope.$digest();
-          }
+          scope.$digest();
         }
       };
 
@@ -88711,8 +88867,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         matches:'=',
         query:'=',
         active:'=',
-        position:'&',
-        moveInProgress:'=',
+        position:'=',
         select:'&'
       },
       replace:true,
@@ -88775,7 +88930,7 @@ angular.module("template/accordion/accordion-group.html", []).run(["$templateCac
     "<div class=\"panel panel-default\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <h4 class=\"panel-title\">\n" +
-    "      <a href=\"#\" tabindex=\"0\" class=\"accordion-toggle\" ng-click=\"$event.preventDefault(); toggleOpen()\" accordion-transclude=\"heading\"><span ng-class=\"{'text-muted': isDisabled}\">{{heading}}</span></a>\n" +
+    "      <a href=\"javascript:void(0)\" tabindex=\"0\" class=\"accordion-toggle\" ng-click=\"toggleOpen()\" accordion-transclude=\"heading\"><span ng-class=\"{'text-muted': isDisabled}\">{{heading}}</span></a>\n" +
     "    </h4>\n" +
     "  </div>\n" +
     "  <div class=\"panel-collapse collapse\" collapse=\"!isOpen\">\n" +
@@ -88792,8 +88947,8 @@ angular.module("template/accordion/accordion.html", []).run(["$templateCache", f
 
 angular.module("template/alert/alert.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/alert/alert.html",
-    "<div class=\"alert\" ng-class=\"['alert-' + (type || 'warning'), closeable ? 'alert-dismissible' : null]\" role=\"alert\">\n" +
-    "    <button ng-show=\"closeable\" type=\"button\" class=\"close\" ng-click=\"close($event)\">\n" +
+    "<div class=\"alert\" ng-class=\"['alert-' + (type || 'warning'), closeable ? 'alert-dismissable' : null]\" role=\"alert\">\n" +
+    "    <button ng-show=\"closeable\" type=\"button\" class=\"close\" ng-click=\"close()\">\n" +
     "        <span aria-hidden=\"true\">&times;</span>\n" +
     "        <span class=\"sr-only\">Close</span>\n" +
     "    </button>\n" +
@@ -88834,23 +88989,23 @@ angular.module("template/datepicker/datepicker.html", []).run(["$templateCache",
 
 angular.module("template/datepicker/day.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/datepicker/day.html",
-    "<table role=\"grid\" aria-labelledby=\"{{::uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
+    "<table role=\"grid\" aria-labelledby=\"{{uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
     "  <thead>\n" +
     "    <tr>\n" +
     "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-left\" ng-click=\"move(-1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-left\"></i></button></th>\n" +
-    "      <th colspan=\"{{::5 + showWeeks}}\"><button id=\"{{::uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"toggleMode()\" ng-disabled=\"datepickerMode === maxMode\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
+    "      <th colspan=\"{{5 + showWeeks}}\"><button id=\"{{uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"toggleMode()\" ng-disabled=\"datepickerMode === maxMode\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
     "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"move(1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-right\"></i></button></th>\n" +
     "    </tr>\n" +
     "    <tr>\n" +
-    "      <th ng-if=\"showWeeks\" class=\"text-center\"></th>\n" +
-    "      <th ng-repeat=\"label in ::labels track by $index\" class=\"text-center\"><small aria-label=\"{{::label.full}}\">{{::label.abbr}}</small></th>\n" +
+    "      <th ng-show=\"showWeeks\" class=\"text-center\"></th>\n" +
+    "      <th ng-repeat=\"label in labels track by $index\" class=\"text-center\"><small aria-label=\"{{label.full}}\">{{label.abbr}}</small></th>\n" +
     "    </tr>\n" +
     "  </thead>\n" +
     "  <tbody>\n" +
     "    <tr ng-repeat=\"row in rows track by $index\">\n" +
-    "      <td ng-if=\"showWeeks\" class=\"text-center h6\"><em>{{ weekNumbers[$index] }}</em></td>\n" +
-    "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{::dt.uid}}\" ng-class=\"::dt.customClass\">\n" +
-    "        <button type=\"button\" style=\"min-width:100%;\" class=\"btn btn-default btn-sm\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"::{'text-muted': dt.secondary, 'text-info': dt.current}\">{{::dt.label}}</span></button>\n" +
+    "      <td ng-show=\"showWeeks\" class=\"text-center h6\"><em>{{ weekNumbers[$index] }}</em></td>\n" +
+    "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{dt.uid}}\" aria-disabled=\"{{!!dt.disabled}}\" ng-class=\"dt.customClass\">\n" +
+    "        <button type=\"button\" style=\"width:100%;\" class=\"btn btn-default btn-sm\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"{'text-muted': dt.secondary, 'text-info': dt.current}\">{{dt.label}}</span></button>\n" +
     "      </td>\n" +
     "    </tr>\n" +
     "  </tbody>\n" +
@@ -88860,18 +89015,18 @@ angular.module("template/datepicker/day.html", []).run(["$templateCache", functi
 
 angular.module("template/datepicker/month.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/datepicker/month.html",
-    "<table role=\"grid\" aria-labelledby=\"{{::uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
+    "<table role=\"grid\" aria-labelledby=\"{{uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
     "  <thead>\n" +
     "    <tr>\n" +
     "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-left\" ng-click=\"move(-1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-left\"></i></button></th>\n" +
-    "      <th><button id=\"{{::uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"toggleMode()\" ng-disabled=\"datepickerMode === maxMode\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
+    "      <th><button id=\"{{uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"toggleMode()\" ng-disabled=\"datepickerMode === maxMode\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
     "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"move(1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-right\"></i></button></th>\n" +
     "    </tr>\n" +
     "  </thead>\n" +
     "  <tbody>\n" +
     "    <tr ng-repeat=\"row in rows track by $index\">\n" +
-    "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{::dt.uid}}\" ng-class=\"::dt.customClass\">\n" +
-    "        <button type=\"button\" style=\"min-width:100%;\" class=\"btn btn-default\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"::{'text-info': dt.current}\">{{::dt.label}}</span></button>\n" +
+    "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{dt.uid}}\" aria-disabled=\"{{!!dt.disabled}}\">\n" +
+    "        <button type=\"button\" style=\"width:100%;\" class=\"btn btn-default\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"{'text-info': dt.current}\">{{dt.label}}</span></button>\n" +
     "      </td>\n" +
     "    </tr>\n" +
     "  </tbody>\n" +
@@ -88881,7 +89036,7 @@ angular.module("template/datepicker/month.html", []).run(["$templateCache", func
 
 angular.module("template/datepicker/popup.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/datepicker/popup.html",
-    "<ul class=\"dropdown-menu\" ng-if=\"isOpen\" style=\"display: block\" ng-style=\"{top: position.top+'px', left: position.left+'px'}\" ng-keydown=\"keydown($event)\" ng-click=\"$event.stopPropagation()\">\n" +
+    "<ul class=\"dropdown-menu\" ng-style=\"{display: (isOpen && 'block') || 'none', top: position.top+'px', left: position.left+'px'}\" ng-keydown=\"keydown($event)\">\n" +
     "	<li ng-transclude></li>\n" +
     "	<li ng-if=\"showButtonBar\" style=\"padding:10px 9px 2px\">\n" +
     "		<span class=\"btn-group pull-left\">\n" +
@@ -88896,18 +89051,18 @@ angular.module("template/datepicker/popup.html", []).run(["$templateCache", func
 
 angular.module("template/datepicker/year.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/datepicker/year.html",
-    "<table role=\"grid\" aria-labelledby=\"{{::uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
+    "<table role=\"grid\" aria-labelledby=\"{{uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
     "  <thead>\n" +
     "    <tr>\n" +
     "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-left\" ng-click=\"move(-1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-left\"></i></button></th>\n" +
-    "      <th colspan=\"3\"><button id=\"{{::uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"toggleMode()\" ng-disabled=\"datepickerMode === maxMode\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
+    "      <th colspan=\"3\"><button id=\"{{uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"toggleMode()\" ng-disabled=\"datepickerMode === maxMode\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
     "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-right\" ng-click=\"move(1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-right\"></i></button></th>\n" +
     "    </tr>\n" +
     "  </thead>\n" +
     "  <tbody>\n" +
     "    <tr ng-repeat=\"row in rows track by $index\">\n" +
-    "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{::dt.uid}}\">\n" +
-    "        <button type=\"button\" style=\"min-width:100%;\" class=\"btn btn-default\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"::{'text-info': dt.current}\">{{::dt.label}}</span></button>\n" +
+    "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{dt.uid}}\" aria-disabled=\"{{!!dt.disabled}}\">\n" +
+    "        <button type=\"button\" style=\"width:100%;\" class=\"btn btn-default\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"{'text-info': dt.current}\">{{dt.label}}</span></button>\n" +
     "      </td>\n" +
     "    </tr>\n" +
     "  </tbody>\n" +
@@ -88919,7 +89074,7 @@ angular.module("template/modal/backdrop.html", []).run(["$templateCache", functi
   $templateCache.put("template/modal/backdrop.html",
     "<div class=\"modal-backdrop\"\n" +
     "     modal-animation-class=\"fade\"\n" +
-    "     modal-in-class=\"in\"\n" +
+    "     ng-class=\"{in: animate}\"\n" +
     "     ng-style=\"{'z-index': 1040 + (index && 1 || 0) + index*10}\"\n" +
     "></div>\n" +
     "");
@@ -88929,8 +89084,7 @@ angular.module("template/modal/window.html", []).run(["$templateCache", function
   $templateCache.put("template/modal/window.html",
     "<div modal-render=\"{{$isRendered}}\" tabindex=\"-1\" role=\"dialog\" class=\"modal\"\n" +
     "    modal-animation-class=\"fade\"\n" +
-    "    modal-in-class=\"in\"\n" +
-    "	ng-style=\"{'z-index': 1050 + index*10, display: 'block'}\" ng-click=\"close($event)\">\n" +
+    "	ng-class=\"{in: animate}\" ng-style=\"{'z-index': 1050 + index*10, display: 'block'}\" ng-click=\"close($event)\">\n" +
     "    <div class=\"modal-dialog\" ng-class=\"size ? 'modal-' + size : ''\"><div class=\"modal-content\" modal-transclude></div></div>\n" +
     "</div>\n" +
     "");
@@ -88939,21 +89093,20 @@ angular.module("template/modal/window.html", []).run(["$templateCache", function
 angular.module("template/pagination/pager.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/pagination/pager.html",
     "<ul class=\"pager\">\n" +
-    "  <li ng-class=\"{disabled: noPrevious(), previous: align}\"><a href ng-click=\"selectPage(page - 1, $event)\">{{::getText('previous')}}</a></li>\n" +
-    "  <li ng-class=\"{disabled: noNext(), next: align}\"><a href ng-click=\"selectPage(page + 1, $event)\">{{::getText('next')}}</a></li>\n" +
+    "  <li ng-class=\"{disabled: noPrevious(), previous: align}\"><a href ng-click=\"selectPage(page - 1, $event)\">{{getText('previous')}}</a></li>\n" +
+    "  <li ng-class=\"{disabled: noNext(), next: align}\"><a href ng-click=\"selectPage(page + 1, $event)\">{{getText('next')}}</a></li>\n" +
     "</ul>");
 }]);
 
 angular.module("template/pagination/pagination.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/pagination/pagination.html",
     "<ul class=\"pagination\">\n" +
-    "  <li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\"><a href ng-click=\"selectPage(1, $event)\">{{::getText('first')}}</a></li>\n" +
-    "  <li ng-if=\"::directionLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\"><a href ng-click=\"selectPage(page - 1, $event)\">{{::getText('previous')}}</a></li>\n" +
-    "  <li ng-repeat=\"page in pages track by $index\" ng-class=\"{active: page.active,disabled: ngDisabled&&!page.active}\"><a href ng-click=\"selectPage(page.number, $event)\">{{page.text}}</a></li>\n" +
-    "  <li ng-if=\"::directionLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\"><a href ng-click=\"selectPage(page + 1, $event)\">{{::getText('next')}}</a></li>\n" +
-    "  <li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\"><a href ng-click=\"selectPage(totalPages, $event)\">{{::getText('last')}}</a></li>\n" +
-    "</ul>\n" +
-    "");
+    "  <li ng-if=\"boundaryLinks\" ng-class=\"{disabled: noPrevious()}\"><a href ng-click=\"selectPage(1, $event)\">{{getText('first')}}</a></li>\n" +
+    "  <li ng-if=\"directionLinks\" ng-class=\"{disabled: noPrevious()}\"><a href ng-click=\"selectPage(page - 1, $event)\">{{getText('previous')}}</a></li>\n" +
+    "  <li ng-repeat=\"page in pages track by $index\" ng-class=\"{active: page.active}\"><a href ng-click=\"selectPage(page.number, $event)\">{{page.text}}</a></li>\n" +
+    "  <li ng-if=\"directionLinks\" ng-class=\"{disabled: noNext()}\"><a href ng-click=\"selectPage(page + 1, $event)\">{{getText('next')}}</a></li>\n" +
+    "  <li ng-if=\"boundaryLinks\" ng-class=\"{disabled: noNext()}\"><a href ng-click=\"selectPage(totalPages, $event)\">{{getText('last')}}</a></li>\n" +
+    "</ul>");
 }]);
 
 angular.module("template/tooltip/tooltip-html-popup.html", []).run(["$templateCache", function($templateCache) {
@@ -89006,22 +89159,6 @@ angular.module("template/tooltip/tooltip-template-popup.html", []).run(["$templa
     "");
 }]);
 
-angular.module("template/popover/popover-html.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("template/popover/popover-html.html",
-    "<div class=\"popover\"\n" +
-    "  tooltip-animation-class=\"fade\"\n" +
-    "  tooltip-classes\n" +
-    "  ng-class=\"{ in: isOpen() }\">\n" +
-    "  <div class=\"arrow\"></div>\n" +
-    "\n" +
-    "  <div class=\"popover-inner\">\n" +
-    "      <h3 class=\"popover-title\" ng-bind=\"title\" ng-if=\"title\"></h3>\n" +
-    "      <div class=\"popover-content\" ng-bind-html=\"contentExp()\"></div>\n" +
-    "  </div>\n" +
-    "</div>\n" +
-    "");
-}]);
-
 angular.module("template/popover/popover-template.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/popover/popover-template.html",
     "<div class=\"popover\"\n" +
@@ -89035,6 +89172,19 @@ angular.module("template/popover/popover-template.html", []).run(["$templateCach
     "      <div class=\"popover-content\"\n" +
     "        tooltip-template-transclude=\"contentExp()\"\n" +
     "        tooltip-template-transclude-scope=\"originScope()\"></div>\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("template/popover/popover-window.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/popover/popover-window.html",
+    "<div class=\"popover {{placement}}\" ng-class=\"{ in: isOpen, fade: animation }\">\n" +
+    "  <div class=\"arrow\"></div>\n" +
+    "\n" +
+    "  <div class=\"popover-inner\">\n" +
+    "      <h3 class=\"popover-title\" ng-bind=\"title\" ng-show=\"title\"></h3>\n" +
+    "      <div class=\"popover-content\" tooltip-template-transclude></div>\n" +
     "  </div>\n" +
     "</div>\n" +
     "");
@@ -89078,17 +89228,16 @@ angular.module("template/progressbar/progressbar.html", []).run(["$templateCache
 angular.module("template/rating/rating.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rating/rating.html",
     "<span ng-mouseleave=\"reset()\" ng-keydown=\"onKeydown($event)\" tabindex=\"0\" role=\"slider\" aria-valuemin=\"0\" aria-valuemax=\"{{range.length}}\" aria-valuenow=\"{{value}}\">\n" +
-    "    <i ng-repeat=\"r in range track by $index\" ng-mouseenter=\"enter($index + 1)\" ng-click=\"rate($index + 1)\" class=\"glyphicon\" ng-class=\"$index < value && (r.stateOn || 'glyphicon-star') || (r.stateOff || 'glyphicon-star-empty')\" ng-attr-title=\"{{r.title}}\" >\n" +
+    "    <i ng-repeat=\"r in range track by $index\" ng-mouseenter=\"enter($index + 1)\" ng-click=\"rate($index + 1)\" class=\"glyphicon\" ng-class=\"$index < value && (r.stateOn || 'glyphicon-star') || (r.stateOff || 'glyphicon-star-empty')\">\n" +
     "        <span class=\"sr-only\">({{ $index < value ? '*' : ' ' }})</span>\n" +
     "    </i>\n" +
-    "</span>\n" +
-    "");
+    "</span>");
 }]);
 
 angular.module("template/tabs/tab.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/tabs/tab.html",
     "<li ng-class=\"{active: active, disabled: disabled}\">\n" +
-    "  <a href=\"#\" ng-click=\"$event.preventDefault(); select()\" tab-heading-transclude>{{heading}}</a>\n" +
+    "  <a href ng-click=\"select()\" tab-heading-transclude>{{heading}}</a>\n" +
     "</li>\n" +
     "");
 }]);
@@ -89111,44 +89260,43 @@ angular.module("template/tabs/tabset.html", []).run(["$templateCache", function(
 angular.module("template/timepicker/timepicker.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/timepicker/timepicker.html",
     "<table>\n" +
-    "  <tbody>\n" +
-    "    <tr class=\"text-center\" ng-show=\"::showSpinners\">\n" +
-    "      <td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
-    "      <td>&nbsp;</td>\n" +
-    "      <td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
-    "      <td ng-show=\"showMeridian\"></td>\n" +
-    "    </tr>\n" +
-    "    <tr>\n" +
-    "      <td class=\"form-group\" ng-class=\"{'has-error': invalidHours}\">\n" +
-    "        <input style=\"width:50px;\" type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"form-control text-center\" ng-readonly=\"::readonlyInput\" maxlength=\"2\">\n" +
-    "      </td>\n" +
-    "      <td>:</td>\n" +
-    "      <td class=\"form-group\" ng-class=\"{'has-error': invalidMinutes}\">\n" +
-    "        <input style=\"width:50px;\" type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"::readonlyInput\" maxlength=\"2\">\n" +
-    "      </td>\n" +
-    "      <td ng-show=\"showMeridian\"><button type=\"button\" class=\"btn btn-default text-center\" ng-click=\"toggleMeridian()\">{{meridian}}</button></td>\n" +
-    "    </tr>\n" +
-    "    <tr class=\"text-center\" ng-show=\"::showSpinners\">\n" +
-    "      <td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
-    "      <td>&nbsp;</td>\n" +
-    "      <td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
-    "      <td ng-show=\"showMeridian\"></td>\n" +
-    "    </tr>\n" +
-    "  </tbody>\n" +
+    "	<tbody>\n" +
+    "		<tr class=\"text-center\">\n" +
+    "			<td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
+    "			<td>&nbsp;</td>\n" +
+    "			<td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
+    "			<td ng-show=\"showMeridian\"></td>\n" +
+    "		</tr>\n" +
+    "		<tr>\n" +
+    "			<td class=\"form-group\" ng-class=\"{'has-error': invalidHours}\">\n" +
+    "				<input style=\"width:50px;\" type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"form-control text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
+    "			</td>\n" +
+    "			<td>:</td>\n" +
+    "			<td class=\"form-group\" ng-class=\"{'has-error': invalidMinutes}\">\n" +
+    "				<input style=\"width:50px;\" type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\">\n" +
+    "			</td>\n" +
+    "			<td ng-show=\"showMeridian\"><button type=\"button\" class=\"btn btn-default text-center\" ng-click=\"toggleMeridian()\">{{meridian}}</button></td>\n" +
+    "		</tr>\n" +
+    "		<tr class=\"text-center\">\n" +
+    "			<td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
+    "			<td>&nbsp;</td>\n" +
+    "			<td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
+    "			<td ng-show=\"showMeridian\"></td>\n" +
+    "		</tr>\n" +
+    "	</tbody>\n" +
     "</table>\n" +
     "");
 }]);
 
 angular.module("template/typeahead/typeahead-match.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/typeahead/typeahead-match.html",
-    "<a href=\"#\" ng-click=\"$event.preventDefault()\" tabindex=\"-1\" bind-html-unsafe=\"match.label | typeaheadHighlight:query\"></a>\n" +
-    "");
+    "<a tabindex=\"-1\" bind-html-unsafe=\"match.label | typeaheadHighlight:query\"></a>");
 }]);
 
 angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/typeahead/typeahead-popup.html",
-    "<ul class=\"dropdown-menu\" ng-show=\"isOpen() && !moveInProgress\" ng-style=\"{top: position().top+'px', left: position().left+'px'}\" style=\"display: block;\" role=\"listbox\" aria-hidden=\"{{!isOpen()}}\">\n" +
-    "    <li ng-repeat=\"match in matches track by $index\" ng-class=\"{active: isActive($index) }\" ng-mouseenter=\"selectActive($index)\" ng-click=\"selectMatch($index)\" role=\"option\" id=\"{{::match.id}}\">\n" +
+    "<ul class=\"dropdown-menu\" ng-show=\"isOpen()\" ng-style=\"{top: position.top+'px', left: position.left+'px'}\" style=\"display: block;\" role=\"listbox\" aria-hidden=\"{{!isOpen()}}\">\n" +
+    "    <li ng-repeat=\"match in matches track by $index\" ng-class=\"{active: isActive($index) }\" ng-mouseenter=\"selectActive($index)\" ng-click=\"selectMatch($index)\" role=\"option\" id=\"{{match.id}}\">\n" +
     "        <div typeahead-match index=\"$index\" match=\"match\" query=\"query\" template-url=\"templateUrl\"></div>\n" +
     "    </li>\n" +
     "</ul>\n" +
@@ -89156,7 +89304,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 }]);
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');
 //! moment.js
-//! version : 2.10.6
+//! version : 2.10.3
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -89251,7 +89399,6 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
                 flags.overflow < 0 &&
                 !flags.empty &&
                 !flags.invalidMonth &&
-                !flags.invalidWeekday &&
                 !flags.nullInput &&
                 !flags.invalidFormat &&
                 !flags.userInvalidated;
@@ -89332,7 +89479,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     // Moment prototype object
     function Moment(config) {
         copyConfig(this, config);
-        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+        this._d = new Date(+config._d);
         // Prevent infinite loop in case updateOffset creates new moment
         // objects.
         if (updateInProgress === false) {
@@ -89346,20 +89493,16 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
     }
 
-    function absFloor (number) {
-        if (number < 0) {
-            return Math.ceil(number);
-        } else {
-            return Math.floor(number);
-        }
-    }
-
     function toInt(argumentForCoercion) {
         var coercedNumber = +argumentForCoercion,
             value = 0;
 
         if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            value = absFloor(coercedNumber);
+            if (coercedNumber >= 0) {
+                value = Math.floor(coercedNumber);
+            } else {
+                value = Math.ceil(coercedNumber);
+            }
         }
 
         return value;
@@ -89457,7 +89600,9 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     function defineLocale (name, values) {
         if (values !== null) {
             values.abbr = name;
-            locales[name] = locales[name] || new Locale();
+            if (!locales[name]) {
+                locales[name] = new Locale();
+            }
             locales[name].set(values);
 
             // backwards compat for now: also set the locale
@@ -89561,14 +89706,16 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     }
 
     function zeroFill(number, targetLength, forceSign) {
-        var absNumber = '' + Math.abs(number),
-            zerosToFill = targetLength - absNumber.length,
+        var output = '' + Math.abs(number),
             sign = number >= 0;
-        return (sign ? (forceSign ? '+' : '') : '-') +
-            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+
+        while (output.length < targetLength) {
+            output = '0' + output;
+        }
+        return (sign ? (forceSign ? '+' : '') : '-') + output;
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g;
 
     var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
 
@@ -89636,7 +89783,10 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         }
 
         format = expandFormat(format, m.localeData());
-        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+
+        if (!formatFunctions[format]) {
+            formatFunctions[format] = makeFormatFunction(format);
+        }
 
         return formatFunctions[format](m);
     }
@@ -89680,15 +89830,8 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
     var regexes = {};
 
-    function isFunction (sth) {
-        // https://github.com/moment/moment/issues/2325
-        return typeof sth === 'function' &&
-            Object.prototype.toString.call(sth) === '[object Function]';
-    }
-
-
     function addRegexToken (token, regex, strictRegex) {
-        regexes[token] = isFunction(regex) ? regex : function (isStrict) {
+        regexes[token] = typeof regex === 'function' ? regex : function (isStrict) {
             return (isStrict && strictRegex) ? strictRegex : regex;
         };
     }
@@ -89896,11 +90039,12 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     }
 
     function deprecate(msg, fn) {
-        var firstTime = true;
+        var firstTime = true,
+            msgWithStack = msg + '\n' + (new Error()).stack;
 
         return extend(function () {
             if (firstTime) {
-                warn(msg + '\n' + (new Error()).stack);
+                warn(msgWithStack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -89948,14 +90092,14 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
             getParsingFlags(config).iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
-                    config._f = isoDates[i][0];
+                    // match[5] should be 'T' or undefined
+                    config._f = isoDates[i][0] + (match[6] || ' ');
                     break;
                 }
             }
             for (i = 0, l = isoTimes.length; i < l; i++) {
                 if (isoTimes[i][1].exec(string)) {
-                    // match[6] should be 'T' or space
-                    config._f += (match[6] || ' ') + isoTimes[i][0];
+                    config._f += isoTimes[i][0];
                     break;
                 }
             }
@@ -90034,10 +90178,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     addRegexToken('YYYYY',  match1to6, match6);
     addRegexToken('YYYYYY', match1to6, match6);
 
-    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
-    addParseToken('YYYY', function (input, array) {
-        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
-    });
+    addParseToken(['YYYY', 'YYYYY', 'YYYYYY'], YEAR);
     addParseToken('YY', function (input, array) {
         array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
     });
@@ -90164,18 +90305,18 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
     //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
     function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
-        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
-        if (d < firstDayOfWeek) {
-            d += 7;
-        }
+        var d = createUTCDate(year, 0, 1).getUTCDay();
+        var daysToAdd;
+        var dayOfYear;
 
-        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
-
-        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
+        d = d === 0 ? 7 : d;
+        weekday = weekday != null ? weekday : firstDayOfWeek;
+        daysToAdd = firstDayOfWeek - d + (d > firstDayOfWeekOfYear ? 7 : 0) - (d < firstDayOfWeek ? 7 : 0);
+        dayOfYear = 7 * (week - 1) + (weekday - firstDayOfWeek) + daysToAdd + 1;
 
         return {
-            year: dayOfYear > 0 ? year : year - 1,
-            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
+            year      : dayOfYear > 0 ? year      : year - 1,
+            dayOfYear : dayOfYear > 0 ? dayOfYear : daysInYear(year - 1) + dayOfYear
         };
     }
 
@@ -90461,19 +90602,9 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     }
 
     function createFromConfig (config) {
-        var res = new Moment(checkOverflow(prepareConfig(config)));
-        if (res._nextDay) {
-            // Adding is smart enough around DST
-            res.add(1, 'd');
-            res._nextDay = undefined;
-        }
-
-        return res;
-    }
-
-    function prepareConfig (config) {
         var input = config._i,
-            format = config._f;
+            format = config._f,
+            res;
 
         config._locale = config._locale || locale_locales__getLocale(config._l);
 
@@ -90497,7 +90628,14 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
             configFromInput(config);
         }
 
-        return config;
+        res = new Moment(checkOverflow(config));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
     }
 
     function configFromInput(config) {
@@ -90577,7 +90715,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         }
         res = moments[0];
         for (i = 1; i < moments.length; ++i) {
-            if (!moments[i].isValid() || moments[i][fn](res)) {
+            if (moments[i][fn](res)) {
                 res = moments[i];
             }
         }
@@ -90689,6 +90827,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         } else {
             return local__createLocal(input).local();
         }
+        return model._isUTC ? local__createLocal(input).zone(model._offset || 0) : local__createLocal(input).local();
     }
 
     function getDateOffset (m) {
@@ -90788,7 +90927,12 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     }
 
     function hasAlignedHourOffset (input) {
-        input = input ? local__createLocal(input).utcOffset() : 0;
+        if (!input) {
+            input = 0;
+        }
+        else {
+            input = local__createLocal(input).utcOffset();
+        }
 
         return (this.utcOffset() - input) % 60 === 0;
     }
@@ -90801,24 +90945,12 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     }
 
     function isDaylightSavingTimeShifted () {
-        if (typeof this._isDSTShifted !== 'undefined') {
-            return this._isDSTShifted;
+        if (this._a) {
+            var other = this._isUTC ? create_utc__createUTC(this._a) : local__createLocal(this._a);
+            return this.isValid() && compareArrays(this._a, other.toArray()) > 0;
         }
 
-        var c = {};
-
-        copyConfig(c, this);
-        c = prepareConfig(c);
-
-        if (c._a) {
-            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
-            this._isDSTShifted = this.isValid() &&
-                compareArrays(c._a, other.toArray()) > 0;
-        } else {
-            this._isDSTShifted = false;
-        }
-
-        return this._isDSTShifted;
+        return false;
     }
 
     function isLocal () {
@@ -90978,7 +91110,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     var add_subtract__add      = createAdder(1, 'add');
     var add_subtract__subtract = createAdder(-1, 'subtract');
 
-    function moment_calendar__calendar (time, formats) {
+    function moment_calendar__calendar (time) {
         // We want to compare the start of today, vs this.
         // Getting start-of-today depends on whether we're local/utc/offset or not.
         var now = time || local__createLocal(),
@@ -90990,7 +91122,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
                 diff < 1 ? 'sameDay' :
                 diff < 2 ? 'nextDay' :
                 diff < 7 ? 'nextWeek' : 'sameElse';
-        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
+        return this.format(this.localeData().calendar(format, this, local__createLocal(now)));
     }
 
     function clone () {
@@ -91034,6 +91166,14 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         } else {
             inputMs = +local__createLocal(input);
             return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
+        }
+    }
+
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
         }
     }
 
@@ -91227,19 +91367,6 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
     }
 
-    function toObject () {
-        var m = this;
-        return {
-            years: m.year(),
-            months: m.month(),
-            date: m.date(),
-            hours: m.hours(),
-            minutes: m.minutes(),
-            seconds: m.seconds(),
-            milliseconds: m.milliseconds()
-        };
-    }
-
     function moment_valid__isValid () {
         return valid__isValid(this);
     }
@@ -91411,20 +91538,18 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     // HELPERS
 
     function parseWeekday(input, locale) {
-        if (typeof input !== 'string') {
-            return input;
+        if (typeof input === 'string') {
+            if (!isNaN(input)) {
+                input = parseInt(input, 10);
+            }
+            else {
+                input = locale.weekdaysParse(input);
+                if (typeof input !== 'number') {
+                    return null;
+                }
+            }
         }
-
-        if (!isNaN(input)) {
-            return parseInt(input, 10);
-        }
-
-        input = locale.weekdaysParse(input);
-        if (typeof input === 'number') {
-            return input;
-        }
-
-        return null;
+        return input;
     }
 
     // LOCALES
@@ -91447,7 +91572,9 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     function localeWeekdaysParse (weekdayName) {
         var i, mom, regex;
 
-        this._weekdaysParse = this._weekdaysParse || [];
+        if (!this._weekdaysParse) {
+            this._weekdaysParse = [];
+        }
 
         for (i = 0; i < 7; i++) {
             // make the regex if we don't have it already
@@ -91594,26 +91721,12 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         return ~~(this.millisecond() / 10);
     });
 
-    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
-    addFormatToken(0, ['SSSS', 4], 0, function () {
-        return this.millisecond() * 10;
-    });
-    addFormatToken(0, ['SSSSS', 5], 0, function () {
-        return this.millisecond() * 100;
-    });
-    addFormatToken(0, ['SSSSSS', 6], 0, function () {
-        return this.millisecond() * 1000;
-    });
-    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
-        return this.millisecond() * 10000;
-    });
-    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
-        return this.millisecond() * 100000;
-    });
-    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
-        return this.millisecond() * 1000000;
-    });
+    function millisecond__milliseconds (token) {
+        addFormatToken(0, [token, 3], 0, 'millisecond');
+    }
 
+    millisecond__milliseconds('SSS');
+    millisecond__milliseconds('SSSS');
 
     // ALIASES
 
@@ -91624,19 +91737,11 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     addRegexToken('S',    match1to3, match1);
     addRegexToken('SS',   match1to3, match2);
     addRegexToken('SSS',  match1to3, match3);
-
-    var token;
-    for (token = 'SSSS'; token.length <= 9; token += 'S') {
-        addRegexToken(token, matchUnsigned);
-    }
-
-    function parseMs(input, array) {
+    addRegexToken('SSSS', matchUnsigned);
+    addParseToken(['S', 'SS', 'SSS', 'SSSS'], function (input, array) {
         array[MILLISECOND] = toInt(('0.' + input) * 1000);
-    }
+    });
 
-    for (token = 'S'; token.length <= 9; token += 'S') {
-        addParseToken(token, parseMs);
-    }
     // MOMENTS
 
     var getSetMillisecond = makeGetSet('Milliseconds', false);
@@ -91683,7 +91788,6 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     momentPrototype__proto.startOf      = startOf;
     momentPrototype__proto.subtract     = add_subtract__subtract;
     momentPrototype__proto.toArray      = toArray;
-    momentPrototype__proto.toObject     = toObject;
     momentPrototype__proto.toDate       = toDate;
     momentPrototype__proto.toISOString  = moment_format__toISOString;
     momentPrototype__proto.toJSON       = moment_format__toISOString;
@@ -91783,23 +91887,19 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         LT   : 'h:mm A',
         L    : 'MM/DD/YYYY',
         LL   : 'MMMM D, YYYY',
-        LLL  : 'MMMM D, YYYY h:mm A',
-        LLLL : 'dddd, MMMM D, YYYY h:mm A'
+        LLL  : 'MMMM D, YYYY LT',
+        LLLL : 'dddd, MMMM D, YYYY LT'
     };
 
     function longDateFormat (key) {
-        var format = this._longDateFormat[key],
-            formatUpper = this._longDateFormat[key.toUpperCase()];
-
-        if (format || !formatUpper) {
-            return format;
+        var output = this._longDateFormat[key];
+        if (!output && this._longDateFormat[key.toUpperCase()]) {
+            output = this._longDateFormat[key.toUpperCase()].replace(/MMMM|MM|DD|dddd/g, function (val) {
+                return val.slice(1);
+            });
+            this._longDateFormat[key] = output;
         }
-
-        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
-            return val.slice(1);
-        });
-
-        return this._longDateFormat[key];
+        return output;
     }
 
     var defaultInvalidDate = 'Invalid date';
@@ -92008,29 +92108,12 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         return duration_add_subtract__addSubtract(this, input, value, -1);
     }
 
-    function absCeil (number) {
-        if (number < 0) {
-            return Math.floor(number);
-        } else {
-            return Math.ceil(number);
-        }
-    }
-
     function bubble () {
         var milliseconds = this._milliseconds;
         var days         = this._days;
         var months       = this._months;
         var data         = this._data;
-        var seconds, minutes, hours, years, monthsFromDays;
-
-        // if we have a mix of positive and negative values, bubble down first
-        // check: https://github.com/moment/moment/issues/2166
-        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
-                (milliseconds <= 0 && days <= 0 && months <= 0))) {
-            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
-            days = 0;
-            months = 0;
-        }
+        var seconds, minutes, hours, years = 0;
 
         // The following code bubbles up values, see the tests for
         // examples of what that means.
@@ -92047,13 +92130,17 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
         days += absFloor(hours / 24);
 
-        // convert days to months
-        monthsFromDays = absFloor(daysToMonths(days));
-        months += monthsFromDays;
-        days -= absCeil(monthsToDays(monthsFromDays));
+        // Accurately convert days to years, assume start from year 0.
+        years = absFloor(daysToYears(days));
+        days -= absFloor(yearsToDays(years));
+
+        // 30 days to a month
+        // TODO (iskren): Use anchor date (like 1st Jan) to compute this.
+        months += absFloor(days / 30);
+        days   %= 30;
 
         // 12 months -> 1 year
-        years = absFloor(months / 12);
+        years  += absFloor(months / 12);
         months %= 12;
 
         data.days   = days;
@@ -92063,15 +92150,15 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         return this;
     }
 
-    function daysToMonths (days) {
+    function daysToYears (days) {
         // 400 years have 146097 days (taking into account leap year rules)
-        // 400 years have 12 months === 4800
-        return days * 4800 / 146097;
+        return days * 400 / 146097;
     }
 
-    function monthsToDays (months) {
-        // the reverse of daysToMonths
-        return months * 146097 / 4800;
+    function yearsToDays (years) {
+        // years * 365 + absFloor(years / 4) -
+        //     absFloor(years / 100) + absFloor(years / 400);
+        return years * 146097 / 400;
     }
 
     function as (units) {
@@ -92083,11 +92170,11 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
         if (units === 'month' || units === 'year') {
             days   = this._days   + milliseconds / 864e5;
-            months = this._months + daysToMonths(days);
+            months = this._months + daysToYears(days) * 12;
             return units === 'month' ? months : months / 12;
         } else {
             // handle milliseconds separately because of floating point math errors (issue #1867)
-            days = this._days + Math.round(monthsToDays(this._months));
+            days = this._days + Math.round(yearsToDays(this._months / 12));
             switch (units) {
                 case 'week'   : return days / 7     + milliseconds / 6048e5;
                 case 'day'    : return days         + milliseconds / 864e5;
@@ -92137,7 +92224,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
         };
     }
 
-    var milliseconds = makeGetter('milliseconds');
+    var duration_get__milliseconds = makeGetter('milliseconds');
     var seconds      = makeGetter('seconds');
     var minutes      = makeGetter('minutes');
     var hours        = makeGetter('hours');
@@ -92215,36 +92302,13 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     var iso_string__abs = Math.abs;
 
     function iso_string__toISOString() {
-        // for ISO strings we do not use the normal bubbling rules:
-        //  * milliseconds bubble up until they become hours
-        //  * days do not bubble at all
-        //  * months bubble up until they become years
-        // This is because there is no context-free conversion between hours and days
-        // (think of clock changes)
-        // and also not between days and months (28-31 days per month)
-        var seconds = iso_string__abs(this._milliseconds) / 1000;
-        var days         = iso_string__abs(this._days);
-        var months       = iso_string__abs(this._months);
-        var minutes, hours, years;
-
-        // 3600 seconds -> 60 minutes -> 1 hour
-        minutes           = absFloor(seconds / 60);
-        hours             = absFloor(minutes / 60);
-        seconds %= 60;
-        minutes %= 60;
-
-        // 12 months -> 1 year
-        years  = absFloor(months / 12);
-        months %= 12;
-
-
         // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
-        var Y = years;
-        var M = months;
-        var D = days;
-        var h = hours;
-        var m = minutes;
-        var s = seconds;
+        var Y = iso_string__abs(this.years());
+        var M = iso_string__abs(this.months());
+        var D = iso_string__abs(this.days());
+        var h = iso_string__abs(this.hours());
+        var m = iso_string__abs(this.minutes());
+        var s = iso_string__abs(this.seconds() + this.milliseconds() / 1000);
         var total = this.asSeconds();
 
         if (!total) {
@@ -92281,7 +92345,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     duration_prototype__proto.valueOf        = duration_as__valueOf;
     duration_prototype__proto._bubble        = bubble;
     duration_prototype__proto.get            = duration_get__get;
-    duration_prototype__proto.milliseconds   = milliseconds;
+    duration_prototype__proto.milliseconds   = duration_get__milliseconds;
     duration_prototype__proto.seconds        = seconds;
     duration_prototype__proto.minutes        = minutes;
     duration_prototype__proto.hours          = hours;
@@ -92319,7 +92383,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.6';
+    utils_hooks__hooks.version = '2.10.3';
 
     setHookCallback(local__createLocal);
 

@@ -104,28 +104,6 @@ angular.module("starter.cgu").controller("cguCtrl", function($scope, EndUserLice
   return $scope.status = false;
 });
 
-angular.module("starter.faq", []).config(function($stateProvider) {
-  $stateProvider.state('faq', {
-    url: '/faq',
-    templateUrl: 'faq.view.html',
-    controller: 'faqCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
-  $rootScope.showNav = void 0;
-  $scope.questions = FrequentlyAskedQuestion.find();
-  return $scope.gotoAnchor = function(x, open) {
-    var newHash, quick;
-    newHash = 'anchor' + x;
-    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
-      return $timeout(quick = function() {
-        return $anchorScroll();
-      }, 300);
-    }
-  };
-});
-
 angular.module("starter.contact", []).config(function($stateProvider) {
   $stateProvider.state('contact', {
     url: '/contact',
@@ -150,6 +128,28 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
     return data.save($scope.mail).then(function(obj) {
       return console.log('obj', obj);
     });
+  };
+});
+
+angular.module("starter.faq", []).config(function($stateProvider) {
+  $stateProvider.state('faq', {
+    url: '/faq',
+    templateUrl: 'faq.view.html',
+    controller: 'faqCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
+  $rootScope.showNav = void 0;
+  $scope.questions = FrequentlyAskedQuestion.find();
+  return $scope.gotoAnchor = function(x, open) {
+    var newHash, quick;
+    newHash = 'anchor' + x;
+    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
+      return $timeout(quick = function() {
+        return $anchorScroll();
+      }, 300);
+    }
   };
 });
 
@@ -312,12 +312,12 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
     if (date == null) {
       date = void 0;
     }
-    console.log(date);
     if (date === void 0) {
       currentDate = moment();
     } else {
       currentDate = moment(date);
     }
+    console.log(date);
     currentDate.hour(14);
     currentDate.second(0);
     currentDate.minute(0);
@@ -329,6 +329,7 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
         }
       }
     }, function(success) {
+      console.log("ONE : ", success);
       return loadLotteryRank(success);
     }, function(error) {
       return console.log(error);
@@ -348,6 +349,7 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
         $scope.datas.push(tmp);
       }
     }
+    console.log("RESULT");
     return console.log($scope.datas);
   };
   loadLotteryRank = function(lotteryDay) {
@@ -360,6 +362,7 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
           include: 'player'
         }
       }, function(success) {
+        console.log("TWO : ", success);
         pushDatas(success);
         if ($scope.tableParams === void 0) {
           return createTable();

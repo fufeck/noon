@@ -12705,6 +12705,7 @@ body {
     padding-top: 0;
   }
   .view-result .body-result .container-comming-soon {
+    display: none;
     position: relative;
     top: 0;
     left: 0;
@@ -12724,7 +12725,6 @@ body {
     margin-top: 15%;
   }
   .view-result .body-result .container-body {
-    display: none;
     position: relative;
     top: 0;
     left: 0;
@@ -13457,7 +13457,7 @@ body {
     background: #34495E;
   }
   .view-ranking .body-ranking .comming-soon {
-    display: block;
+    display: none;
     position: relative;
     top: 0;
     left: 0;
@@ -13468,7 +13468,6 @@ body {
     margin-top: 15%;
   }
   .view-ranking .body-ranking .results-ranking {
-    display: none;
     position: relative;
     top: 0;
     left: 0;
