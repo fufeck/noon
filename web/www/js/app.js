@@ -104,28 +104,6 @@ angular.module("starter.cgu").controller("cguCtrl", function($scope, EndUserLice
   return $scope.status = false;
 });
 
-angular.module("starter.faq", []).config(function($stateProvider) {
-  $stateProvider.state('faq', {
-    url: '/faq',
-    templateUrl: 'faq.view.html',
-    controller: 'faqCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
-  $rootScope.showNav = void 0;
-  $scope.questions = FrequentlyAskedQuestion.find();
-  return $scope.gotoAnchor = function(x, open) {
-    var newHash, quick;
-    newHash = 'anchor' + x;
-    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
-      return $timeout(quick = function() {
-        return $anchorScroll();
-      }, 300);
-    }
-  };
-});
-
 angular.module("starter.contact", []).config(function($stateProvider) {
   $stateProvider.state('contact', {
     url: '/contact',
@@ -153,79 +131,25 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
   };
 });
 
-angular.module("starter.mention", []).config(function($stateProvider) {
-  $stateProvider.state('mention', {
-    url: '/mention',
-    templateUrl: 'mention.view.html',
-    controller: 'mentionCtrl'
+angular.module("starter.faq", []).config(function($stateProvider) {
+  $stateProvider.state('faq', {
+    url: '/faq',
+    templateUrl: 'faq.view.html',
+    controller: 'faqCtrl'
   });
 }).run(function() {});
 
-angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
+angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
   $rootScope.showNav = void 0;
-});
-
-angular.module("starter.ranking", []).config(function($stateProvider) {
-  $stateProvider.state('ranking', {
-    url: '/ranking',
-    templateUrl: 'ranking.view.html',
-    controller: 'rankingCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
-  var createTable;
-  $rootScope.showNav = void 0;
-  Player.find({}, function(success) {
-    var i, len, line, players, rank;
-    console.log("PLAYER : ", success);
-    players = [];
-    rank = 1;
-    for (i = 0, len = success.length; i < len; i++) {
-      line = success[i];
-      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
-        players.push(line);
-      }
+  $scope.questions = FrequentlyAskedQuestion.find();
+  return $scope.gotoAnchor = function(x, open) {
+    var newHash, quick;
+    newHash = 'anchor' + x;
+    if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
+      return $timeout(quick = function() {
+        return $anchorScroll();
+      }, 300);
     }
-    return createTable(players);
-  }, function(error) {
-    return console.log(error);
-  });
-  return createTable = function(data) {
-    console.log("data");
-    console.log(data);
-    $scope.tableParams = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
-    return $scope.tableParamsMobile = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
   };
 });
 
@@ -292,6 +216,82 @@ angular.module("starter.home").controller("homeCtrl", function($scope, $http, Sl
   $scope.isPhoneActive = function() {
     return $scope.activePhone;
   };
+});
+
+angular.module("starter.ranking", []).config(function($stateProvider) {
+  $stateProvider.state('ranking', {
+    url: '/ranking',
+    templateUrl: 'ranking.view.html',
+    controller: 'rankingCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
+  var createTable;
+  $rootScope.showNav = void 0;
+  Player.find({}, function(success) {
+    var i, len, line, players, rank;
+    console.log("PLAYER : ", success);
+    players = [];
+    rank = 1;
+    for (i = 0, len = success.length; i < len; i++) {
+      line = success[i];
+      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
+        players.push(line);
+      }
+    }
+    return createTable(players);
+  }, function(error) {
+    return console.log(error);
+  });
+  return createTable = function(data) {
+    console.log("data");
+    console.log(data);
+    $scope.tableParams = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        username: ''
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        var orderedData;
+        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+        params.total(orderedData.length);
+        $defer.resolve($scope.users);
+      }
+    });
+    return $scope.tableParamsMobile = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {
+        username: ''
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        var orderedData;
+        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
+        params.total(orderedData.length);
+        $defer.resolve($scope.users);
+      }
+    });
+  };
+});
+
+angular.module("starter.mention", []).config(function($stateProvider) {
+  $stateProvider.state('mention', {
+    url: '/mention',
+    templateUrl: 'mention.view.html',
+    controller: 'mentionCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
+  $rootScope.showNav = void 0;
 });
 
 angular.module("starter.result", []).config(function($stateProvider) {
