@@ -19,7 +19,7 @@
     site:
       name: noon
       path: /var/www/site
-      repo: git@ec2-52-17-41-107.eu-west-1.compute.amazonaws.com:user/noon-site.git
+      repo: https://github.com/fufeck/noon.git
       user: www-data
       group: www-data
 
