@@ -12705,7 +12705,6 @@ body {
     padding-top: 0;
   }
   .view-result .body-result .container-comming-soon {
-    display: none;
     position: relative;
     top: 0;
     left: 0;
@@ -13313,7 +13312,6 @@ body {
     background: #34495E;
   }
   .view-ranking .body-ranking .container-comming-soon .comming-soon {
-    display: block;
     position: relative;
     top: 50px;
     left: 0;
@@ -13457,7 +13455,6 @@ body {
     background: #34495E;
   }
   .view-ranking .body-ranking .comming-soon {
-    display: none;
     position: relative;
     top: 0;
     left: 0;

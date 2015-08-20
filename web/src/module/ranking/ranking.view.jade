@@ -8,32 +8,32 @@ noon-header
 						.container-comming-soon
 							.comming-soon.animated.swing
 								img(src="img/picto-soon.png")
-						.results-ranking
-							.title-ranking
-								img(src="img/picto-classement.png")
-								h2 CLASSEMENT GÉNÉRAL
-							table(ng-table="tableParamsMobile" show-filter="true")
-								tr(ng-repeat="line in $data track by $index")
-									td(data-title="'RANK'") {{ line.positions }}
-									td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-									td(data-title="'RATIO'") {{ (line.quizzWinnedCount / line.quizzPlayedCount) }}
-									td(data-title="'SOMME €'") {{ line.totalEarned }}
+						//- .results-ranking
+						//- 	.title-ranking
+						//- 		img(src="img/picto-classement.png")
+						//- 		h2 CLASSEMENT GÉNÉRAL
+						//- 	table(ng-table="tableParamsMobile" show-filter="true")
+						//- 		tr(ng-repeat="line in $data track by $index")
+						//- 			td(data-title="'RANK'") {{ line.positions }}
+						//- 			td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
+						//- 			td(data-title="'RATIO'") {{ (line.quizzWinnedCount / line.quizzPlayedCount) }}
+						//- 			td(data-title="'SOMME €'") {{ line.totalEarned }}
 						noon-footer.show-on-keybord
 			noon-footer.hide-on-keybord
 
 	.view-ranking.hidden-mobile
 		.body-ranking
-			.results-ranking
-				.title-ranking
-					img(src="img/picto-classement.png")
-					h2 CLASSEMENT GÉNÉRAL
-				table(ng-table="tableParams" show-filter="true")
-					tr(ng-repeat="line in $data track by $index")
-						td(data-title="'RANK'") {{ line.positions }}
-						td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-						td(data-title="'RÉPONSES VALIDÉES'") {{ line.quizzWinnedCount }}
-						td(data-title="'RATIO'") {{ (line.quizzWinnedCount / line.quizzPlayedCount) }}
-						td(data-title="'SOMME €'") {{ line.totalEarned }}
+			//- .results-ranking
+			//- 	.title-ranking
+			//- 		img(src="img/picto-classement.png")
+			//- 		h2 CLASSEMENT GÉNÉRAL
+			//- 	table(ng-table="tableParams" show-filter="true")
+			//- 		tr(ng-repeat="line in $data track by $index")
+			//- 			td(data-title="'RANK'") {{ line.positions }}
+			//- 			td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
+			//- 			td(data-title="'RÉPONSES VALIDÉES'") {{ line.quizzWinnedCount }}
+			//- 			td(data-title="'RATIO'") {{ (line.quizzWinnedCount / line.quizzPlayedCount) }}
+			//- 			td(data-title="'SOMME €'") {{ line.totalEarned }}
 			.comming-soon.animated.swing
 				img(src="img/picto-soon.png")
 		noon-footer
