@@ -13,7 +13,7 @@ autoprefixer    = require 'gulp-autoprefixer'
 minifycss       = require 'gulp-minify-css'
 minifyHTML      = require 'gulp-minify-html'
 ngAnnotate      = require 'gulp-ng-annotate'
-uglify         = require 'gulp-uglify'
+uglify          = require 'gulp-uglify'
  
 
  
