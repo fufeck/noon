@@ -16,3 +16,10 @@
 - name: Build project
   shell: ./node_modules/.bin/gulp build chdir={{ site.path }}/web
 
+- name: Copy supervisor config file
+  template: src=etc/supervisor/conf.d/conf dest=/etc/supervisor/conf.d/phantomjs.conf owner=root group=root
+
+- name: Ensure api is present in supervisorctl
+  supervisorctl: name=phantomjs state=present
+
+

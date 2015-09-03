@@ -1,0 +1,10 @@
+[program:phantomjs]
+command=phantomjs --disk-cache=no angular-seo-server.js 8888 site/web/www/index.html
+startsecs=2 ; number of secs prog must stay running (def. 1)
+directory=/var/www ; directory to cwd to before exec (def no cwd)
+stopwaitsecs=2 ; max num secs to wait b4 SIGKILL (default 10)
+user=www-data ; setuid to this UNIX account to run the program
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/phantomjs.err.log
+stdout_logfile=/var/log/phantomjs.out.log
