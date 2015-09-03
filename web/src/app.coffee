@@ -31,14 +31,14 @@ angular.module "starter", [
 	"seo"
 	"ui.router"
 	"ui.bootstrap"
-	"ngAnimate"
+	# "ngAnimate"
 	"ngStorage"
 	"ngResource"
 	"ngTable"
 	"duScroll"
 	"noon.service"
 
-	"starter.translate"
+	# "starter.translate"
 
 	"starter.home"
 	"starter.result"
@@ -53,6 +53,7 @@ angular.module "starter", [
 .config ($urlRouterProvider, $locationProvider) ->
 
 	$locationProvider.hashPrefix('!')
+	$locationProvider.html5Mode(true)
 	$urlRouterProvider.otherwise '/'
 
 	Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG")

@@ -13,6 +13,9 @@
 - name: Download bower dependencies
   shell: bower install chdir={{ site.path }}/web --allow-root
 
+- name: Download npm dependencies
+  shell: npm install chdir={{ site.path }}/web --allow-root
+
 - name: Build project
   shell: ./node_modules/.bin/gulp build chdir={{ site.path }}/web
 
