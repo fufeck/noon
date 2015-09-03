@@ -6,7 +6,7 @@ noon-header
 				.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
 					.container-comming-soon
 						.comming-soon.animated.swing
-							img(src="img/picto-soon.png")
+							img(src="img/picto-soon.png" alt="soon")
 					//- .results
 					//- 	.title-result
 					//- 		img(src="img/picto-resultat.png")
@@ -38,7 +38,7 @@ noon-header
 		.body-result
 			.container-comming-soon
 				.comming-soon.animated.swing
-					img(src="img/picto-soon.png")
+					img(src="img/picto-soon.png" alt="soon")
 			//- .container-body
 			//- 	.title-result
 			//- 		img(src="img/picto-resultat.png")
@@ -50,7 +50,6 @@ noon-header
 			//- 				td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
 			//- 				td(data-title="'N°TICKET'") {{ line.position }}
 			//- 				td(data-title="'SOMME €'") {{ line.earned }}
-
 			//- 	datepicker(ng-model="dt" ng-change="change(dt)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")
 
 		noon-footer

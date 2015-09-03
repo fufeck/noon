@@ -1,7 +1,7 @@
 .visible-mobile
 	.header-mobile
 		.title(ui-sref="home")
-			img(src="img/logo.png")
+			img(src="img/logo.png" alt="logo noon")
 		.burger(ng-click="($root.showNav == undefined || $root.showNav == false) ? ($root.showNav = true) : ($root.showNav = false)")
 			.fa.fa-navicon
 		.menu(ng-hide="$root.showNav == undefined || $root.showNav == false")
@@ -15,7 +15,7 @@
 	.header-noon
 		.header-container
 			.title(ui-sref="home")
-				img(src="img/logo.png")
+				img(src="img/logo.png" alt="logo noon")
 			.menu
 				.result
 					h2(ui-sref="result") RÉSULTATS

@@ -7,10 +7,10 @@ noon-header
 					.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
 						.container-comming-soon
 							.comming-soon.animated.swing
-								img(src="img/picto-soon.png")
+								img(src="img/picto-soon.png" alt="picto-soon")
 						//- .results-ranking
 						//- 	.title-ranking
-						//- 		img(src="img/picto-classement.png")
+						//- 		img(src="img/picto-classement.png" alt="ranking")
 						//- 		h2 CLASSEMENT GÉNÉRAL
 						//- 	table(ng-table="tableParamsMobile" show-filter="true")
 						//- 		tr(ng-repeat="line in $data track by $index")
@@ -25,7 +25,7 @@ noon-header
 		.body-ranking
 			//- .results-ranking
 			//- 	.title-ranking
-			//- 		img(src="img/picto-classement.png")
+			//- 		img(src="img/picto-classement.png" alt="ranking")
 			//- 		h2 CLASSEMENT GÉNÉRAL
 			//- 	table(ng-table="tableParams" show-filter="true")
 			//- 		tr(ng-repeat="line in $data track by $index")
@@ -35,5 +35,5 @@ noon-header
 			//- 			td(data-title="'RATIO'") {{ (line.quizzWinnedCount / line.quizzPlayedCount) }}
 			//- 			td(data-title="'SOMME €'") {{ line.totalEarned }}
 			.comming-soon.animated.swing
-				img(src="img/picto-soon.png")
+				img(src="img/picto-soon.png" alt="soon")
 		noon-footer

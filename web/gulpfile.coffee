@@ -10,8 +10,17 @@ templateCache   = require 'gulp-angular-templatecache'
 plumber         = require 'gulp-plumber'
 notify          = require 'gulp-notify'
 autoprefixer    = require 'gulp-autoprefixer'
+minifycss       = require 'gulp-minify-css'
+minifyHTML      = require 'gulp-minify-html'
+ngAnnotate      = require 'gulp-ng-annotate'
+uglify         = require 'gulp-uglify'
+ 
 
+ 
 # Configs ########################################################
+opts =
+  conditionals: true
+  spare:true
 
 paths =
   src: './src'
@@ -55,6 +64,7 @@ gulp.task 'index', ->
   gulp.src paths.src + paths.dev.index
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe jade configs.jade
+  .pipe minifyHTML(opts)
   .pipe gulp.dest paths.dest
 
 gulp.task 'img', ->
@@ -66,6 +76,8 @@ gulp.task 'assets', ->
   gulp.src paths.dev.js
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe concat filenames.assets
+  .pipe ngAnnotate()
+  .pipe uglify()
   .pipe gulp.dest paths.dest + paths.build.assets
 
 gulp.task 'jade', ->
@@ -81,6 +93,7 @@ gulp.task 'less', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe less()
   .pipe autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4')
+  .pipe minifycss()
   .pipe gulp.dest paths.dest + paths.build.css
 
 gulp.task 'ionic', ->
@@ -94,6 +107,8 @@ gulp.task 'coffee', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe coffee configs.coffee
   .pipe concat filenames.app
+  .pipe ngAnnotate()
+  .pipe uglify()
   .pipe gulp.dest paths.dest + paths.build.js
 
 gulp.task 'vendors', ->
@@ -101,6 +116,8 @@ gulp.task 'vendors', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe filter filters.onlyJs
   .pipe concat filenames.vendors
+  .pipe ngAnnotate()
+  .pipe uglify()
   .pipe gulp.dest paths.dest + paths.build.js
 
 gulp.task 'fonts', ->
