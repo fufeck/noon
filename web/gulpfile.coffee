@@ -14,9 +14,9 @@ minifycss       = require 'gulp-minify-css'
 minifyHTML      = require 'gulp-minify-html'
 ngAnnotate      = require 'gulp-ng-annotate'
 uglify          = require 'gulp-uglify'
- 
 
- 
+
+
 # Configs ########################################################
 opts =
   conditionals: true
@@ -27,7 +27,7 @@ paths =
   dest: './www'
   dev:
     sitemap: '/sitemap.xml'
-    robot: '/robot.txt'
+    robot: '/robots.txt'
     index: '/index.jade'
     img: '/img/**'
     jade: ['./src/**/*.jade', '!./src/index.jade']
