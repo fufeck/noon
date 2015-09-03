@@ -1,4 +1,34 @@
+!((window, document) ->
+
+  getModule = (angular) ->
+    angular.module('seo', []).run [
+      '$rootScope'
+      ($rootScope) ->
+
+        $rootScope.htmlReady = ->
+          $rootScope.$evalAsync ->
+            # fire after $digest
+            setTimeout (->
+              # fire after DOM rendering
+              if typeof window.callPhantom == 'function'
+                window.callPhantom()
+              return
+            ), 0
+            return
+          return
+
+        return
+    ]
+
+  if typeof define == 'function' and define.amd
+    define [ 'angular' ], getModule
+  else
+    getModule angular
+  return
+)(window, document)
+
 angular.module "starter", [
+	"seo"
 	"ui.router"
 	"ui.bootstrap"
 	"ngAnimate"
@@ -20,8 +50,9 @@ angular.module "starter", [
 	"starter.mention"
 ]
 
-.config ($urlRouterProvider) ->
+.config ($urlRouterProvider, $locationProvider) ->
 
+	$locationProvider.hashPrefix('!')
 	$urlRouterProvider.otherwise '/'
 
 	Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG")

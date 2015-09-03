@@ -38,4 +38,6 @@ angular.module "starter.home"
 	$scope.isPhoneActive =  ->
 		return $scope.activePhone
 
+	$scope.htmlReady()
+
 	return ;

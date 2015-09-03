@@ -5,3 +5,4 @@ angular.module "starter.cgu"
 
 	$scope.questions = EndUserLicenseAgreement.find()
 	$scope.status = false
+	$scope.htmlReady()

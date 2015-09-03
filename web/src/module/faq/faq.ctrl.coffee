@@ -11,3 +11,5 @@ angular.module "starter.faq"
 			$timeout(quick = () ->
 				$anchorScroll();
 			, 300)
+
+	$scope.htmlReady()

@@ -11,7 +11,7 @@ angular.module "starter.result"
 		else
 			currentDate = moment(date)
 
-		
+
 		console.log date
 		currentDate.hour(14)
 		currentDate.second(0)
@@ -20,9 +20,10 @@ angular.module "starter.result"
 		Lottery.find {filter : where : day : currentDate.toISOString()}, (success) ->
 			console.log "ONE : ", success
 			loadLotteryRank(success)
+
 		, (error) ->
 			console.log error
-	
+
 	pushDatas = (datas) ->
 		$scope.datas = []
 		rank = 1
@@ -47,6 +48,7 @@ angular.module "starter.result"
 				else
 					$scope.tableParams.reload()
 					$scope.tableParamsMobile.reload()
+				$scope.htmlReady()
 			, (error) ->
 				console.log error
 

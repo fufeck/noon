@@ -17,4 +17,6 @@ angular.module "starter.contact"
 		.then (obj) ->
 			return console.log('obj', obj)
 
+	$scope.htmlReady()
+
 

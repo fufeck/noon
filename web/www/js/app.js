@@ -1,4 +1,29 @@
-angular.module("starter", ["ui.router", "ui.bootstrap", "ngAnimate", "ngStorage", "ngResource", "ngTable", "duScroll", "noon.service", "starter.translate", "starter.home", "starter.result", "starter.ranking", "starter.advertiser", "starter.contact", "starter.faq", "starter.cgu", "starter.mention"]).config(function($urlRouterProvider) {
+!(function(window, document) {
+  var getModule;
+  getModule = function(angular) {
+    return angular.module('seo', []).run([
+      '$rootScope', function($rootScope) {
+        $rootScope.htmlReady = function() {
+          $rootScope.$evalAsync(function() {
+            setTimeout((function() {
+              if (typeof window.callPhantom === 'function') {
+                window.callPhantom();
+              }
+            }), 0);
+          });
+        };
+      }
+    ]);
+  };
+  if (typeof define === 'function' && define.amd) {
+    define(['angular'], getModule);
+  } else {
+    getModule(angular);
+  }
+})(window, document);
+
+angular.module("starter", ["seo", "ui.router", "ui.bootstrap", "ngAnimate", "ngStorage", "ngResource", "ngTable", "duScroll", "noon.service", "starter.translate", "starter.home", "starter.result", "starter.ranking", "starter.advertiser", "starter.contact", "starter.faq", "starter.cgu", "starter.mention"]).config(function($urlRouterProvider, $locationProvider) {
+  $locationProvider.hashPrefix('!');
   $urlRouterProvider.otherwise('/');
   Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG");
 }).run(function($rootScope) {
@@ -62,14 +87,6 @@ angular.module('starter.translate', ['pascalprecht.translate']).config(function(
   $translateProvider.fallbackLanguage('en');
 });
 
-angular.module('starter').directive('noonHeader', function() {
-  return {
-    restrict: 'AEC',
-    templateUrl: 'noonHeader.view.html',
-    controller: 'noonHeaderCtrl'
-  };
-}).controller('noonHeaderCtrl', function($scope) {});
-
 angular.module('starter').directive('noonFooter', function() {
   return {
     restrict: 'AEC',
@@ -77,6 +94,14 @@ angular.module('starter').directive('noonFooter', function() {
     controller: 'noonFooterCtrl'
   };
 }).controller('noonFooterCtrl', function($scope) {});
+
+angular.module('starter').directive('noonHeader', function() {
+  return {
+    restrict: 'AEC',
+    templateUrl: 'noonHeader.view.html',
+    controller: 'noonHeaderCtrl'
+  };
+}).controller('noonHeaderCtrl', function($scope) {});
 
 angular.module("starter.advertiser", []).config(function($stateProvider) {
   $stateProvider.state('advertiser', {
@@ -88,6 +113,7 @@ angular.module("starter.advertiser", []).config(function($stateProvider) {
 
 angular.module("starter.advertiser").controller("advertiserCtrl", function($scope, $rootScope) {
   $rootScope.showNav = void 0;
+  $scope.htmlReady();
 });
 
 angular.module("starter.cgu", []).config(function($stateProvider) {
@@ -101,7 +127,8 @@ angular.module("starter.cgu", []).config(function($stateProvider) {
 angular.module("starter.cgu").controller("cguCtrl", function($scope, EndUserLicenseAgreement, $rootScope) {
   $rootScope.showNav = void 0;
   $scope.questions = EndUserLicenseAgreement.find();
-  return $scope.status = false;
+  $scope.status = false;
+  return $scope.htmlReady();
 });
 
 angular.module("starter.contact", []).config(function($stateProvider) {
@@ -120,7 +147,7 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
     phone: "",
     entreprise: ""
   };
-  return $scope.sendMail = function() {
+  $scope.sendMail = function() {
     var Contact, data;
     $scope.notif = true;
     Contact = Parse.Object.extend('Contact');
@@ -129,6 +156,7 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
       return console.log('obj', obj);
     });
   };
+  return $scope.htmlReady();
 });
 
 angular.module("starter.faq", []).config(function($stateProvider) {
@@ -142,7 +170,7 @@ angular.module("starter.faq", []).config(function($stateProvider) {
 angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyAskedQuestion, $anchorScroll, $location, $timeout, $rootScope) {
   $rootScope.showNav = void 0;
   $scope.questions = FrequentlyAskedQuestion.find();
-  return $scope.gotoAnchor = function(x, open) {
+  $scope.gotoAnchor = function(x, open) {
     var newHash, quick;
     newHash = 'anchor' + x;
     if (open && $(window).height() / 2 < $('#' + newHash).position().top) {
@@ -151,6 +179,7 @@ angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyA
       }, 300);
     }
   };
+  return $scope.htmlReady();
 });
 
 angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
@@ -216,6 +245,7 @@ angular.module("starter.home").controller("homeCtrl", function($scope, $http, Sl
   $scope.isPhoneActive = function() {
     return $scope.activePhone;
   };
+  $scope.htmlReady();
 });
 
 angular.module("starter.mention", []).config(function($stateProvider) {
@@ -228,6 +258,7 @@ angular.module("starter.mention", []).config(function($stateProvider) {
 
 angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
   $rootScope.showNav = void 0;
+  $scope.htmlReady();
 });
 
 angular.module("starter.ranking", []).config(function($stateProvider) {
@@ -252,7 +283,8 @@ angular.module("starter.ranking").controller("rankingCtrl", function($scope, $fi
         players.push(line);
       }
     }
-    return createTable(players);
+    createTable(players);
+    return $scope.htmlReady();
   }, function(error) {
     return console.log(error);
   });
@@ -365,11 +397,12 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
         console.log("TWO : ", success);
         pushDatas(success);
         if ($scope.tableParams === void 0) {
-          return createTable();
+          createTable();
         } else {
           $scope.tableParams.reload();
-          return $scope.tableParamsMobile.reload();
+          $scope.tableParamsMobile.reload();
         }
+        return $scope.htmlReady();
       }, function(error) {
         return console.log(error);
       });

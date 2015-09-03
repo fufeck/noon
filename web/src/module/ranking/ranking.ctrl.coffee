@@ -12,6 +12,7 @@ angular.module "starter.ranking"
 			if line.username != undefined && line.goodAnswers != undefined && line.totalAnswers != undefined
 				players.push line
 		createTable(players)
+		$scope.htmlReady()
 	, (error) ->
 		console.log error
 
@@ -50,3 +51,4 @@ angular.module "starter.ranking"
 
 		    return
 		)
+
