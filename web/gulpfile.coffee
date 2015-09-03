@@ -26,6 +26,8 @@ paths =
   src: './src'
   dest: './www'
   dev:
+    sitemap: '/sitemap.xml'
+    robot: '/robot.txt'
     index: '/index.jade'
     img: '/img/**'
     jade: ['./src/**/*.jade', '!./src/index.jade']
@@ -65,6 +67,14 @@ gulp.task 'index', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe jade configs.jade
   .pipe minifyHTML(opts)
+  .pipe gulp.dest paths.dest
+
+gulp.task 'sitemap', ->
+  gulp.src paths.src + paths.dev.sitemap
+  .pipe gulp.dest paths.dest
+
+gulp.task 'robot', ->
+  gulp.src paths.src + paths.dev.robot
   .pipe gulp.dest paths.dest
 
 gulp.task 'img', ->
@@ -131,7 +141,7 @@ gulp.task 'i18n', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe gulp.dest paths.dest + paths.build.i18n
 
-gulp.task 'build', ['index', 'jade', 'less', 'coffee', 'assets', 'vendors', 'fonts', 'ionic', 'img', 'i18n']
+gulp.task 'build', ['sitemap', 'robot', 'index', 'jade', 'less', 'coffee', 'assets', 'vendors', 'fonts', 'ionic', 'img', 'i18n']
 
 gulp.task 'watch', ['build'], ->
   gulp.watch paths.src + paths.dev.index, ['index']
