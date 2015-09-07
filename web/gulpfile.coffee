@@ -14,7 +14,7 @@ minifycss       = require 'gulp-minify-css'
 minifyHTML      = require 'gulp-minify-html'
 ngAnnotate      = require 'gulp-ng-annotate'
 uglify          = require 'gulp-uglify'
-
+manifest        = require 'gulp-manifest'
 
 
 # Configs ########################################################
@@ -61,6 +61,14 @@ configs =
   coffee: { bare: true }
 
 # Tasks ########################################################
+
+gulp.task 'manifest', ->
+  gulp.src([ 'www/**/*.*' ]).pipe(manifest(
+    hash: true
+    preferOnline: true
+    network: [ '*' ]
+    filename: 'app.manifest'
+    exclude: 'app.manifest')).pipe gulp.dest('www')
 
 gulp.task 'index', ->
   gulp.src paths.src + paths.dev.index
@@ -141,7 +149,7 @@ gulp.task 'i18n', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe gulp.dest paths.dest + paths.build.i18n
 
-gulp.task 'build', ['sitemap', 'robot', 'index', 'jade', 'less', 'coffee', 'assets', 'vendors', 'fonts', 'ionic', 'img', 'i18n']
+gulp.task 'build', ['sitemap', 'robot', 'index', 'jade', 'less', 'coffee', 'assets', 'vendors', 'fonts', 'ionic', 'img', 'i18n', 'manifest']
 
 gulp.task 'watch', ['build'], ->
   gulp.watch paths.src + paths.dev.index, ['index']

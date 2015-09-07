@@ -1,0 +1,18 @@
+CACHE MANIFEST
+
+
+CACHE:
+index.html
+robot.txt
+sharefb.html
+sitemap.xml
+
+
+NETWORK:
+*
+
+
+SETTINGS:
+prefer-online
+
+# hash: 76d77efa17b6fb521c7fc8bc27fc05496f990410564ceb6a9d37372915068a43
