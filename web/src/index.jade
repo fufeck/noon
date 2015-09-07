@@ -13,9 +13,16 @@ html
     meta(name="mobile-web-app-capable", content="yes")
     meta(name="viewport", content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width")
 
-    title Noon Game | Des quiz pas comme les autres
-    meta(name="description", content="Découvrez Noon, la seule application mobile qui vous permet de participer tous les jours à une loterie gratuite simplement en jouant à des quiz.\
-    Inscrivez vous sur notre site dès aujourd'hui et devenez un beta-nooners pour tester l'application en avant première.")
+    title Noon | Des quiz pas comme les autres
+    script(type="application/ld+json").
+        {
+          "@context": "http://schema.org",
+          "@type": "Organization",
+          "url": "http://noongame.fr",
+          "logo": "http://noongame.fr/img/share3.png"
+        }
+
+    meta(name="description", content="Noon, l'application mobile gratuite qui permet de participer tous les jours à une loterie simplement en jouant à des quiz")
     base(href="/")
     link(href="css/app.css", rel="stylesheet")
 
