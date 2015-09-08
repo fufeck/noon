@@ -52,8 +52,8 @@ angular.module "starter", [
 
 .config ($urlRouterProvider, $locationProvider) ->
 
-	$locationProvider.hashPrefix('!')
-	$locationProvider.html5Mode(true)
+	# $locationProvider.hashPrefix('!')
+	# $locationProvider.html5Mode(true)
 	$urlRouterProvider.otherwise '/'
 
 	Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG")
