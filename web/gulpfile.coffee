@@ -26,7 +26,7 @@ paths =
   src: './src'
   dest: './www'
   dev:
-    sitemap: '/sitemap.xml'
+    sitemap: '/sitemap/**'
     robot: '/robots.txt'
     index: '/index.jade'
     img: '/img/**'
@@ -79,7 +79,7 @@ gulp.task 'index', ->
 
 gulp.task 'sitemap', ->
   gulp.src paths.src + paths.dev.sitemap
-  .pipe gulp.dest paths.dest
+  .pipe gulp.dest paths.dest + '/sitemap'
 
 gulp.task 'robot', ->
   gulp.src paths.src + paths.dev.robot
