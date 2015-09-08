@@ -5,6 +5,9 @@ server {
   location / {
     root /var/www/site/web/www;
 
-
+    if ($args ~ _escaped_fragment_) {
+      proxy_pass http://localhost:8888;
+      break;
+    }
   }
 }
