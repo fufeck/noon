@@ -29,6 +29,7 @@ paths =
     sitemap: '/sitemap/**'
     robot: '/robots.txt'
     index: '/index.jade'
+    sharefb: '/sharefb.jade'
     img: '/img/**'
     jade: ['./src/**/*.jade', '!./src/index.jade']
     less: ['./src/app.less']
@@ -72,6 +73,13 @@ gulp.task 'manifest', ->
 
 gulp.task 'index', ->
   gulp.src paths.src + paths.dev.index
+  .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
+  .pipe jade configs.jade
+  .pipe minifyHTML(opts)
+  .pipe gulp.dest paths.dest
+
+gulp.task 'sharefb', ->
+  gulp.src paths.src + paths.dev.sharefb
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe jade configs.jade
   .pipe minifyHTML(opts)
@@ -149,7 +157,7 @@ gulp.task 'i18n', ->
   .pipe plumber(errorHandler: notify.onError('Error: <%= error.message %>'))
   .pipe gulp.dest paths.dest + paths.build.i18n
 
-gulp.task 'build', ['sitemap', 'robot', 'index', 'jade', 'less', 'coffee', 'assets', 'vendors', 'fonts', 'ionic', 'img', 'i18n', 'manifest']
+gulp.task 'build', ['sitemap', 'robot', 'sharefb', 'index', 'jade', 'less', 'coffee', 'assets', 'vendors', 'fonts', 'ionic', 'img', 'i18n', 'manifest']
 
 gulp.task 'watch', ['build'], ->
   gulp.watch paths.src + paths.dev.index, ['index']
