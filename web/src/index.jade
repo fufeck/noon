@@ -15,11 +15,26 @@ html(lang="fr")
 
     title Noon | Des quiz pas comme les autres
     script(type="application/ld+json").
+
         {
-          "@context": "http://schema.org",
-          "@type": "Organization",
+          "@context": "http://schema.org/",
+          "@type": "SoftwareApplication",
+          "name": "NOON",
+          "image": "http://noongame.fr/img/icon.png",
           "url": "http://noongame.fr",
-          "logo": "http://noongame.fr/img/icon.png"
+
+          "operatingSystem": "ANDROID,IOS",
+          "applicationCategory": "http://schema.org/GameApplication",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.6",
+            "ratingCount": "5"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "EUR"
+          }
         }
 
     meta(name="description", content="Noon, l'application mobile gratuite qui permet de participer tous les jours à une loterie simplement en jouant à des quiz")
