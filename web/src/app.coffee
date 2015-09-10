@@ -50,12 +50,12 @@ angular.module "starter", [
 	"starter.mention"
 ]
 
-.config ($urlRouterProvider, $locationProvider) ->
+.config ($urlRouterProvider, $locationProvider, LoopBackResourceProvider) ->
 
 	$locationProvider.hashPrefix('!')
 	# $locationProvider.html5Mode(true)
 	$urlRouterProvider.otherwise '/'
-
+	LoopBackResourceProvider.setUrlBase "http://dashboard.noongame.com/api"
 	Parse.initialize("XknyA0h8q2IWp5pr0cvZePcYzDvkePv0ybVCFDqz", "dhIIoXKciHOVuk5TcNQwHg9cRPj4vvnct4FvptzG")
 	return
 
