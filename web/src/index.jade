@@ -77,6 +77,22 @@ html(lang="fr")
     meta(property='og:image', content='http://noongame.fr/img/share3.png')
 
   body(ng-app="starter" id="fb-root")
+    //- .download-app-ios.visible-mobile(ng-if="$root.downloadIsVisible && $root.isIOS()")
+    //-     .close(ng-click="$root.closeDownloader()") ✕
+    //-     .app
+    //-         img(src="img/icon-ios.png")
+    //-     .title Noon <br> <span class="free">Gratuit</span>
+    //-     .download
+    //-         button OBTENIR
+
+    //- .download-app-android.visible-mobile(ng-if="$root.downloadIsVisible && $root.isAndroid()")
+    //-     .close(ng-click="$root.closeDownloader()") ✕
+    //-     .app
+    //-         img(src="img/icon-android.png")
+    //-     .title Noon <br> <span class="free">Gratuit</span>
+    //-     .download
+    //-         button INSTALLER
+
     .view(ui-view autoscroll="true")
 
 

@@ -58,6 +58,103 @@
 @import "directive/noonHeader/noonHeader";
 @import "directive/noonFooter/noonFooter";
 
+.download-app-ios {
+	position: fixed;
+	height: 70px;
+	line-height: 70px;
+	background: #EFEFEF;
+	color:black;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	bottom: 0;
+	left: 0;
+	z-index: 9999999999;
+	width: 100%;
+	.close {
+		.make-xs-column(1);
+		line-height:70px;
+		font-size: 0.9em;
+	}
+	.app {
+		.make-xs-column(2);
+		img {
+			border-radius: 5px;
+			width: 40px;
+			height: 40px;
+		}
+	}
+	.title {
+		.make-xs-column(5);
+		font-size: 1.5em;
+		.free {
+			color:grey;
+			font-size: 0.6em;
+		}
+		padding-top: 14px;
+		line-height: 20px;
+	}
+	.download {
+		.make-xs-column(4);
+		button {
+
+			line-height: 24px;
+			padding:0px 20px;
+			height: 30px;
+			border: 1px solid rgb(0,158, 253);
+			color: rgb(0,158, 253);
+			border-radius: 5px;
+			background:#EFEFEF;
+			font-weight: 500;
+		}
+	}
+}
+
+.download-app-android {
+	position: fixed;
+	height: 70px;
+	line-height: 70px;
+	background: #EFEFEF;
+	color:black;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	bottom: 0;
+	left: 0;
+	z-index: 9999999999;
+	width: 100%;
+	.close {
+		.make-xs-column(1);
+		line-height:70px;
+		font-size: 0.9em;
+	}
+	.app {
+		.make-xs-column(2);
+		img {
+			width: 40px;
+			height: 40px;
+		}
+	}
+	.title {
+		.make-xs-column(5);
+		font-size: 1.5em;
+		.free {
+			color:grey;
+			font-size: 0.6em;
+		}
+		padding-top: 14px;
+		line-height: 20px;
+	}
+	.download {
+		.make-xs-column(4);
+		button {
+
+			line-height: 24px;
+			padding:0px 20px;
+			height: 30px;
+			color: white;
+			border: none;
+			background:rgb(134,187,34);
+			font-weight: 500;
+		}
+	}
+}
 @media(max-width:767px) {
 	.wrapper-mobile {
 		position : relative;

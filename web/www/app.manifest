@@ -9,6 +9,8 @@ sharefb.html
 sitemap.xml
 css/app.css
 css/ionic.css
+i18n/locale-en.json
+i18n/locale-fr.json
 fonts/default-skin.svg
 fonts/fontawesome-webfont.svg
 fonts/fontawesome-webfont.ttf
@@ -19,8 +21,10 @@ fonts/glyphicons-halflings-regular.woff
 fonts/ionicons.svg
 fonts/ionicons.ttf
 fonts/ionicons.woff
-i18n/locale-en.json
-i18n/locale-fr.json
+js/app.js
+js/assets.js
+js/templates.js
+js/vendors.js
 img/CCM-1.png
 img/CCM-2.png
 img/CCM-3.png
@@ -46,6 +50,8 @@ img/fleche-cta.png
 img/fleche.png
 img/fond1.png
 img/fond2.png
+img/icon-ios.png
+img/icon.png
 img/iphone.png
 img/iphone2.png
 img/logo.png
@@ -73,10 +79,6 @@ img/picto1annonceur.png
 img/plus.png
 img/share3.png
 img/text.png
-js/app.js
-js/assets.js
-js/templates.js
-js/vendors.js
 img/favicon/android-icon-144x144.png
 img/favicon/android-icon-192x192.png
 img/favicon/android-icon-36x36.png
@@ -104,6 +106,8 @@ img/favicon/ms-icon-144x144.png
 img/favicon/ms-icon-150x150.png
 img/favicon/ms-icon-310x310.png
 img/favicon/ms-icon-70x70.png
+sitemap/fr/sitemap.xml
+sitemap/com/sitemap.xml
 
 
 NETWORK:
@@ -113,4 +117,4 @@ NETWORK:
 SETTINGS:
 prefer-online
 
-# hash: 1a854030942a0e253abd829197f6a6292f138b54962c034d27031903663ab124
+# hash: 22daa7cce69c126a7e27e5fd62bfd6188d53fd0174673d3287f2e646fb27d95d

@@ -61,7 +61,16 @@ angular.module "starter", [
 
 .run ($rootScope) ->
 
+	# ------- DOWNLOAD BANNER --------------------
 
+	# $rootScope.isIOS = -> /iPhone|iPad|iPod/i.test(navigator.userAgent)
+	# $rootScope.isAndroid = -> /Android/i.test(navigator.userAgent)
+
+	# $rootScope.downloadIsVisible = true
+	# $rootScope.closeDownloader = ->
+	# 	$rootScope.downloadIsVisible = false
+
+	# --------------------------------------------
 	$rootScope.positionPhone = false
 	$rootScope.showNav = undefined
 	$rootScope.slidePhone = ->

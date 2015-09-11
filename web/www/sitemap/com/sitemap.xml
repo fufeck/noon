@@ -5,18 +5,18 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://noongame.com/result</loc>
+    <loc>http://noongame.com/#!/result</loc>
     <changefreq>daily</changefreq>
-    <priority>0.1</priority>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://noongame.com/ranking</loc>
+    <loc>http://noongame.com/#!/ranking</loc>
     <changefreq>daily</changefreq>
-    <priority>0.1</priority>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://noongame.com/advertiser</loc>
+    <loc>http://noongame.com/#!/advertiser</loc>
     <changefreq>daily</changefreq>
-    <priority>0.1</priority>
+    <priority>1.0</priority>
   </url>
 </urlset>
