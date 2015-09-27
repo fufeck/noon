@@ -3,6 +3,20 @@ noon-header
 	.view-waitinglist
 		.body-waitinglist
 
+			.share-account
+				.share-ranking
+					input.filter(type="text" ng-model="query" placeholder="username")
+					table(ng-if="players && !formActive")
+						tr
+							th USERNAME
+							th SHARE
+							th ACTIVE ACCOUNT
+						tr(ng-repeat="line in players | filter: { username: query } | limitTo:10")
+							td {{ line.username }}
+							td {{ line.shares }}
+							td {{ line.isActive }}
+
+
 			.info-account
 				.already-account(ng-show="user")
 					.title
@@ -58,19 +72,5 @@ noon-header
 							button.button-secondary.primary(ng-click="send(form);submitted=true;" play-song) S'inscrire
 								img(ng-src="img/validate.png")
 
-			.share-account
-				.share-ranking
-					input.filter(type="text" ng-model="query" placeholder="username")
-					table(ng-if="players && !formActive")
-						tr
-							th RANK
-							th USERNAME
-							th SHARE
-							th ACTIVE ACCOUNT
-						tr(ng-repeat="line in players track by $index | filter:query | limitTo:10")
-							td {{ $index }}
-							td {{ line.username }}
-							td {{ line.shares }}
-							td {{ line.isActive }}
 
 		noon-footer

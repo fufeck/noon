@@ -4,7 +4,7 @@ angular.module "starter.waitinglist", []
 	
 	$stateProvider
 	.state 'waitinglist',
-		url: '/waitinglist/:iduser',
+		url: '/waitinglist/:username',
 		title: "waitinglist"
 		templateUrl: 'waitinglist.view.html',
 		controller: 'waitinglistCtrl'

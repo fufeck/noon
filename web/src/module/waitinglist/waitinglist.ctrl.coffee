@@ -28,17 +28,15 @@ angular.module "starter.waitinglist"
 				if err.data.error.details.codes.email then newUser.emailAlreadyUsed = true
 				if err.data.error.details.codes.username then newUser.usernameAlreadyUsed = true
 
-		# $scope.redirect = (url) ->
-		# 	window.open(url, '_system');
-
 	incShare = ->
-		return;
-		# if $stateParams.username != ""
-			# $http.post "", { username : $stateParams.username }
-			# .success ->
-			# 	console.log success
-			# , (error) ->
-			# 	console.log error
+		console.log "USERNAME = ", $stateParams.username
+		if $stateParams.username != ""
+			$http.post "URL", { username : $stateParams.username }
+			.success (success) ->
+				findPlayer()
+				console.log success
+			.error (error) ->
+				console.log error
 
 	findPlayer()
 	incShare()
