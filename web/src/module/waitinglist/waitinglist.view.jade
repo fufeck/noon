@@ -1,0 +1,76 @@
+noon-header
+.noon-view
+	.view-waitinglist
+		.body-waitinglist
+
+			.info-account
+				.already-account(ng-show="user")
+					.title
+						h1 TU ETES DEJA
+						h1.light UN BÊTA-NOONER
+					.subtitle
+						h3 Partage des à présent ce lien pour etre le premier a découvrire Noon
+						h3 {{ user.link }}
+				.create-account(ng-hide="user")
+					.subtitle
+						h3 Inscrivez vous pour rejoindre
+						h3 la communauté des <span class="strong">BÊTA-NOONERS</span>
+					.form-beta
+						form(name="form", novalidate="")
+							.gender
+								span(ng-class='{true: "error"}[!newUser.gender && submitted]') Je suis
+									sup.primary *
+								input(type="radio" ng-model="newUser.gender" id="hgen", required name="gender", value="male")
+								label(for="hgen" ng-class='{true: "error"}[!newUser.gender && submitted]') Homme
+								input(type="radio" ng-model="newUser.gender" id="fgen" name="gender", value="female")
+								label(for="fgen" ng-class='{true: "error"}[!newUser.gender && submitted]') Femme
+
+							label(ng-class='{true: "error"}[(form.email.$invalid || newUser.emailAlreadyUsed) && submitted]') Adresse email
+								sup.primary *
+								input(type="email", ng-model="newUser.email", name="email", required="", autofocus="false")
+							small.error(ng-show='newUser.emailAlreadyUsed && submitted') Cette adresse email est déjà inscrite.
+
+							label(ng-class='{true: "error"}[(form.username.$invalid || newUsernameAlreadyUsed) && submitted]') Créer un pseudo
+								sup.primary *
+								input(type="text", ng-model="newUser.username", name="username", required="", autofocus="false" autocomplete="off" autocorrect="off")
+							small.error(ng-show='newUsernameAlreadyUsed && submitted') Ce pseudo est déjà utilisé.
+
+							label(ng-class='{true: "error"}[form.birthday.$invalid && submitted]') Date de naissance
+								sup.primary *
+								input(type="date", ng-model="newUser.birthday", name="birthday", required="", autofocus="false")
+
+							label(ng-class='{true: "error"}[form.password.$invalid && submitted]') Mot de passe
+								sup.primary *
+								input(type="password", ng-model="newUser.password", name="password", required="", autofocus="false")
+
+							label(ng-class='{true: "error"}[(newUser.password !== newUser.retype || form.retype.$invalid) && submitted]') Confirmer le mot de passe
+								sup.primary *
+								input(type="password", ng-model="newUser.retype", name="retype", required="", autofocus="false")
+
+							p En cliquant sur "S'inscrire",
+								br
+								| j'accepte la
+								a.primary(href='http://ec2-52-17-249-12.eu-west-1.compute.amazonaws.com/#/cgu') &nbsp;Politique de confidentialité
+								br
+								| et les
+								a.primary &nbsp;Conditions d'utilisation
+
+							button.button-secondary.primary(ng-click="send(form);submitted=true;" play-song) S'inscrire
+								img(ng-src="img/validate.png")
+
+			.share-account
+				.share-ranking
+					input.filter(type="text" ng-model="query" placeholder="username")
+					table(ng-if="players && !formActive")
+						tr
+							th RANK
+							th USERNAME
+							th SHARE
+							th ACTIVE ACCOUNT
+						tr(ng-repeat="line in players track by $index | filter:query | limitTo:10")
+							td {{ $index }}
+							td {{ line.username }}
+							td {{ line.shares }}
+							td {{ line.isActive }}
+
+		noon-footer

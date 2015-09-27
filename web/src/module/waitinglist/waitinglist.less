@@ -1,0 +1,314 @@
+.view-waitinglist {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #34495E;
+
+	.body-waitinglist {
+		position : relative;
+		top : 80px;
+		left : 0;
+		width : 100%;
+		height : 100%;
+		font-weight : 200px;
+		padding-top : 0;
+		.row;
+
+		.info-account {
+			.text-center;
+			.make-xs-column(6);
+			.already-account {
+
+			}
+			.create-account {
+				.subtitle {
+					margin-top:10px;
+					
+				}
+				.form-beta {
+						.make-xs-column(10);
+						.make-xs-column-offset(1);
+						form {
+							padding: 20px;
+							float: left;
+							width: 100%;
+
+							h5 {
+								margin: 0;
+								font-size: 1.8rem;
+								font-weight: 400;
+							}
+
+							label {
+								font-weight: 300;
+								font-size: 16px;
+								width: 100%;
+							}
+
+							.gender {
+								display: table;
+								height: 50px;
+								margin-top: 0px;
+
+								span {
+									font-weight: 300;
+									width: 28px;
+									line-height: 40px;
+								}
+
+								input {
+									display: none;
+								}
+
+								label {
+									width: 28%;
+									display: inline-block;
+									cursor: pointer;
+									position: relative;
+									padding-left: 70px;
+									margin-right: 45px;
+									font-size: 1.8rem;
+									line-height: 35px;
+									height: 35px;
+
+									&:before {
+										content: "\2022";
+										font-size: 6rem;
+										color: rgb(226, 222, 222);
+										text-align: center;
+										line-height: 35px;
+										display: inline-block;
+
+										width: 35px;
+										height: 35px;
+										border-radius: 50%;
+
+										position: absolute;
+										left: 25px;
+										background-color: radial-gradient(@primaryGrey, #263745);
+										border: 1px solid white;
+
+									}
+								}
+
+								label.error {
+									&:before {
+										border-color: red;
+									}
+								}
+
+
+								input:checked + label:before {
+									content: "\2022";
+									color: @primaryOrange;
+									font-size: 6rem;
+									text-align: center;
+									line-height: 30px;
+									height: 30px;
+								}
+
+								@media all and (max-height: 600px) {
+									input {
+										display: none;
+									}
+
+									label {
+										width: 24%;
+										display: inline-block;
+										cursor: pointer;
+										position: relative;
+										padding-left: 50px;
+										margin-right: 45px;
+										font-size: 1.6rem;
+										line-height: 29px;
+										height: 29px;
+
+										&:before {
+											content: "\2022";
+											font-size: 5rem;
+											color: rgb(226, 222, 222);
+											text-align: center;
+											line-height: 29px;
+											display: inline-block;
+
+											width: 29px;
+											height: 29px;
+											border-radius: 50%;
+
+											position: absolute;
+											left: 15px;
+											background-color: radial-gradient(@primaryGrey, #263745);
+											border: 1px solid white;
+
+										}
+									}
+
+									input:checked + label:before {
+										content: "\2022";
+										color: @primaryOrange;
+										font-size: 5rem;
+										text-align: center;
+										line-height: 29px;
+										height: 29px;
+									}
+								}
+							}
+
+							input {
+								width: 100%;
+								height: 40px;
+								background-color: #5d6d7d;
+								border: 1px solid white;
+								border-radius: 3px;
+								padding: 10px;
+								font-weight: 400;
+								margin-bottom: 2px;
+								font-size: 16px;
+							}
+
+							input:focus {
+								border-color: @primaryOrange;
+							}
+
+							sup.primary {
+								color: @primaryOrange;
+								font-size: 10px;
+							}
+
+							small {
+								float: right;
+
+								a {
+									color: white;
+									font-weight: 300;
+								}
+
+								a:hover {
+									text-decoration: none;
+								}
+							}
+
+							button.button-secondary {
+								margin-top: 0px;
+								width: 100%;
+								text-align: center;
+								font-size: 24px;
+								height: 60px;
+								min-width: 250px;
+
+								* {
+									margin-left: -20px;
+								}
+							}
+
+							button.primary {
+								background-color: @primaryOrange;
+								border-color: @primaryOrange;
+							}
+						}
+
+						p {
+							text-align: center;
+							font-size: 1.8rem;
+							line-height: 2.5rem;
+							font-weight: 300;
+							margin-top: 10px;
+
+							a.primary {
+								color: @primaryOrange;
+								font-weight: 500;
+							}
+						}
+
+						@media all and (max-width: 350px) {
+							p {
+								font-size: 1.5rem;
+							}
+						}
+
+						@media all and (max-width: 300px) {
+							p {
+								font-size: 1.3rem;
+							}
+						}
+				}
+			}
+		}
+		.share-account {
+			.make-xs-column(6);
+			.share-ranking {
+				.make-xs-column(10);
+				.make-xs-column-offset(1);
+				margin-top: 80px;
+				input {
+						position : relative;
+						margin-top: 20px;
+						left : 0;
+						height : 40px;
+						width : 250px;
+						-webkit-appearance: none;
+						-moz-appearance: none;
+						outline: none;    
+						background-color: transparent;
+						border : 0;
+						border-bottom : 1px solid rgba(255, 255, 255, 0.4);
+						color : white;
+						background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
+						padding-left: 30px;
+					}
+				table {
+					position: absolute;
+					top : 100px;
+					color: white;
+					border-bottom: 1px solid rgba(255,255,255,0.6);
+					border-left: 1px solid rgba(255,255,255,0.6);
+					border-right: 1px solid rgba(255,255,255,0.6);
+					margin-left: auto;
+					margin-right: auto;
+				}
+				td {
+					border-collapse: collapse;
+					padding: 4px;
+					padding-left: 8px;
+					padding-right: 8px;
+					// height : 50px;
+					// width : 180px;
+					.text-center;
+				}
+				th  {
+					border-collapse: collapse;
+					padding: 4px;
+					padding-left: 8px;
+					padding-right: 8px;
+					// height : 50px;
+					// width : 180px;
+					.text-center;
+				}
+				td:nth-child(3) {
+					padding: 4px;
+					// width : 180px;
+				}
+				table tr:nth-child(odd) {
+					background-color: #495C6D;
+					font-size : 1.2em;
+				}
+				table tr:nth-child(even) {
+					background-color: #34495E;
+					font-size : 1.2em;
+				}
+				table td:nth-child(5) {
+					color : #F67D0A;
+				}
+				tr th {
+					background-image:-moz-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-image:-webkit-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-image:-o-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-image:linear-gradient(60deg, #F67D0A, #FEB221, #F67D0A);
+					background-size : 380px 10px;
+					background-attachment:fixed;
+				}
+			}
+		}
+	}
+}

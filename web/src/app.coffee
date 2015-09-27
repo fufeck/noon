@@ -48,6 +48,7 @@ angular.module "starter", [
 	"starter.faq"
 	"starter.cgu"
 	"starter.mention"
+	"starter.waitinglist"
 ]
 
 .config ($urlRouterProvider, $locationProvider, LoopBackResourceProvider) ->
