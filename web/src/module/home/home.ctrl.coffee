@@ -7,19 +7,22 @@ angular.module "starter.home"
 	$scope.activePhone = false
 
 	SliderPicture.getFiles (pictures) ->
+		console.log 'get files : '
 		i = 0
 		for pict in pictures
-			$scope.slides.push('http://52.11.211.225/api/slider-pictures/download/' + pict.name)
+			$scope.slides.push('http://dashboard.noongame.com/api/slider-pictures/download/' + pict.name)
 			i++
 		console.log $scope.slides
-		lauchSlide()
+		launchSlide()
+	, (error) ->
+		console.log 'error : ', error
 
-	lauchSlide = () ->
+	launchSlide = () ->
 		$timeout(startslide = () ->
 				$scope.currentIndex++
 				if ($scope.currentIndex >= $scope.slides.length)
 					$scope.currentIndex = 0
-				lauchSlide()
+				launchSlide()
 			, 5000)
 
 	$scope.isCurrentSlideIndex = (index) ->

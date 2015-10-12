@@ -1,263 +1,265 @@
-@media(min-width:768px) {
-	.view-result {
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+.view-result {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #34495E;
+
+	.body-result {
+		position : relative;
+		top : 80px;
+		left : 0;
+		width : 100%;
+		height : 100%;
 		background: #34495E;
+		font-weight : 200px;
+		padding-top : 0;
 
-		.body-result {
-			position : relative;
-			top : 80px;
-			left : 0;
-			width : 100%;
-			height : 100%;
+		.container-body {
+			height : 160%;
 			background: #34495E;
-			font-weight : 200px;
-			padding-top : 0;
+			.make-xs-column(12);
+			margin: auto;
+			padding-top: 10px;
 
-			.container-comming-soon {
-				display : none;
-				position : relative;
-				top : 0;
-				left : 0;
-				width : 100%;
-				height : 100%;
-				background: #34495E;
-				border: 1px #34495E solid;
-				.comming-soon {
-					position : relative;
-					top : 0;
-					left : 0;
-					width : 200px;
-					height : 160px;
-					margin-left: auto;
-					margin-right: auto;
-					margin-top: 15%;
+			.title-result {
+				position: relative;
+				padding: 0;
+				height : 60px;
+				width: 205px;
+				margin-left: auto;
+				margin-right: auto;
+				h2 {
+					font-size : 1.2em;
+					font-weight : 200 !important;
+					.text-center;
+					color : white;
+					float: right;
+				}
+				img {
+					position: absolute;
+					top : 15px;
+					height: 30px;
 				}
 			}
+			.medate {
+				.make-xs-column(12);
+				.make-sm-column(4);
+				.make-md-column(4);
+				.make-lg-column-offset(1);
+				.make-lg-column(3);
+			}
+			.results {
+				.make-xs-column(12);
+				.make-sm-column(8);
+				.make-md-column(8);
+				.make-lg-column(7);
+				.filter {
+					padding-left: 5%;
+					input {
+						&:focus {
+							outline: none;
+						}
+					}
+				}
+				.pager {
+					margin:  10px 40px;
+					button {
+						.text-center;
+						margin: 2px 3px;
+						width: 30px;
+						border: none;
+						color : white;
+						border: 2px solid #34495E;
+						background-color : #495C6D;
+						border-radius: 3px;
+							transition: all .5s;
+						&:focus {
+							outline: none;
+						}
+						&:hover, &.active {
+							background: #F67D0A;
+						}
 
-			.container-body {
-				// display: none;
-				position : relative;
-				top : 0;
-				left : 0;
-				padding-top : 0;
-				height : 100%;
-				width : 700px;
-				margin: auto;
-				padding-top: 10px;
-
-				.title-result {
-					position: relative;
-					padding: 0;
-					height : 60px;
-					width: 205px;
+					}
+				}
+				padding: 0 !important;
+				input {
+					position : relative;
+					left : 0;
+					height : 40px;
+					width : 250px;
+					margin-bottom : 20px;
+					background-color: transparent;
+					border : 0;
+					border-bottom : 1px solid rgba(255, 255, 255, 0.4);
+					color : white;
+					background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
+					padding-left: 30px;
+					box-shadow: none;
+				}
+				table {
+					color: white;
+					border-bottom: 1px solid rgba(255,255,255,0.6);
+					// border-left: 1px solid rgba(255,255,255,0.6);
+					// border-right: 1px solid rgba(255,255,255,0.6);
 					margin-left: auto;
 					margin-right: auto;
-					h2 {
-						font-size : 1.2em;
-						font-weight : 200 !important;
-						.text-center;
-						color : white;
-						float: right;
-					}
-					img {
-						position: absolute;
-						top : 15px;
-						height: 30px;
-					}
 				}
-				.results {
-					position : absolute;
-					width : 500px;
-					height : 430px;
-					left : 0px;
+				td {
+					border-collapse: collapse;
+					height : 28px;
+					width : 150px;
+					.text-center;
+				}
+				th  {
+					border-collapse: collapse;
+					height : 30px;
+					width : 150px;
+					.text-center;
+				}
+				table tr:nth-child(odd) {
+					background-color: #495C6D;
+					font-size : 1em;
+				}
+				table tr:nth-child(even) {
+					background-color: #34495E;
+					font-size : 1em;
+				}
+				table td:nth-child(4) {
+					color : #F67D0A;
+				}
+				thead tr {
+					background-image:-moz-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-image:-webkit-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-image:-o-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-image:linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
+					background-size : 400px 40px;
+					background-attachment:fixed;
+				}
+				.ng-table-pager {
+						right : 0;
+						a {
+							color : white;
+							border: 2px solid #34495E;
+							background-color : #495C6D;
+						}
+						.active a {
+							z-index : 0;
+							background-color : #838F9B;
 
-					input {
-						position : relative;
+						}
+						li:first-child a {
+							background-color: white;
+							color : #34495E;
+						}
+						li:last-child a {
+							background-color: white;
+							color : #34495E;
+						}
+					}
+					.ng-table-filters {
+						position: absolute;
+						top : -40px;
 						left : 0;
-						height : 40px;
-						width : 250px;
-						margin-bottom : 20px;
-						background-color: transparent;
-						border : 0;
-						border-bottom : 1px solid rgba(255, 255, 255, 0.4);
-						color : white;
-						background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
-						padding-left: 30px;
-						box-shadow: none;
-					}
-					table {
-						position: absolute;
-						top : 50px;
-						color: white;
-						border-bottom: 1px solid rgba(255,255,255,0.6);
-						border-left: 1px solid rgba(255,255,255,0.6);
-						border-right: 1px solid rgba(255,255,255,0.6);
-						margin-left: auto;
-						margin-right: auto;
-					}
-					td {
-						border-collapse: collapse;
-						height : 28px;
-						width : 110px;
-						.text-center;
-					}
-					th  {
-						border-collapse: collapse;
-						height : 30px;
-						width : 120px;
-						.text-center;
-					}
-					table tr:nth-child(odd) {
-						background-color: #495C6D;
-						font-size : 1em;
-					}
-					table tr:nth-child(even) {
-						background-color: #34495E;
-						font-size : 1em;
-					}
-					table td:nth-child(4) {
-						color : #F67D0A;
-					}
-					thead tr {
-						background-image:-moz-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
-						background-image:-webkit-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
-						background-image:-o-linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
-						background-image:linear-gradient(60deg, #FEB221, #F67D0A, #FEB221);
-						background-size : 400px 40px;
-						background-attachment:fixed;
-					}
-					.ng-table-pager {
-							right : 0;
-							a {
-								color : white;
-								border: 2px solid #34495E;
-								background-color : #495C6D;
-							}
-							.active a {
-								z-index : 0;
-								background-color : #838F9B;
-
-							}
-							li:first-child a {
-								background-color: white;
-								color : #34495E;
-							}
-							li:last-child a {
-								background-color: white;
-								color : #34495E;
-							}
-						}
-						.ng-table-filters {
+						background:none;
+						th {
 							position: absolute;
-							top : -40px;
-							left : 0;
-							background:none;
-							th {
-								position: absolute;
-								left: 0;
-								top : 0;
-							}
-							input {
-								left: 0;
-								height : 35px;
-								width : 250px;
-								background-color: transparent;
-								border : 0;
-								border-bottom : 1px solid rgba(255, 255, 255, 0.4);
-								color : white;
-								background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
-								padding-left: 30px;
-								box-shadow: none;
-							}
+							left: 0;
+							top : 0;
 						}
-						.pagination.ng-table-pagination {
-							position : absolute;
-							right : 15px !important;
-							bottom: 0px;
+						input {
+							left: 0;
+							height : 35px;
+							width : 250px;
+							background-color: transparent;
+							border : 0;
+							border-bottom : 1px solid rgba(255, 255, 255, 0.4);
+							color : white;
+							background: url("../img/picto-loupe.png") no-repeat scroll 5px 8px;
+							padding-left: 30px;
+							box-shadow: none;
 						}
-						.ng-table-counts {
-							.hide;
-						}
+					}
+					.pagination.ng-table-pagination {
+						position : absolute;
+						right : 15px !important;
+						bottom: 0px;
+					}
+					.ng-table-counts {
+						.hide;
+					}
+			}
+			.medate {
+
+				table {
+					color: white;
+					background-color: #495C6D;
+					border-radius: 2px;
+					width: 100%;
 				}
-				.medate {
-					position : absolute;
-					top : 0;
-					right : 0;
-					width : 200px;
-					height : 100%;
-					padding-top : 120px;
+				th , td {
+					height : 16% !important;
+					width : 20px !important;
+					.text-center;
+					span {
+						font-size : 1.2em;
+					}
+					box-shadow: none !important;
+				}
 
-					table {
+				thead tr {
+					background-image:-moz-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
+					background-image:-webkit-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
+					background-image:-o-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
+					background-size : 400px 60px;
+					background-attachment:fixed;
+				}
+				button {
+					background-color: #495C6D;
+					color: white;
+					border: 0;
+					font-size: 0.8em;
+				}
+				td button {
+					height : 32px !important;
+					width : 32px !important;
+					background-color: #495C6D;
+					color: white;
+					border: 0;
+					box-shadow: none !important;
+					font-size: 0.8em;
+					padding : 0;
+					margin : 2px;
+					.text-info {
 						color: white;
-						background-color: #495C6D;
-						border-radius: 2px;
 					}
-					th , td {
-						height : 20px !important;
-						width : 20px !important;
-						.text-center;
-						span {
-							font-size : 1.2em;
-						}
-						box-shadow: none !important;
+					.text-muted {
+						color : #495C6D;
 					}
+					span {
+						height : 100%;
+						width : 100%;
+					}
+				}
+				.active {
+					-webkit-box-shadow: none;
+					box-shadow: none;
+					background: transparent none;
+					outline : none;
+					border-radius : 100%;
+					background-color : #FF8610;
+				}
+				.btn[disabled] {
+					background-color: transparent;
+					opacity : 1;
+				}
+				.btn-sm.pull-right {
+					background-color: transparent;
 
-					thead tr {
-						background-image:-moz-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
-						background-image:-webkit-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
-						background-image:-o-linear-gradient(180deg, #F67D0A, #FEB221, #F67D0A);
-						background-size : 400px 60px;
-						background-attachment:fixed;
-					}
-					button {
-						background-color: #495C6D;
-						color: white;
-						border: 0;
-						font-size: 0.8em;
-					}
-					td button {
-						height : 22px !important;
-						width : 22px !important;
-						background-color: #495C6D;
-						color: white;
-						border: 0;
-						box-shadow: none !important;
-						font-size: 0.8em;
-						padding : 0;
-						margin : 2px;
-						.text-info {
-							color: white;
-						}
-						.text-muted {
-							color : #495C6D;
-						}
-						span {
-							height : 100%;
-							width : 100%;
-						}
-					}
-					.active {
-						-webkit-box-shadow: none;
-						box-shadow: none;
-						background: transparent none;
-						outline : none;
-						border-radius : 100%;
-						background-color : #FF8610;
-					}
-					.btn[disabled] {
-						background-color: transparent;
-						opacity : 1;
-					}
-					.btn-sm.pull-right {
-						background-color: transparent;
-
-					}
-					.btn-sm.pull-left {
-						background-color: transparent;
-					}
+				}
+				.btn-sm.pull-left {
+					background-color: transparent;
 				}
 			}
 		}

@@ -1,56 +1,32 @@
 noon-header
 .noon-view
-	.view-result.visible-mobile
-		ion-view
-			.body-result
-				.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
-					.container-comming-soon
-						.comming-soon.animated.swing
-							img(src="img/picto-soon.png")
-					.results
-						.title-result
-							img(src="img/picto-resultat.png")
-							h2 RÉSULTATS DU JOUR
-						button(type="button" class="btn btn-default" ng-click="changeState()")
-							i.glyphicon.glyphicon-calendar
-
-						.container-table
-							.date-tab(ng-show="isOpen")
-								datepicker(ng-model="dt"
-									ng-change="change(dt)"
-									min-mode="day"
-									max-mode="day"
-									min-date="minDate"
-									show-weeks="false"
-									custom-class="getDayClass(date, mode)")
-
-							.result-tab(ng-show="!isOpen")
-								table(ng-table="tableParamsMobile" show-filter="true")
-									tr(ng-repeat="line in $data track by $index")
-										td(data-title="'RANK'") {{ line.rank }}
-										td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-										td(data-title="'N°TICKET'") {{ line.position }}
-										td(data-title="'SOMME €'") {{ line.earned }}
-						noon-footer.show-on-keybord
-			noon-footer.hide-on-keybord
-
-	.view-result.hidden-mobile
+	.view-result
 		.body-result
-			.container-comming-soon
-				.comming-soon.animated.swing
-					img(src="img/picto-soon.png")
 			.container-body
 				.title-result
 					img(src="img/picto-resultat.png")
 					h2 RÉSULTATS DU JOUR
+				datepicker(ng-model="date" ng-change="getResults(date)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")
 				.results
-					table(ng-table="tableParams" show-filter="true")
-						tr(ng-repeat="line in $data track by $index")
-							td(data-title="'RANK'") {{ line.rank }}
-							td(data-title="'USERNAME'" filter="{ 'username': 'text' }") {{ line.username }}
-							td(data-title="'N°TICKET'") {{ line.position }}
-							td(data-title="'SOMME €'") {{ line.earned }}
+					.filter
+						input(type="text" ng-model="q" ng-change="search(q)")
 
-				datepicker(ng-model="dt" ng-change="change(dt)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")
+					table
+						thead
+							td RANK
+							td USERNAME
+							td N°TICKET
+							td SOMME €
 
-		noon-footer
+						tbody(ng-repeat="result in filteredResults = (resultsByPage | filter:q ) track by $index")
+							td {{ result.position + 1 }}
+							td {{ result.player.username }}
+							td {{ result.ticket.number }}
+							td {{ result.earned }}
+
+
+					.pager(ng-hide="q.length")
+						button(ng-repeat="page in pages" ng-click="getResultsByPage(page)" ng-class="{ 'active' : page == currentPage }") {{ page + 1 }}
+
+
+		//- noon-footer

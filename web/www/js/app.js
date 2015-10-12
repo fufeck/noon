@@ -131,71 +131,6 @@ angular.module("starter.contact").controller("contactCtrl", function($scope, $ro
   };
 });
 
-angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
-  console.log('tutu');
-  $scope.mail = 'tutu';
-  $scope.user = {
-    mail: 'eree'
-  };
-  return $scope.subscribe = function(user) {
-    return console.log('mail : ', user);
-  };
-});
-
-angular.module("starter.home", []).config(function($stateProvider) {
-  $stateProvider.state('home', {
-    url: '/',
-    templateUrl: 'home.view.html',
-    controller: 'homeCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.home").controller("homeCtrl", function($scope, $http, SliderPicture, $timeout, $rootScope) {
-  var lauchSlide;
-  $rootScope.showNav = void 0;
-  $scope.slides = [];
-  $scope.currentIndex = 0;
-  $scope.activePhone = false;
-  SliderPicture.getFiles(function(pictures) {
-    var i, j, len, pict;
-    i = 0;
-    for (j = 0, len = pictures.length; j < len; j++) {
-      pict = pictures[j];
-      $scope.slides.push('http://52.11.211.225/api/slider-pictures/download/' + pict.name);
-      i++;
-    }
-    console.log($scope.slides);
-    return lauchSlide();
-  });
-  lauchSlide = function() {
-    var startslide;
-    return $timeout(startslide = function() {
-      $scope.currentIndex++;
-      if ($scope.currentIndex >= $scope.slides.length) {
-        $scope.currentIndex = 0;
-      }
-      return lauchSlide();
-    }, 5000);
-  };
-  $scope.isCurrentSlideIndex = function(index) {
-    return $scope.currentIndex === index;
-  };
-  $scope.setCurrentSlideIndex = function(index) {
-    return $scope.currentIndex = index;
-  };
-  $scope.setPhoneActive = function() {
-    console.log($scope.activePhone);
-    if ($scope.activePhone === true) {
-      return $scope.activePhone = false;
-    } else {
-      return $scope.activePhone = true;
-    }
-  };
-  $scope.isPhoneActive = function() {
-    return $scope.activePhone;
-  };
-});
-
 angular.module("starter.faq", []).config(function($stateProvider) {
   $stateProvider.state('faq', {
     url: '/faq',
@@ -218,6 +153,138 @@ angular.module("starter.faq").controller("faqCtrl", function($scope, FrequentlyA
   };
 });
 
+angular.module("starter").controller("backdropCtrl", function($scope, $rootScope) {
+  console.log('tutu');
+  $scope.mail = 'tutu';
+  $scope.user = {
+    mail: 'eree'
+  };
+  return $scope.subscribe = function(user) {
+    return console.log('mail : ', user);
+  };
+});
+
+angular.module("starter.home", []).config(function($stateProvider) {
+  $stateProvider.state('home', {
+    url: '/',
+    templateUrl: 'home.view.html',
+    controller: 'homeCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.home").controller("homeCtrl", function($scope, $http, SliderPicture, $timeout, $rootScope) {
+  var launchSlide;
+  $rootScope.showNav = void 0;
+  $scope.slides = [];
+  $scope.currentIndex = 0;
+  $scope.activePhone = false;
+  SliderPicture.getFiles(function(pictures) {
+    var i, j, len, pict;
+    console.log('get files : ');
+    i = 0;
+    for (j = 0, len = pictures.length; j < len; j++) {
+      pict = pictures[j];
+      $scope.slides.push('http://dashboard.noongame.com/api/slider-pictures/download/' + pict.name);
+      i++;
+    }
+    console.log($scope.slides);
+    return launchSlide();
+  }, function(error) {
+    return console.log('error : ', error);
+  });
+  launchSlide = function() {
+    var startslide;
+    return $timeout(startslide = function() {
+      $scope.currentIndex++;
+      if ($scope.currentIndex >= $scope.slides.length) {
+        $scope.currentIndex = 0;
+      }
+      return launchSlide();
+    }, 5000);
+  };
+  $scope.isCurrentSlideIndex = function(index) {
+    return $scope.currentIndex === index;
+  };
+  $scope.setCurrentSlideIndex = function(index) {
+    return $scope.currentIndex = index;
+  };
+  $scope.setPhoneActive = function() {
+    console.log($scope.activePhone);
+    if ($scope.activePhone === true) {
+      return $scope.activePhone = false;
+    } else {
+      return $scope.activePhone = true;
+    }
+  };
+  $scope.isPhoneActive = function() {
+    return $scope.activePhone;
+  };
+});
+
+angular.module("starter.ranking", []).config(function($stateProvider) {
+  $stateProvider.state('ranking', {
+    url: '/ranking',
+    templateUrl: 'ranking.view.html',
+    controller: 'rankingCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, $rootScope, Player) {
+  $rootScope.showNav = void 0;
+  $scope.currentPage = 0;
+  $scope.results = [];
+  $scope.pages = [];
+  $scope.resultsByPage = [];
+  $scope.search = function(q) {
+    console.log;
+    if (q.length) {
+      return $scope.resultsByPage = $scope.filteredResults.slice(0, 10);
+    } else {
+      return $scope.getResultsByPage($scope.currentPage);
+    }
+  };
+  $scope.getResults = function() {
+    return $scope.getPlayers().$promise.then(function(players) {
+      var i, ref, results;
+      console.log(players);
+      $scope.results = players;
+      if (players.length) {
+        $scope.pages = (function() {
+          results = [];
+          for (var i = 0, ref = (players.length / 10) - 1; 0 <= ref ? i <= ref : i >= ref; 0 <= ref ? i++ : i--){ results.push(i); }
+          return results;
+        }).apply(this);
+      } else {
+        $scope.pages = [];
+      }
+      return $scope.getResultsByPage();
+    });
+  };
+  $scope.getPlayers = function(lotteryDrawingDate) {
+    return Player.find({
+      filter: {
+        where: {
+          totalEarned: {
+            neq: null
+          }
+        },
+        order: ['totalEarned DESC']
+      }
+    });
+  };
+  $scope.getResultsByPage = function(page) {
+    var end, start;
+    if (page == null) {
+      page = 0;
+    }
+    start = page * 10;
+    end = start + 10;
+    $scope.currentPage = page;
+    return $scope.resultsByPage = $scope.results.slice(start, end);
+  };
+  return $scope.getResults();
+});
+
 angular.module("starter.mention", []).config(function($stateProvider) {
   $stateProvider.state('mention', {
     url: '/mention',
@@ -230,80 +297,6 @@ angular.module("starter.mention").controller("mentionCtrl", function($scope, $ro
   $rootScope.showNav = void 0;
 });
 
-angular.module("starter.ranking", []).config(function($stateProvider) {
-  $stateProvider.state('ranking', {
-    url: '/ranking',
-    templateUrl: 'ranking.view.html',
-    controller: 'rankingCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.ranking").controller("rankingCtrl", function($scope, $filter, ngTableParams, $rootScope, Player) {
-  var createTable, filter;
-  $rootScope.showNav = void 0;
-  filter = {
-    order: 'totalEarned desc',
-    where: {
-      totalEarned: {
-        neq: null
-      }
-    }
-  };
-  Player.find({
-    filter: filter
-  }, function(success) {
-    var i, len, line, players, rank;
-    console.log("PLAYER : ", success);
-    players = [];
-    rank = 1;
-    for (i = 0, len = success.length; i < len; i++) {
-      line = success[i];
-      if (line.username !== void 0 && line.goodAnswers !== void 0 && line.totalAnswers !== void 0) {
-        players.push(line);
-      }
-    }
-    return createTable(players);
-  }, function(error) {
-    return console.log(error);
-  });
-  return createTable = function(data) {
-    console.log("data");
-    console.log(data);
-    $scope.tableParams = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
-    return $scope.tableParamsMobile = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: data.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
-  };
-});
-
 angular.module("starter.result", []).config(function($stateProvider) {
   $stateProvider.state('result', {
     url: '/result',
@@ -312,123 +305,83 @@ angular.module("starter.result", []).config(function($stateProvider) {
   });
 }).run(function() {});
 
-angular.module("starter.result").controller("resultCtrl", function($scope, $http, $filter, ngTableParams, Lottery, LotteryRank, $rootScope) {
-  var createTable, getLotteryDay, loadLotteryRank, pushDatas;
+angular.module("starter.result").controller("resultCtrl", function($scope, $http, $filter, Lottery, $rootScope) {
   $rootScope.showNav = void 0;
   $scope.isOpen = false;
-  $scope.tableParams = void 0;
-  getLotteryDay = function(date) {
-    var currentDate;
-    if (date == null) {
-      date = void 0;
-    }
-    if (date === void 0) {
-      currentDate = moment();
+  $scope.currentPage = 0;
+  $scope.results = [];
+  $scope.pages = [];
+  $scope.resultsByPage = [];
+  $scope.search = function(q) {
+    console.log;
+    if (q.length) {
+      return $scope.resultsByPage = $scope.filteredResults.slice(0, 10);
     } else {
-      currentDate = moment(date);
+      return $scope.getResultsByPage($scope.currentPage);
     }
-    console.log(date);
-    currentDate.hour(14);
-    currentDate.second(0);
-    currentDate.minute(0);
-    currentDate.millisecond(0);
-    return Lottery.find({
+  };
+  $scope.getResults = function(date) {
+    var lotteryDrawingDate;
+    lotteryDrawingDate = $scope.getLotteryDrawingDate(date);
+    return $scope.getLottery(lotteryDrawingDate).$promise.then(function(lottery) {
+      var i, ref, results;
+      $scope.results = lottery.ranks;
+      if (lottery.ranks.length) {
+        $scope.pages = (function() {
+          results = [];
+          for (var i = 0, ref = (lottery.ranks.length / 10) - 1; 0 <= ref ? i <= ref : i >= ref; 0 <= ref ? i++ : i--){ results.push(i); }
+          return results;
+        }).apply(this);
+      } else {
+        $scope.pages = [];
+      }
+      return $scope.getResultsByPage();
+    });
+  };
+  $scope.getLottery = function(lotteryDrawingDate) {
+    return Lottery.findOne({
       filter: {
         where: {
-          day: currentDate.toISOString()
+          drawingDate: lotteryDrawingDate
+        },
+        include: {
+          relation: 'ranks',
+          scope: {
+            where: {
+              earned: {
+                gt: 0
+              }
+            },
+            include: 'ticket'
+          }
         }
-      }
-    }, function(success) {
-      console.log("ONE : ", success);
-      return loadLotteryRank(success);
-    }, function(error) {
-      return console.log(error);
-    });
-  };
-  pushDatas = function(datas) {
-    var d, i, len, rank, tmp;
-    $scope.datas = [];
-    rank = 1;
-    for (i = 0, len = datas.length; i < len; i++) {
-      d = datas[i];
-      if (d.player && d.player.username) {
-        tmp = d;
-        tmp.username = d.player.username;
-        tmp.rank = rank;
-        rank += 1;
-        $scope.datas.push(tmp);
-      }
-    }
-    console.log("RESULT");
-    return console.log($scope.datas);
-  };
-  loadLotteryRank = function(lotteryDay) {
-    if (lotteryDay.length > 0) {
-      return LotteryRank.find({
-        filter: {
-          where: {
-            lotteryId: lotteryDay[0].id
-          },
-          include: 'player'
-        }
-      }, function(success) {
-        console.log("TWO : ", success);
-        pushDatas(success);
-        if ($scope.tableParams === void 0) {
-          return createTable();
-        } else {
-          $scope.tableParams.reload();
-          return $scope.tableParamsMobile.reload();
-        }
-      }, function(error) {
-        return console.log(error);
-      });
-    }
-  };
-  createTable = function() {
-    $scope.tableParams = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: $scope.datas.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')($scope.datas, params.filter()) : $scope.datas;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
-      }
-    });
-    return $scope.tableParamsMobile = new ngTableParams({
-      page: 1,
-      count: 10,
-      filter: {
-        username: ''
-      }
-    }, {
-      total: $scope.datas.length,
-      getData: function($defer, params) {
-        var orderedData;
-        orderedData = params.filter() ? $filter('filter')($scope.datas, params.filter()) : $scope.datas;
-        $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count());
-        params.total(orderedData.length);
-        $defer.resolve($scope.users);
       }
     });
   };
-  getLotteryDay();
-  $scope.changeState = function() {
-    if ($scope.isOpen === false) {
-      return $scope.isOpen = true;
-    } else {
-      return $scope.isOpen = false;
+  $scope.getLotteryDrawingDate = function(selectedDate) {
+    var lotteryDrawingDate;
+    if (selectedDate == null) {
+      selectedDate = void 0;
     }
+    lotteryDrawingDate = moment(selectedDate);
+    if (lotteryDrawingDate.hour < 12) {
+      lotteryDrawingDate.subtract(1, 'days');
+    }
+    return lotteryDrawingDate.hour(12).second(0).minute(0).millisecond(0);
   };
-  return $scope.change = function(date) {
-    $scope.isOpen = false;
-    return getLotteryDay(date);
+  $scope.getResultsByPage = function(page) {
+    var end, start;
+    if (page == null) {
+      page = 0;
+    }
+    start = page * 10;
+    end = start + 10;
+    $scope.currentPage = page;
+    $scope.resultsByPage = $scope.results.slice(start, end);
+    console.log('start : ', start);
+    console.log('end : ', end);
+    console.log('getResultsByPage : ', $scope.resultsByPage);
+    return console.log('results : ', $scope.results);
   };
+  return $scope.getResults();
 });

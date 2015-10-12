@@ -1,92 +1,67 @@
 angular.module "starter.result"
 
-.controller "resultCtrl", ($scope, $http, $filter, ngTableParams, Lottery, LotteryRank, $rootScope) ->
+.controller "resultCtrl", ($scope, $http, $filter, Lottery, $rootScope) ->
 	$rootScope.showNav = undefined
-	$scope.isOpen = false;
-	$scope.tableParams = undefined
+	$scope.isOpen = false
+	$scope.currentPage = 0
+	$scope.results = []
+	$scope.pages = []
+	$scope.resultsByPage = []
 
-	getLotteryDay = (date = undefined) ->
-		if date == undefined
-			currentDate = moment()
+	$scope.search = (q) ->
+		console.log
+		if q.length
+			$scope.resultsByPage = $scope.filteredResults.slice 0, 10
 		else
-			currentDate = moment(date)
+			$scope.getResultsByPage($scope.currentPage)
 
-		
-		console.log date
-		currentDate.hour(14)
-		currentDate.second(0)
-		currentDate.minute(0)
-		currentDate.millisecond(0)
-		Lottery.find {filter : where : day : currentDate.toISOString()}, (success) ->
-			console.log "ONE : ", success
-			loadLotteryRank(success)
-		, (error) ->
-			console.log error
-	
-	pushDatas = (datas) ->
-		$scope.datas = []
-		rank = 1
-		for d in datas
-			if d.player && d.player.username
-				tmp = d
-				tmp.username = d.player.username
-				tmp.rank = rank
-				rank += 1
-				$scope.datas.push tmp
-		console.log "RESULT"
-		console.log $scope.datas
+	$scope.getResults = (date) ->
+		lotteryDrawingDate = $scope.getLotteryDrawingDate date
 
-	loadLotteryRank = (lotteryDay) ->
-		if lotteryDay.length > 0
-			LotteryRank.find {filter : where : {lotteryId : lotteryDay[0].id}, include : 'player'}
-			, (success) ->
-				console.log "TWO : ", success
-				pushDatas(success)
-				if $scope.tableParams == undefined
-					createTable()
-				else
-					$scope.tableParams.reload()
-					$scope.tableParamsMobile.reload()
-			, (error) ->
-				console.log error
+		$scope.getLottery lotteryDrawingDate
+		.$promise
+		.then (lottery) ->
+			$scope.results = lottery.ranks
+			if lottery.ranks.length
+				$scope.pages = [0..(lottery.ranks.length / 10) - 1]
+			else
+				$scope.pages = []
+			$scope.getResultsByPage()
 
-	createTable = ->
+	$scope.getLottery = (lotteryDrawingDate) ->
+		Lottery.findOne
+			filter:
+				where:
+					drawingDate: lotteryDrawingDate
+				include:
+					relation: 'ranks'
+					scope:
+						where:
+							earned:
+								gt: 0
+						include: 'ticket'
 
-		$scope.tableParams = new ngTableParams({
-			page: 1
-			count: 10
-			filter: username: ''
-		},
-			total: $scope.datas.length
-			getData: ($defer, params) ->
-				orderedData = if params.filter() then $filter('filter')($scope.datas, params.filter()) else $scope.datas
-				$scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count())
-				params.total orderedData.length
-				$defer.resolve $scope.users
-				return
-		)
-		$scope.tableParamsMobile = new ngTableParams({
-			page: 1
-			count: 10
-			filter: username: ''
-		},
-			total: $scope.datas.length
-			getData: ($defer, params) ->
-				orderedData = if params.filter() then $filter('filter')($scope.datas, params.filter()) else $scope.datas
-				$scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count())
-				params.total orderedData.length
-				$defer.resolve $scope.users
-				return
-		)
+	$scope.getLotteryDrawingDate = (selectedDate = undefined) ->
+		lotteryDrawingDate = moment(selectedDate)
 
-	getLotteryDay()
+		if lotteryDrawingDate.hour < 12 then lotteryDrawingDate.subtract 1, 'days'
 
-	$scope.changeState = ->
-		if ($scope.isOpen == false)
-			$scope.isOpen = true;
-		else
-			$scope.isOpen = false;
+		lotteryDrawingDate.hour(12).second(0).minute(0).millisecond(0)
 
-	$scope.change = (date) ->
-		$scope.isOpen = false;
-		getLotteryDay(date)
+
+
+
+	$scope.getResultsByPage = (page = 0) ->
+		start = page * 10
+		end = start + 10
+		$scope.currentPage = page
+		$scope.resultsByPage = $scope.results.slice start, end
+		console.log 'start : ', start
+		console.log 'end : ', end
+		console.log 'getResultsByPage : ', $scope.resultsByPage
+		console.log 'results : ', $scope.results
+
+
+
+
+	$scope.getResults()

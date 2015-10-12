@@ -1,57 +1,54 @@
 angular.module "starter.ranking"
 
-.controller "rankingCtrl", ($scope, $filter, ngTableParams, $rootScope, Player) ->
-	$rootScope.showNav = undefined
+.controller "rankingCtrl", ($scope, $filter, $rootScope, Player) ->
+  $rootScope.showNav = undefined
+  $scope.currentPage = 0
+  $scope.results = []
+  $scope.pages = []
+  $scope.resultsByPage = []
 
-	filter = 
-		order: 'totalEarned desc'
-		where :
-			totalEarned :
-				neq : null
-	Player.find {filter : filter}
-	, (success) ->
-		console.log "PLAYER : ", success
-		players = []
-		rank = 1
-		for line in success
-			if line.username != undefined && line.goodAnswers != undefined && line.totalAnswers != undefined
-				players.push line
-		createTable(players)
-	, (error) ->
-		console.log error
+  $scope.search = (q) ->
+    console.log
+    if q.length
+      $scope.resultsByPage = $scope.filteredResults.slice 0, 10
+    else
+      $scope.getResultsByPage($scope.currentPage)
 
-	createTable = (data) ->
-		console.log "data"
-		console.log data
-		$scope.tableParams = new ngTableParams({
-		  page: 1
-		  count: 10
-		  filter: username: ''
-		},
-		  total: data.length
-		  getData: ($defer, params) ->
-		    # use build-in angular filter
-		    orderedData = if params.filter() then $filter('filter')(data, params.filter()) else data
-		    $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count())
-		    params.total orderedData.length
-		    # set total for recalc pagination
-		    $defer.resolve $scope.users
+  $scope.getResults = ->
 
-		    return
-		)
-		$scope.tableParamsMobile = new ngTableParams({
-		  page: 1
-		  count: 10
-		  filter: username: ''
-		},
-		  total: data.length
-		  getData: ($defer, params) ->
-		    # use build-in angular filter
-		    orderedData = if params.filter() then $filter('filter')(data, params.filter()) else data
-		    $scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count())
-		    params.total orderedData.length
-		    # set total for recalc pagination
-		    $defer.resolve $scope.users
+    $scope.getPlayers()
+    .$promise
+    .then (players) ->
+      console.log players
+      $scope.results = players
+      if players.length
+        $scope.pages = [0..(players.length / 10) - 1]
+      else
+        $scope.pages = []
+      $scope.getResultsByPage()
 
-		    return
-		)
+  $scope.getPlayers = (lotteryDrawingDate) ->
+    Player.find
+      filter:
+        where:
+          totalEarned:
+            neq: null
+        order: [
+          'totalEarned DESC'
+        ]
+
+
+  $scope.getResultsByPage = (page = 0) ->
+    start = page * 10
+    end = start + 10
+    $scope.currentPage = page
+    $scope.resultsByPage = $scope.results.slice start, end
+    # console.log 'start : ', start
+    # console.log 'end : ', end
+    # console.log 'getResultsByPage : ', $scope.resultsByPage
+    # console.log 'results : ', $scope.results
+
+
+
+
+  $scope.getResults()
