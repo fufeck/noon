@@ -59,66 +59,6 @@
     </script>
   </head>
   <body ng-app="starter" id="fb-root">
-    <div ng-click="$root.toggleVideo()" ng-if="$root.videoIsOpen" class="close-video"><i class="fa fa-close"></i></div>
-    <div ng-if="$root.videoIsOpen" class="backdrop hidden-mobile">
-      <div class="video">
-        <div id="typed"><span class="light">DÉCOUVREZ </span> NOON</div>
-        <h1>DÈS AUJOURD'HUI</h1>
-        <iframe width="100%" height="70%" src="https://www.youtube.com/embed/EucXzpkaAdk?rel=0" frameborder="0" allowfullscreen></iframe>
-        <iframe width="80px" height="40px" src="sharefb.html" frameborder="0"></iframe>
-      </div>
-      <div class="description">
-        <div class="title">
-          <h1>DEVENEZ</h1>
-          <h1 class="light">UN BÊTA-NOONER</h1>
-          <h1>EN AVANT PREMIÈRE</h1>
-        </div>
-        <div class="subtitle">
-          <h4>Inscrivez vous pour rejoindre</h4>
-          <h4>la communauté des <span class="strong">BÊTA-NOONERS</span></h4>
-        </div><br>
-        <div class="subtitle">
-          <h4>Et recevez des <span class="strong">NOONCODES</span> privilèges</h4>
-          <h4>pour votre soutien</h4>
-        </div>
-        <div class="get-user">
-          <input type="email" id="email1" placeholder="exemple@exemple.com">
-        </div>
-        <div class="warning">
-          <p ng-if="!$root.error">Saisissez votre adresse email ici</p>
-          <p ng-if="$root.error" class="red">Adresse email incorrect</p>
-        </div>
-        <div class="click-user">
-          <button ng-click="$root.subscribe('email1')">S'INSCRIRE</button>
-        </div>
-        <div class="warning">
-          <p>Attention nombre d'inscriptions limité</p>
-        </div>
-      </div>
-    </div>
-    <div ng-if="$root.videoIsOpen" class="backdrop visible-mobile">
-      <div class="video mobile">
-        <div class="title">
-          <h4>DEVENEZ</h4>
-          <h4 class="light">UN BÊTA-NOONER</h4>
-          <h4>EN AVANT PREMIÈRE</h4>
-        </div>
-        <iframe width="100%" height="50%" src="https://www.youtube.com/embed/EucXzpkaAdk?rel=0" frameborder="0" allowfullscreen></iframe>
-        <div class="get-user">
-          <input type="email" id="email2" placeholder="exemple@exemple.com">
-        </div>
-        <div class="warning">
-          <p ng-if="!$root.error">Saisissez votre adresse email ici</p>
-          <p ng-if="$root.error" class="red">Adresse email incorrect</p>
-        </div>
-        <div class="click-user">
-          <button ng-click="$root.subscribe('email2')">S'INSCRIRE</button>
-        </div>
-        <div class="warning">
-          <p>Attention nombre d'inscriptions limité</p>
-        </div>
-      </div>
-    </div>
     <div ui-view autoscroll="true" class="view"></div>
   </body>
   <script>

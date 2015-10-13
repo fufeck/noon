@@ -12481,6 +12481,13 @@ body {
   margin: auto;
   padding-top: 10px;
 }
+.view-result .body-result .container-body .p-result {
+  font-size: 1.2em;
+  font-weight: 200 !important;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
 .view-result .body-result .container-body .title-result {
   position: relative;
   padding: 0;
