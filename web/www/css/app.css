@@ -12497,11 +12497,15 @@ body {
   padding-top: 10px;
 }
 .view-result .body-result .container-body .p-result {
+  text-align: center;
   font-size: 1.2em;
   font-weight: 200 !important;
   color: white;
-  text-align: center;
   padding: 20px;
+}
+.view-result .body-result .container-body .p-result .subtitle {
+  font-weight: 200 !important;
+  font-size: 0.9em;
 }
 .view-result .body-result .container-body .title-result {
   padding: 0;
@@ -12519,10 +12523,11 @@ body {
 }
 .view-result .body-result .container-body .title-result img {
   position: absolute;
-  top: 15px;
+  top: 24px;
   height: 30px;
 }
 .view-result .body-result .container-body .medate {
+  padding-top: 60px;
   float: left;
   width: 100%;
   position: relative;
@@ -12628,6 +12633,7 @@ body {
   height: 28px;
   width: 150px;
   text-align: center;
+  border-bottom: 1px solid #596C7D;
 }
 .view-result .body-result .container-body .results th {
   border-collapse: collapse;
@@ -12645,13 +12651,19 @@ body {
 }
 .view-result .body-result .container-body .results table td:nth-child(4) {
   color: #F67D0A;
+  font-weight: bold;
 }
 .view-result .body-result .container-body .results thead tr {
+  height: 46px;
   background-image: -webkit-linear-gradient(60deg, #feb221, #f67d0a, #feb221);
   background-image: -webkit-linear-gradient(30deg, #feb221, #f67d0a, #feb221);
   background-image: linear-gradient(60deg, #feb221, #f67d0a, #feb221);
   background-size: 400px 40px;
   background-attachment: fixed;
+}
+.view-result .body-result .container-body .results thead tr td:nth-child(4) {
+  color: white !important;
+  font-weight: 300;
 }
 .view-result .body-result .container-body .results .ng-table-pager {
   right: 0;

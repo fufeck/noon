@@ -6,7 +6,7 @@ noon-header
 				.title-result
 					img(src="img/picto-resultat.png")
 					h2 RÉSULTATS DU JOUR
-				.p-result Chaque partie se déroule à cheval sur 2 jours pendant 24 heures (de 12h01 à 11h59 le lendemain). La loterie a lieu tous les midis. A titre dexemple : Pour voir les résultats de la partie se déroulant le 9 et 10, veuillez selectionner le 10 dans le calendrier
+				.p-result Chaque partie se déroule à cheval sur 2 jours pendant 24 heures (de 12h01 à 11h59 le lendemain). La loterie a lieu tous les midis.<br><span class="subtitle"> A titre dexemple : Pour voir les résultats de la partie se déroulant le 09 et 10, veuillez selectionner le 10 dans le calendrier.</span>
 				datepicker(ng-model="date" ng-change="getResults(date)" min-mode="day" max-mode="day" min-date="minDate" show-weeks="false" class="medate" custom-class="getDayClass(date, mode)")
 				.results
 					.filter

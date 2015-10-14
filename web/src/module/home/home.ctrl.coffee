@@ -1,6 +1,6 @@
 angular.module "starter.home"
 
-.controller "homeCtrl", ($scope, $http, SliderPicture, $timeout, $rootScope) ->
+.controller "homeCtrl", ($scope, $http, SliderPicture, $timeout, $rootScope, Player) ->
 	$rootScope.showNav = undefined
 	$scope.slides = []
 	$scope.currentIndex = 0
@@ -40,5 +40,10 @@ angular.module "starter.home"
 
 	$scope.isPhoneActive =  ->
 		return $scope.activePhone
+
+	Player.find
+		include: 'goodAnswers'
+	, (success) ->
+		console.log 'PLAYERS', success
 
 	return ;

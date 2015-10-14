@@ -172,7 +172,7 @@ angular.module("starter.home", []).config(function($stateProvider) {
   });
 }).run(function() {});
 
-angular.module("starter.home").controller("homeCtrl", function($scope, $http, SliderPicture, $timeout, $rootScope) {
+angular.module("starter.home").controller("homeCtrl", function($scope, $http, SliderPicture, $timeout, $rootScope, Player) {
   var launchSlide;
   $rootScope.showNav = void 0;
   $scope.slides = [];
@@ -219,6 +219,11 @@ angular.module("starter.home").controller("homeCtrl", function($scope, $http, Sl
   $scope.isPhoneActive = function() {
     return $scope.activePhone;
   };
+  Player.find({
+    include: 'goodAnswers'
+  }, function(success) {
+    return console.log('PLAYERS', success);
+  });
 });
 
 angular.module("starter.mention", []).config(function($stateProvider) {
