@@ -12474,6 +12474,16 @@ body {
   font-weight: 200px;
   padding-top: 0;
 }
+.view-result .body-result.slideUpNav {
+  padding-top: 0px;
+  -webkit-transition: all .5s linear;
+          transition: all .5s linear;
+}
+.view-result .body-result.slideDownNav {
+  padding-top: 120px;
+  -webkit-transition: all .5s linear;
+          transition: all .5s linear;
+}
 .view-result .body-result .container-body {
   height: 160%;
   background: #34495E;

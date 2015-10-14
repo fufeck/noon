@@ -1,7 +1,7 @@
 noon-header
 .noon-view
 	.view-result
-		.body-result
+		.body-result(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
 			.container-body
 				.title-result
 					img(src="img/picto-resultat.png")
