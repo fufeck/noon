@@ -29,5 +29,27 @@ noon-header
 					.pager(ng-hide="q.length")
 						button(ng-repeat="page in pages" ng-click="getResultsByPage(page)" ng-class="{ 'active' : page == currentPage }") {{ page + 1 }}
 
+	.footer-test(ng-class="{'big-footer' : $root.showNav}")
+		.footer-title
+			.footer-title NOON © 2015
+		.footer-container
+			.footer-page(ui-sref="contact") CONTACT
+			.footer-page(ui-sref="faq") FAQ
+			.footer-page(ui-sref="cgu") CGU
+			.footer-page(ui-sref="mention") MENTION LÉGALES
+		.footer-links
+			.footer-link
+				a(href="https://www.facebook.com/noonlejeu?fref=ts" target="_blank")
+					img(src="img/picto-FB.png")
+			.footer-link
+				a(href="https://twitter.com/nooners_inside" target="_blank")
+					img(src="img/picto-twitter.png")
+			.footer-link
+				a(href="https://instagram.com/nooners_inside" target="_blank")
+					img(src="img/picto-IG.png")
+			.footer-link
+				a(href="https://www.youtube.com/channel/UCKzMVjkjwZy1hWV347OE4Mw" target="_blank")
+					img(src="img/picto-YT.png")
 
-		//- noon-footer
+
+

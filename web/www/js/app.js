@@ -221,6 +221,18 @@ angular.module("starter.home").controller("homeCtrl", function($scope, $http, Sl
   };
 });
 
+angular.module("starter.mention", []).config(function($stateProvider) {
+  $stateProvider.state('mention', {
+    url: '/mention',
+    templateUrl: 'mention.view.html',
+    controller: 'mentionCtrl'
+  });
+}).run(function() {});
+
+angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
+  $rootScope.showNav = void 0;
+});
+
 angular.module("starter.ranking", []).config(function($stateProvider) {
   $stateProvider.state('ranking', {
     url: '/ranking',
@@ -285,18 +297,6 @@ angular.module("starter.ranking").controller("rankingCtrl", function($scope, $fi
   return $scope.getResults();
 });
 
-angular.module("starter.mention", []).config(function($stateProvider) {
-  $stateProvider.state('mention', {
-    url: '/mention',
-    templateUrl: 'mention.view.html',
-    controller: 'mentionCtrl'
-  });
-}).run(function() {});
-
-angular.module("starter.mention").controller("mentionCtrl", function($scope, $rootScope) {
-  $rootScope.showNav = void 0;
-});
-
 angular.module("starter.result", []).config(function($stateProvider) {
   $stateProvider.state('result', {
     url: '/result',
@@ -315,7 +315,7 @@ angular.module("starter.result").controller("resultCtrl", function($scope, $http
   $scope.search = function(q) {
     console.log;
     if (q.length) {
-      return $scope.resultsByPage = $scope.filteredResults.slice(0, 10);
+      return $scope.resultsByPage = $scope.results;
     } else {
       return $scope.getResultsByPage($scope.currentPage);
     }

@@ -11,7 +11,7 @@ angular.module "starter.result"
 	$scope.search = (q) ->
 		console.log
 		if q.length
-			$scope.resultsByPage = $scope.filteredResults.slice 0, 10
+			$scope.resultsByPage = $scope.results
 		else
 			$scope.getResultsByPage($scope.currentPage)
 
