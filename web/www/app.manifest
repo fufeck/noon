@@ -7,10 +7,6 @@ robot.txt
 robots.txt
 sharefb.html
 sitemap.xml
-css/app.css
-css/ionic.css
-i18n/locale-en.json
-i18n/locale-fr.json
 fonts/default-skin.svg
 fonts/fontawesome-webfont.svg
 fonts/fontawesome-webfont.ttf
@@ -21,10 +17,10 @@ fonts/glyphicons-halflings-regular.woff
 fonts/ionicons.svg
 fonts/ionicons.ttf
 fonts/ionicons.woff
-js/app.js
-js/assets.js
-js/templates.js
-js/vendors.js
+i18n/locale-en.json
+i18n/locale-fr.json
+css/app.css
+css/ionic.css
 img/CCM-1.png
 img/CCM-2.png
 img/CCM-3.png
@@ -33,6 +29,7 @@ img/FOND.png
 img/Logo_Appstore.png
 img/Logo_Googlestore.png
 img/MediaKit.pdf
+img/MediaKitFinal.pdf
 img/Picto-1.png
 img/Picto-2.png
 img/Picto-3.png
@@ -50,6 +47,7 @@ img/fleche-cta.png
 img/fleche.png
 img/fond1.png
 img/fond2.png
+img/icon-android.png
 img/icon-ios.png
 img/icon.png
 img/iphone.png
@@ -79,6 +77,10 @@ img/picto1annonceur.png
 img/plus.png
 img/share3.png
 img/text.png
+js/app.js
+js/assets.js
+js/templates.js
+js/vendors.js
 img/favicon/android-icon-144x144.png
 img/favicon/android-icon-192x192.png
 img/favicon/android-icon-36x36.png
@@ -106,8 +108,8 @@ img/favicon/ms-icon-144x144.png
 img/favicon/ms-icon-150x150.png
 img/favicon/ms-icon-310x310.png
 img/favicon/ms-icon-70x70.png
-sitemap/fr/sitemap.xml
 sitemap/com/sitemap.xml
+sitemap/fr/sitemap.xml
 
 
 NETWORK:
@@ -117,4 +119,4 @@ NETWORK:
 SETTINGS:
 prefer-online
 
-# hash: 22daa7cce69c126a7e27e5fd62bfd6188d53fd0174673d3287f2e646fb27d95d
+# hash: 463bbb14d35858c4f4f7c9d01a9f0cf2b2d662fa57c280daacd8757160ceb791

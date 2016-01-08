@@ -43,7 +43,7 @@ noon-header {
         position : absolute;
         top : 50px;
         left : 0;
-        height : 150px;
+        height : 200px;
         width : 100%;
         overflow-y : hidden;
         z-index : -500;
@@ -53,11 +53,12 @@ noon-header {
         position : absolute;
         top : -150px;
         left : 0;
-        height:150px;
+        height:200px;
         width : 100%;
         z-index:10;
-        background: rgba(255,255,255, 0.5);
+        // background: rgba(255,255,255, 0.5);
         .nav-link {
+          background: rgba(255,255,255, 0.5);
           z-index:10;
           height:50px;
           width : 100%;
@@ -66,6 +67,10 @@ noon-header {
           color:white;
           font-size : 1.5em;
           .text-center;
+          a {
+            color:white;
+            text-decoration:none;
+          }
         }
       }
     }
@@ -108,26 +113,41 @@ noon-header {
           .result {
             position : absolute;
             height: 100%;
-            right : 230px;
+            right : 350px;
             cursor: pointer;
           }
           .classment {
             position : absolute;
             height: 100%;
-            right : 120px;
+            right : 240px;
             cursor: pointer;
           }
           .announcer {
             position : absolute;
             height: 100%;
+            right : 120px;
+            cursor: pointer;
+          }
+          .blog {
+            position : absolute;
+            height: 100%;
             right : 0;
             cursor: pointer;
+            a {
+              padding: 6px 12px;
+              background:orange;
+              border-radius: 5px;
+              text-decoration:none;
+            }
           }
           h2 {
             padding-top: 10px;
             min-width : 120px;
             font-size:1em;
             font-weight:400;
+            a {
+              color:white;
+            }
             .text-center;
             &:hover {
               color: white;
@@ -181,16 +201,22 @@ noon-header {
           .result {
             position : absolute;
             height: 100%;
-            right : 230px;
+            right : 350px;
             cursor: pointer;
           }
           .classment {
             position : absolute;
             height: 100%;
-            right : 120px;
+            right : 240px;
             cursor: pointer;
           }
           .announcer {
+            position : absolute;
+            height: 100%;
+            right : 120;
+            cursor: pointer;
+          }
+          .blog {
             position : absolute;
             height: 100%;
             right : 0;
