@@ -1,7 +1,0 @@
----
-
-- name: Add SSH Keys
-  template: src=key dest=/root/.ssh/id_rsa mode=0600 owner=root group=root
-
-- name: Add SSH Keys .pub
-  template: src=key.pub dest=/root/.ssh/id_rsa.pub mode=0600 owner=root group=root

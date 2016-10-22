@@ -1,0 +1,35 @@
+noon-header
+.noon-view
+	.view-contact.visible-mobile
+		.wrapper-mobile.animated(ng-class="{'slideDownNav' : $root.showNav, 'slideUpNav' : $root.showNav == false}")
+			.body-contact-container
+				.contact-us
+					.title CONTACTEZ-NOUS
+					img(src="img/picto-mail.png" alt="mail")
+					.email
+						a(href="mailto:contact@noongame.fr") contact@noongame.fr
+
+				.us-contact(ng-if="notif == true")
+					span Vos informations ont bien été envoyés. Notre équipe reviendra vers vous dès que possible. Merci
+			noon-footer.show-on-keybord
+		noon-footer.hide-on-keybord
+	.view-contact.hidden-mobile
+		.body-contact-container
+			.contact-us
+				.title CONTACTEZ-NOUS
+				img(src="img/picto-mail.png" alt="mail")
+				.email
+					a(href="mailto:contact@noongame.fr") contact@noongame.fr
+			//- .us-contact(ng-if="notif == false")
+			//- 	img(src="img/picto-contact.png" alt="contact")
+			//- 	.title On vous contacte
+			//- 	input(placeholder="Nom et prénom*" ng-model="mail.name")
+			//- 	input(placeholder="Adresse email*" ng-model="mail.mail")
+			//- 	input(placeholder="Téléphone*" ng-model="mail.phone")
+			//- 	input(placeholder="Entreprise" ng-model="mail.entreprise")
+			//- 	.send(ng-click="sendMail()")
+			//- 		p Envoyer
+			//- 		.fa.fa-long-arrow-right
+			//- .us-contact(ng-if="notif == true")
+			//- 		span Vos informations ont bien été envoyés. Notre équipe reviendra vers vous dès que possible. Merci
+	noon-footer.hidden-mobile
